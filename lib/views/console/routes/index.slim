@@ -1,0 +1,24 @@
+h1
+  | console/routes
+  a.button href="/console/routes/new"
+    i.fa.fa-plus-circle
+    | New Route
+
+.container-margin-t@@console-route data-empty=""
+  p No routes found :(
+
+.container.margin-t
+  .col
+    ul.styled-list.routes.plain
+      li@@console-route
+        a@edit-href href="/console/routes/show"
+        span.route-name@name
+          | default
+        i.fa.fa-long-arrow-right
+        span.route-method@method
+          | GET
+        span.route-path@path
+          | /
+        span.datetime@last_modified
+          | Mar 26, 8:51p
+        img.avatar@author src="/console/images/avatar-ryan.png" title="Ryan C"

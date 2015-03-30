@@ -1,0 +1,113 @@
+@import "defs";
+
+body {
+  -webkit-font-smoothing: antialiased;
+  font-family: $font-main;
+  color: $color-black;
+}
+
+a {
+  text-decoration: none !important;
+}
+
+input {
+  padding: 10px 8px !important;
+}
+
+button, .button {
+  padding: 10px 12px !important;
+
+  font-weight: 500;
+
+  i {
+    margin-right: 8px;
+  }
+}
+
+.dim {
+  color: $color-mgray;
+}
+
+h1 a {
+  font-size: 13px;
+}
+
+.notice {
+  $notice-h: 30;
+
+  color: $color-black;
+  position: relative;
+  background: #fcf8e3;
+  border: 1px solid #faebcc;
+  padding: 2px 8px;
+  margin-bottom: 30px;
+  margin-top: 10px;
+  @include rem(height, 30);
+
+  p {
+    @include rem(line-height, 30);
+  }
+
+  img {
+    $img-size: 20;
+    @include rem(height, $img-size);
+    @include rem(width, $img-size);
+    margin-top: 5px;
+    float: right;
+  }
+
+  a {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+}
+
+hr {
+  margin-bottom: 20px;
+}
+
+.todo {
+  background: #eee;
+  border: 1px solid #ddd;
+  color: $color-mgray;
+  padding: 60px;
+  font-size: 11px;
+  text-align:center;
+}
+
+.inline-fields {
+  input {
+    display:inline-block;
+  }
+
+  label {
+    margin-left: 5px;
+    display: inline-block;
+    margin-right: 30px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  p {
+    display: inline-block;
+  }
+}
+
+ul.styled {
+  list-style-type: disc;
+  margin-top:10px;
+
+  li {
+    margin-left: 25px;
+    margin-bottom: 5px;
+  }
+}
+
+h5 {
+  font-style: italic;
+}

@@ -1,0 +1,29 @@
+@import "defs";
+
+body {
+  background: $color-black;
+  color: $color-white;
+}
+
+.main {
+  width: 400px;
+  position:absolute;
+  left: 50%;
+  margin-left: -200px;
+  margin-top:15%;
+}
+
+form {
+  input[type='text'], input[type='password'] {
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  button[type='submit'] {
+    float: right;
+  }
+}
+
+hr {
+  background: $color-dgray;
+}

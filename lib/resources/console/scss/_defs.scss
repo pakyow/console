@@ -1,0 +1,13 @@
+@mixin rem($style, $px) {
+  #{$style}: #{$px}px; 
+  #{$style}: #{$px / 10}rem;
+}
+
+$color-black: #222;
+$color-white: #fff;
+$color-xgray: #eee;
+$color-lgray: #ccc;
+$color-mgray: #777;
+$color-dgray: #555;
+
+$font-main: "museo-sans", "Helvetica Neue", Helvetica, sans-serif;

@@ -1,0 +1,36 @@
+doctype html
+html
+  head
+    title Pakyow Console
+
+    link href="/console/styles/pakyow-css/reset.css" rel="stylesheet" type="text/css"
+    link href="/console/styles/pakyow-css/structure.css" rel="stylesheet" type="text/css"
+    link href="/console/styles/pakyow-css/style.css" rel="stylesheet" type="text/css"
+    link href="/console/styles/common.css" rel="stylesheet" type="text/css"
+    link href="/console/styles/console.css" rel="stylesheet" type="text/css"
+    link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
+
+    script src="//use.typekit.net/uhs8byw.js"
+    script try{Typekit.load();}catch(e){}
+
+    script src="//code.jquery.com/jquery-2.1.3.min.js"
+
+    link rel="shortcut icon" href="/console/favicon.ico"
+body
+  .page-wrapper
+    .nav-wrapper
+      nav.side
+        a href="/console/dashboard"
+          .brand.pakyow pakyow
+          .brand.console console
+
+        .avatar
+          a href="/console/settings"
+            img src="/console/images/avatar.png" data-scope="user" data-prop="avatar-small"
+
+        .nav-links
+            /! @include side-nav
+
+    .main-wrapper
+      .container
+        /! @container

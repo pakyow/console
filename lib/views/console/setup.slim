@@ -1,0 +1,33 @@
+---
+template: minimal
+---
+
+h1 Welcome! Let's get setup.
+
+.notice
+  p
+    a href="#"
+    img src="/console/images/pakyow.png"
+    | Connect your pakyow.com account.
+
+hr
+
+p Or, create an account manually.
+
+/! @include errors
+
+form@@user action="/console/setup" method="post"
+  fieldset
+    ul
+      li
+        input@name type="text" placeholder="Your Name"
+      li
+        input@email type="text" placeholder="Your Email Address"
+      li
+        input@password type="password" placeholder="Set Your Password"
+      li
+        input@password_confirmation type="password" placeholder="Confirm Password"
+      li
+        button type="submit"
+          i.fa.fa-check-circle-o
+          span Finish

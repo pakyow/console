@@ -1,0 +1,20 @@
+h3.margin-t Functionality
+
+.container-2 style="margin-top:10px"
+  .col.r-6-4.function-detail
+    /! @include empty_function
+    /! @include edit_function
+
+  .col.r-6-2.function-list
+    a.button#add-function@@console-route@add-function href="#"
+      i.fa.fa-plus-circle
+      | Add Function
+
+    ul.plain
+      li@@console-function
+        i.fa.fa-ellipsis-v
+        a.edit-function@edit_link href="#"
+          | blog.posts.detail
+
+        a.delete-function@delete_href href="#"
+          i.fa.fa-remove

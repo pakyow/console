@@ -1,0 +1,36 @@
+.plugins {
+  .avatar {
+    height: 25px;
+    width: 25px;
+    border-radius: 100%;
+    margin-right:5px;
+    position: absolute;
+    margin-top:-4px;
+    right: 0;
+  }
+
+  .plugin-name {
+    display: inline-block;
+    @include rem(font-size, 15);
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  i {
+    margin: 0 15px;
+    color: $color-mgray;
+  }
+
+  .plugin-version {
+    font-family: Source Code Pro;
+    color: $color-mgray;
+    margin-left: 15px;
+  }
+
+  .datetime {
+    float:right;
+    @include rem(font-size, 12);
+    color: $color-mgray;
+    margin-right: 30px;
+  }
+}

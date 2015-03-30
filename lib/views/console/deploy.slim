@@ -1,0 +1,39 @@
+h1
+  | console/release
+  a.button.heroku href="#" One-Click Deploy
+
+.container-2.margin-t
+  .col.r-6-4
+    ul.styled-list.releases.plain
+      li
+        a.rollback href="#" title="Rollback"
+          i.fa.fa-undo
+
+        img.avatar src="/images/avatar-ryan.png" title="Ryan C"
+        span.version v2
+        span.commit
+          | (6c0f7e9)
+        span.datetime
+          | Mar 26, 8:51p
+      li
+        img.avatar src="/images/avatar-dan.png" title="Dan M"
+        span.version v1
+        span.commit
+          | (db53cf3)
+        span.datetime
+          | Mar 25, 5:51a
+
+  .col.r-6-2.sidebar
+    .container
+      p 12 commits since yesterday's release.
+
+      h3 Dependencies
+
+      ul
+        li
+          | Auth
+          span.dep.ver 0.8 &rarr; 0.9
+        li
+          | Stripe
+          span.dep.new new
+

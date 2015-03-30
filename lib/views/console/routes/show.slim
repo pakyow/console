@@ -1,0 +1,61 @@
+h1
+  | routes/view post
+  a.button href="/console/routes"
+    i.fa.fa-caret-left
+    | Back to routes
+
+form.margin-t action="/console/routes/show"
+  fieldset
+    ul
+      li
+        .container-3
+          .col
+            label Route Name:
+            input type="text" value="View Post"
+          .col
+            label Request Path:
+            input type="text" value="/:slug"
+          .col
+            label View Path:
+            input type="text" value="/posts/show"
+
+  h3.margin-t Functionality
+
+  .container-2 style="margin-top:10px"
+    .col.r-6-4.function-detail
+      fieldset.container-2
+        .col
+          ul
+            li
+              label Container
+            li.inline-fields.margin-t
+              input type="checkbox" checked="checked"
+              label Use custom view
+        .col
+          ul
+            li
+              select
+                option main
+                option side
+            li.margin-t
+              label Post Node:
+              input type="text" value="scope[post]"
+
+              h5.margin-t Available Props
+
+              ul.styled
+                li title
+                li body
+                li author
+                li datetime
+    .col.r-6-2.function-list
+      a.button href="#"
+        i.fa.fa-plus-circle
+        | Add Function
+      ul.plain
+        li.active
+          i.fa.fa-ellipsis-v
+          | blog.posts.detail
+        li
+          i.fa.fa-ellipsis-v
+          | blog.comments.list
