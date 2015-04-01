@@ -261,6 +261,54 @@ Pakyow::App.routes :console do
         # end
       end
     end
+
+    restful :'console-data', '/data' do
+      fn :render_types do
+        types = Pakyow::Console::Data.types
+        view.scope(:'console-data-type').apply(types) do |view, type|
+          if @current_type.to_sym == type[:name]
+            view.attrs.class.ensure(:active)
+          end
+        end
+      end
+
+      list after: [:render_types] do
+      end
+
+      show after: [:render_types] do
+        @current_type = params[:'console-data_id']
+
+        type = Pakyow::Console::Data.type(@current_type)
+        #TODO humanize attribute names
+        view.scope(:'console-data-field').apply(type.attributes)
+
+        #NOTE ideally model objects would be from rom and support the
+        # common mapper interface; if that's too difficult then we could
+        # also make a simplified version; but I think it'd work
+
+        data = type.model_object.all
+        view.container(:default).scope(:'console-datum').apply(data) do |view, datum|
+          view.scope(:'console-data-value').repeat(type.attributes) do |view, type|
+            value = datum[type[:name]]
+
+            if value.nil?
+              text = 'nil'
+            else
+              text = value.to_s
+            end
+
+            view.text = text
+          end
+        end
+      end
+
+      member do
+        get ':datum_id' do
+          presenter.path = 'console/data/datum'
+          #TODO what we want here is for each plugin to define a form for it's datatypes
+        end
+      end
+    end
   end
 
   Pakyow::Console::Routes.config.each do |route|

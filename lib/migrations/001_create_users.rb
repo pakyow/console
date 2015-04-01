@@ -2,7 +2,7 @@ require_relative '../pakyow-console'
 
 Sequel.migration do
   up do
-    Pakyow::Console.db.default.connection.create_table :users do
+    create_table :users do
       primary_key   :id
       String        :email
       String        :name
@@ -16,6 +16,6 @@ Sequel.migration do
   end
 
   down do
-    Pakyow::Console.db.default.connection.drop_table :users
+    drop_table :users
   end
 end

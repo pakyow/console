@@ -1,0 +1,18 @@
+h1
+  | console/data
+
+.container-2.margin-t.data-wrapper
+  /! @include types
+  .col.r-5-4.data-list
+    table
+      tr
+        th@@console-data-field@name
+          | Field1
+      tr@@console-datum data-empty=""
+        td colspan="42"
+          p No data found :(
+      tr@@console-datum
+        td@@console-data-value@value
+          | Value1
+
+script src="/console/scripts/data-list.js"

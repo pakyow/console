@@ -193,7 +193,7 @@ nav {
   background-repeat: no-repeat;
   background-position: left center;
   padding-left: 42px !important;
-  @include retina-image(/images/heroku, 36px 36px);
+  @include retina-image(/console/images/heroku, 36px 36px);
 }
 
 .sidebar {
@@ -410,3 +410,4 @@ h1 .button {
 }
 
 @import "plugins";
+@import "data";

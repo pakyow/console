@@ -11,6 +11,8 @@ Sequel::Model.plugin :timestamps, update_on_create: true
 
 CONSOLE_ROOT = File.expand_path('../', __FILE__)
 
+#TODO need to be smarter about view reloading in development by keeping up with changed views
+# it's currently taking a 5ms response to a 400ms one; might also be worth doing a performance audit
 Pakyow::App.config.presenter.view_stores[:console] = File.join(CONSOLE_ROOT, 'views')
 Pakyow::App.config.app.resources[:console] = File.join(CONSOLE_ROOT, 'resources')
 
@@ -113,6 +115,8 @@ end
 
 require_relative 'plugins'
 require_relative 'routes'
+require_relative 'data'
+
 require_relative 'core_plugin'
 
 class String
@@ -132,8 +136,4 @@ Pakyow::App.before :load do
   Pakyow::Console.load_paths.each do |path|
     Pakyow::Console.loader.load_from_path(path)
   end
-end
-
-Pakyow::App.after :load do
-
 end
