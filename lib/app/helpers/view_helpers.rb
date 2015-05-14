@@ -39,6 +39,6 @@ module Pakyow::Helpers
   #TODO move this somewhere else
   def invoke(plugin, function, options = {})
     #TODO mixin default option values
-    Pakyow::Console::Plugins.find(plugin).invoke(function, self, options)
+    Pakyow::Console::PluginRegistry.find(plugin).invoke(function, self, options)
   end
 end

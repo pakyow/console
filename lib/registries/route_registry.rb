@@ -1,6 +1,6 @@
 require 'yaml'
 
-module Pakyow::Console::Routes
+module Pakyow::Console::RouteRegistry
   def self.all
     #TODO show overrides
     config.concat(app_routes).sort { |a,b| a[:path] <=> b[:path] }
@@ -69,62 +69,5 @@ module Pakyow::Console::Routes
     File.open(config_path, 'w') { |f|
       f.write(config.to_yaml)
     }
-  end
-end
-
-class Pakyow::Console::Route
-  attr_reader :errors, :id, :name, :method, :path, :view_path
-
-  def initialize(values)
-    @id, @last_modified, @type, @name, @method, @path, @view_path, @author, @functions = values.values_at(:id, :last_modified, :type, :name, :method, :path, :view_path, :author, :functions)
-  end
-
-  def [](var)
-    instance_variable_get(:"@#{var}")
-  end
-
-  def valid?
-    @errors = []
-
-    %w[name method path].each do |var|
-      value = instance_variable_get(:"@#{var}")
-      if value.nil? || value.empty?
-        @errors << "#{var} is required"
-      end
-    end
-
-    @errors.count == 0
-  end
-
-  def update(values)
-    @name, @method, @path, @view_path = values.values_at(:name, :method, :path, :view_path)
-  end
-
-  def save
-    return unless valid?
-    @id ||= SecureRandom.hex(16)
-    Pakyow::Console::Routes.save(self)
-  end
-
-  def to_h
-    {
-      id: @id,
-      name: @name,
-      method: @method.upcase,
-      path: "/#{String.normalize_path(@path)}",
-      view_path: String.normalize_path(view_path),
-      type: :console,
-      last_modified: Time.now,
-      author: {
-        name: @author[:name],
-        gravatar: @author[:gravatar] || @author.gravatar_hash
-      },
-      functions: @functions
-    }
-  end
-
-  def view_path
-    return @path if @view_path.nil? || @view_path.empty?
-    @view_path
   end
 end

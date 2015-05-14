@@ -1,4 +1,4 @@
-Pakyow::Console::Plugins.register :core do |plugin|
+Pakyow::Console::PluginRegistry.register :core do |plugin|
   plugin.version = '0.1.0'
 
   boot do
