@@ -18,4 +18,10 @@ form button[type='submit'] {
 hr {
   background: #555; }
 
+a {
+  color: #fff; }
+  a:hover {
+    color: #fff;
+    border-bottom: 1px solid #555; }
+
 /*# sourceMappingURL=minimal.css.map */

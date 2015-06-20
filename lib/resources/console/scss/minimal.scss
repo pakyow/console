@@ -27,3 +27,12 @@ form {
 hr {
   background: $color-dgray;
 }
+
+a {
+  color: $color-white;
+
+  &:hover {
+    color: $color-white;
+    border-bottom: 1px solid $color-dgray;
+  }
+}

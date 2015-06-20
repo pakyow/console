@@ -1,3 +1,4 @@
+@import url("users.css");
 nav {
   background: #222;
   position: absolute;
@@ -66,7 +67,7 @@ nav {
   float: left; }
 
 .main-wrapper {
-  margin-top: 30px;
+  margin-top: 60px;
   margin-left: 250px; }
 
 .slim {
@@ -141,9 +142,9 @@ nav {
 .styled-list {
   margin: 0 !important; }
   .styled-list li {
-    background: #eee;
-    border: 1px solid #ddd;
-    padding: 10px 8px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0px;
     margin-bottom: 15px;
     position: relative; }
   .styled-list a {
@@ -310,5 +311,29 @@ h1 .button {
     padding: 5px 8px; }
     .data-list td:last-child, .data-list th:last-child {
       border: 0; }
+
+.notifier {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 800px;
+  margin-left: -275px;
+  height: 30px;
+  background: #222;
+  cursor: pointer;
+  line-height: 30px;
+  line-height: 3rem;
+  padding-left: 15px;
+  box-sizing: border-box;
+  color: #fff;
+  text-align: center;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+  font-weight: 600;
+  -webkit-transition: top 0.05s ease-in;
+  -moz-transition: top 0.05s ease-in;
+  transition: top 0.05s ease-in; }
+  .notifier.hide {
+    top: -30px; }
 
 /*# sourceMappingURL=console.css.map */

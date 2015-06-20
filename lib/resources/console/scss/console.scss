@@ -1,5 +1,10 @@
 @import "defs";
+@import "pakyow-css/vars";
 @import "bourbon/bourbon";
+
+@each $mixin in mixins() {
+  @import url("#{$mixin}.css");
+}
 
 $header-h: 40;
 
@@ -176,7 +181,7 @@ nav {
 }
 
 .main-wrapper {
-  margin-top: 30px;
+  margin-top: 60px;
   margin-left: 250px;
 }
 
@@ -271,9 +276,10 @@ nav {
   margin: 0 !important;
 
   li {
-    background: #eee;
-    border: 1px solid #ddd;
-    padding: 10px 8px;
+    // background: #eee;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0px;
     margin-bottom: 15px;
     position: relative;
   }
@@ -411,3 +417,4 @@ h1 .button {
 
 @import "plugins";
 @import "data";
+@import "notifier";

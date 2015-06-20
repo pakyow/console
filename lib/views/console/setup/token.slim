@@ -1,0 +1,19 @@
+---
+template: minimal
+---
+
+h1 We need a token.
+
+p Go to your platform settings and generate a new personal access token, then enter it along with your email address below.
+
+form action="/console/setup/token" method="post"
+  fieldset
+    ul
+      li
+        input type="text" name="email" placeholder="Your email"
+      li
+        input type="text" name="token" placeholder="Enter token"
+      li
+        button type="submit"
+          i.fa.fa-check-circle-o
+          span Save

@@ -10,13 +10,13 @@ h1 Hello! Please sign in.
     img src="/console/images/pakyow.png"
     | Sign in with your pakyow.com account.
 
-hr
-
-p Or, login manually.
+p
+  a href="#" data-ui="toggle" data-config="name:manual"
+    | Or, login manually.
 
 /! @include errors
 
-form@@console-session
+form@@console-session data-ui="toggleable" data-config="name:manual"
   fieldset
     ul
       li

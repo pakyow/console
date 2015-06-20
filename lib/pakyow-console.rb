@@ -13,7 +13,7 @@ CONSOLE_ROOT = File.expand_path('../', __FILE__)
 
 #TODO need to be smarter about view reloading in development by keeping up with changed views
 # it's currently taking a 5ms response to a 400ms one; might also be worth doing a performance audit
-Pakyow::App.config.presenter.view_stores[:console] = File.join(CONSOLE_ROOT, 'views')
+Pakyow::App.config.presenter.view_stores[:console] = [File.join(CONSOLE_ROOT, 'views')]
 Pakyow::App.config.app.resources[:console] = File.join(CONSOLE_ROOT, 'resources')
 
 module Sass
@@ -37,8 +37,16 @@ module Pakyow
       @load_paths ||= []
     end
 
+    def self.imports
+      @imports ||= []
+    end
+
     def self.add_load_path(path)
       load_paths << path
+    end
+
+    def self.add_import(path)
+      imports << Sass::Script::String.new(path)
     end
 
     def self.boot_plugins
@@ -60,6 +68,7 @@ require_relative 'registries/route_registry'
 require_relative 'plugins/core_plugin'
 
 require '/Users/bryanp/code/pakyow/libs/pakyow-console-users/lib/pakyow-console-users'
+require '/Users/bryanp/code/pakyow/libs/pakyow-console-release/lib/pakyow-console-release'
 
 app_path = File.join(CONSOLE_ROOT, 'app')
 res_path = File.join(CONSOLE_ROOT, 'resources', 'console')
@@ -73,4 +82,12 @@ Pakyow::App.before :load do
   Pakyow::Console.load_paths.each do |path|
     Pakyow::Console.loader.load_from_path(path)
   end
+end
+
+module Sass::Script::Functions
+  def mixins
+    Sass::Script::List.new(Pakyow::Console.imports, :comma)
+  end
+
+  declare :mixins, args: []
 end

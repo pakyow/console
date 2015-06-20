@@ -1,28 +1,19 @@
 module Pakyow::Helpers
-  def handle_errors(view)
-    if @errors
-      render_errors(view, @errors)
-    else
-      view.scope(:errors).remove
-    end
-  end
-
-  def render_errors(view, errors)
-    unless errors.is_a?(Array)
-      errors = pretty_errors(errors.full_messages)
-    end
-
-    view.scope(:errors).with do
-      prop(:message).repeat(errors) { |context, message|
-        context.text = message
-      }
-    end
-  end
-
-  def pretty_errors(errors)
-    Array(errors).map { |error|
-      String.capitalize(error.gsub('_', ' '))
+  def handle_errors(view, object_type: nil, object_id: nil)
+    q = {
+      object_type: object_type,
+      object_id: object_id,
     }
+
+    unless current_user.nil?
+      q[:user_id] = current_user.id
+    end
+
+    if req.socket? && @errors && !@errors.empty?
+      ui.mutated(:errors, data: @errors, qualify: q)
+    else
+      view.scope(:errors).mutate(:list, data: @errors).subscribe(q)
+    end
   end
 
   def gravatar_url(hash)
