@@ -374,4 +374,31 @@ h1 .button {
     .console-toolbar .collaborators .avatar {
       margin-right: 10px; }
 
+.dashboard-events .dashboard-event {
+  height: 40px; }
+  .dashboard-events .dashboard-event .message {
+    display: inline-block;
+    margin-top: 3px; }
+  .dashboard-events .dashboard-event .date {
+    float: right;
+    font-size: 11px;
+    font-size: 1.1rem;
+    color: #777; }
+  .dashboard-events .dashboard-event .avatar {
+    display: inline-block;
+    line-height: 0;
+    margin-right: 10px; }
+    .dashboard-events .dashboard-event .avatar:hover a {
+      border: 0; }
+    .dashboard-events .dashboard-event .avatar:hover img {
+      opacity: 0.8; }
+    .dashboard-events .dashboard-event .avatar img {
+      height: 20px;
+      height: 2rem;
+      width: 20px;
+      width: 2rem;
+      display: inline;
+      vertical-align: middle;
+      border-radius: 20px; }
+
 /*# sourceMappingURL=console.css.map */

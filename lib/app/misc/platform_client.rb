@@ -49,8 +49,10 @@ class PlatformClient
       password: @token,
     })
 
-    JSON.parse(response.body).map { |app|
-      Hash.strhash(app)
+    JSON.parse(response.body).map { |event|
+      event = Hash.strhash(event)
+      event[:created_at] = DateTime.parse(event[:created_at]).to_time
+      event
     }
   end
 

@@ -1,0 +1,41 @@
+.dashboard-events {
+  .dashboard-event {
+    height: 40px;
+
+    .message {
+      display:inline-block;
+      margin-top: 3px;
+    }
+
+    .date {
+      float: right;
+      @include rem(font-size, 11);
+      color: $color-mgray;
+    }
+
+    .avatar {
+      display:inline-block;
+      line-height: 0;
+      margin-right: 10px;
+
+      &:hover {
+        a {
+          border: 0;
+        }
+
+        img {
+          opacity: 0.8;
+        }
+      }
+
+      img {
+        $avatar-size: 20;
+        @include rem(height, $avatar-size);
+        @include rem(width, $avatar-size);
+        display: inline;
+        vertical-align: middle;
+        border-radius: 20px;
+      }
+    }
+  }
+}

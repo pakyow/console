@@ -9,6 +9,14 @@ module Pakyow::Helpers
     !session[:user].nil? || platform?
   end
 
+  def current_user
+    if platform?
+      platform_creds
+    else
+      Pakyow::Auth::User[session[:user]]
+    end
+  end
+
   def platform?
     (setup? && platform_client.valid?)
   end
