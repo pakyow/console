@@ -13,7 +13,11 @@ class WebSocketClient
       msg = Hash.strhash(JSON.parse(msg.data.to_s))
 
       if event = msg[:payload][:event]
-        context.data(:app_event).create(event)
+        context.data(:app_event).mutated(event)
+      end
+
+      if collaborator = msg[:payload][:collaborator]
+        context.data(:collaborator).mutated(collaborator)
       end
     end
 

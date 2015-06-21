@@ -1,6 +1,6 @@
-Pakyow::App.mutable :app_event do
+Pakyow::App.mutable :collaborator do
   query :all do
-    platform_client.events
+    platform_client.collaborators
   end
 
   action :mutated do |params|

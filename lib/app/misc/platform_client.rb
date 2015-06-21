@@ -53,4 +53,15 @@ class PlatformClient
       Hash.strhash(app)
     }
   end
+
+  def collaborators
+    response = HTTParty.get(File.join($platform_url, "api/apps/#{@info[:app][:id]}", 'collaborators'), basic_auth: {
+      username: @email,
+      password: @token,
+    })
+
+    JSON.parse(response.body).map { |app|
+      Hash.strhash(app)
+    }
+  end
 end

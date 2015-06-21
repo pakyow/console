@@ -6,8 +6,6 @@ module Pakyow::Console::SharedRoutes
   end
 
   fn :setup do
-    view.partial(:header).scope(:'console-user').bind(current_user)
-
     view.partial(:'dev-nav').with do |view|
       if env == :development
         view.scope(:'console-panel-item').apply(Pakyow::Console::PanelRegistry.nav(:development))
@@ -17,6 +15,8 @@ module Pakyow::Console::SharedRoutes
     end
 
     view.partial(:'side-nav').scope(:'console-panel-item').apply(Pakyow::Console::PanelRegistry.nav(:production))
+
+    setup_toolbar(view)
   end
 
   fn :notify do

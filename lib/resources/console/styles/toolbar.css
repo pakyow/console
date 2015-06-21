@@ -1,0 +1,63 @@
+/*
+Error: It's not clear which file to import for '@import "toolbar"'.
+       Candidates:
+         _toolbar.scss
+         toolbar.scss
+       Please delete or rename all but one of these files.
+        on line 3 of /Users/bryanp/code/pakyow/libs/pakyow-console/lib/resources/console/scss/toolbar.scss
+
+1: @import "defs";
+2: // @import "pakyow-css/vars";
+3: @import "toolbar";
+
+Backtrace:
+/Users/bryanp/code/pakyow/libs/pakyow-console/lib/resources/console/scss/toolbar.scss:3
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/import_node.rb:66:in `rescue in import'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/import_node.rb:45:in `import'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/import_node.rb:28:in `imported_file'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/import_node.rb:37:in `css_import?'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:301:in `visit_import'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/visitors/base.rb:36:in `visit'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:158:in `block in visit'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/stack.rb:79:in `block in with_base'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/stack.rb:115:in `with_frame'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/stack.rb:79:in `with_base'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:158:in `visit'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/visitors/base.rb:52:in `block in visit_children'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/visitors/base.rb:52:in `map'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/visitors/base.rb:52:in `visit_children'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:167:in `block in visit_children'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:179:in `with_environment'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:166:in `visit_children'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/visitors/base.rb:36:in `block in visit'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:186:in `visit_root'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/visitors/base.rb:36:in `visit'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:157:in `visit'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/visitors/perform.rb:8:in `visit'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/root_node.rb:36:in `css_tree'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/tree/root_node.rb:29:in `render_with_sourcemap'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/engine.rb:368:in `_render_with_sourcemap'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/engine.rb:285:in `render_with_sourcemap'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/plugin/compiler.rb:490:in `update_stylesheet'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/plugin/compiler.rb:209:in `each'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/sass-3.4.9/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'
+/Users/bryanp/code/pakyow/libs/pakyow-console/lib/pakyow-console.rb:106:in `block in <top (required)>'
+/Users/bryanp/code/pakyow/libs/pakyow/pakyow-core/lib/core/app.rb:405:in `instance_exec'
+/Users/bryanp/code/pakyow/libs/pakyow/pakyow-core/lib/core/app.rb:405:in `block in call_stack'
+/Users/bryanp/code/pakyow/libs/pakyow/pakyow-core/lib/core/app.rb:404:in `each'
+/Users/bryanp/code/pakyow/libs/pakyow/pakyow-core/lib/core/app.rb:404:in `call_stack'
+/Users/bryanp/code/pakyow/libs/pakyow/pakyow-core/lib/core/app.rb:412:in `load_app'
+/Users/bryanp/code/pakyow/libs/pakyow/pakyow-core/lib/core/app.rb:208:in `initialize'
+/Users/bryanp/code/pakyow/libs/pakyow/pakyow-core/lib/core/app.rb:33:in `new'
+/Users/bryanp/code/pakyow/libs/pakyow/pakyow-core/lib/core/app.rb:33:in `stage'
+/Users/bryanp/code/pakyow/libs/pakyow/pakyow-core/lib/core/app.rb:43:in `run'
+/users/bryanp/code/pakyow/libs/pakyow/lib/commands/server.rb:23:in `<top (required)>'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in `require'
+/Users/bryanp/.rbenv/versions/2.2.0/lib/ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in `require'
+/users/bryanp/code/pakyow/libs/pakyow/bin/pakyow:12:in `<main>'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Error: It's not clear which file to import for '@import \"toolbar\"'.\A        Candidates:\A          _toolbar.scss\A          toolbar.scss\A        Please delete or rename all but one of these files.\A         on line 3 of /Users/bryanp/code/pakyow/libs/pakyow-console/lib/resources/console/scss/toolbar.scss\A \A 1: @import \"defs\";\A 2: // @import \"pakyow-css/vars\";\A 3: @import \"toolbar\";"; }

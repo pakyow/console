@@ -76,6 +76,29 @@ res_path = File.join(CONSOLE_ROOT, 'resources', 'console')
 Pakyow::Console.sass.add_template_location(File.join(res_path, 'scss'), File.join(res_path, 'styles'))
 Pakyow::Console.add_load_path(app_path)
 
+CLOSING_HEAD_REGEX = /<\/head>/m
+CLOSING_BODY_REGEX = /<\/body>/m
+
+Pakyow::App.after :init do
+  @context = AppContext.new
+  @socket ||= WebSocketClient.new(self, platform_client, platform_info)
+end
+
+Pakyow::App.after :process do
+  if req.path_parts[0] != 'console' && @presenter.presented? && platform?
+    view = ViewContext.new(View.new(File.open(File.join(CONSOLE_ROOT, 'views', 'console', '_toolbar.slim')).read, format: :slim), self)
+    setup_toolbar(view)
+
+    console_css = '<link href="/console/styles/console-toolbar.css" rel="stylesheet" type="text/css">'
+    font_css = '<link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,600,700" rel="stylesheet" type="text/css">'
+    fa_css = '<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">'
+
+    body = res.body[0]
+    body.gsub!(CLOSING_HEAD_REGEX, console_css + font_css + fa_css + '</head>')
+    body.gsub!(CLOSING_BODY_REGEX, view.to_html + '</body>')
+  end
+end
+
 Pakyow::App.before :load do
   Pakyow::Console.boot_plugins
   Pakyow::Console.sass.update_stylesheets

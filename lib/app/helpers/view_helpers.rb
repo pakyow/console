@@ -32,4 +32,11 @@ module Pakyow::Helpers
     #TODO mixin default option values
     Pakyow::Console::PluginRegistry.find(plugin).invoke(function, self, options)
   end
+
+  def setup_toolbar(view)
+    view.scope(:'console-user').bind(current_user)
+
+    # collaborator presence
+    view.scope(:collaborator).mutate(:list, with: data(:collaborator).all).subscribe
+  end
 end

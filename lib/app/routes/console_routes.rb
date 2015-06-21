@@ -13,7 +13,6 @@ Pakyow::App.routes :console do
     end
 
     get :dashboard, '/dashboard', before: [:auth], after: [:setup] do
-      @@socket ||= WebSocketClient.new(self, platform_client, platform_info)
       view.scope(:app_event).mutate(:list, with: data(:app_event).all).subscribe
     end
   end

@@ -1,0 +1,17 @@
+.console-toolbar
+  ul.collaborators
+    li.collaborator@@collaborator
+      .avatar
+        / TODO link this to their pakyow.com profile
+        img@avatar-small src="/console/images/avatar.png"
+
+  .avatar
+    a href="/console/settings"
+      img@@console-user@avatar-small src="/console/images/avatar.png"
+
+  a.brand-wrap href="/console/dashboard"
+    .brand.pakyow pakyow
+    .brand.console console
+
+  a.to-site href="/"
+    i.fa.fa-home

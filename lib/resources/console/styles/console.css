@@ -8,36 +8,8 @@ nav {
   width: 200px;
   box-sizing: border-box;
   padding: 5px 15px 0; }
-  nav .brand {
-    float: left;
-    font-size: 14px;
-    font-size: 1.4rem;
-    line-height: 40px;
-    line-height: 4rem; }
-    nav .brand.pakyow {
-      color: #777; }
-      nav .brand.pakyow:after {
-        content: '/'; }
-    nav .brand.console {
-      color: #ccc; }
-  nav .avatar {
-    float: right;
-    margin-top: 8px; }
-    nav .avatar:hover a {
-      border: 0; }
-    nav .avatar:hover img {
-      opacity: 0.8; }
-    nav .avatar img {
-      height: 20px;
-      height: 2rem;
-      width: 20px;
-      width: 2rem;
-      display: inline;
-      vertical-align: middle;
-      border-radius: 20px; }
   nav .nav-links {
-    clear: both;
-    margin-top: 50px; }
+    margin-top: 10px; }
     nav .nav-links h4 {
       color: #fff;
       margin-bottom: 15px; }
@@ -335,5 +307,71 @@ h1 .button {
   transition: top 0.05s ease-in; }
   .notifier.hide {
     top: -30px; }
+
+.console-toolbar {
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, sans-serif;
+  background: #222;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 25px; }
+  .console-toolbar .brand-wrap {
+    display: inline-block;
+    margin-left: 10px;
+    height: 25px;
+    width: 145px; }
+  .console-toolbar .to-site {
+    font-size: 15px;
+    font-size: 1.5rem;
+    line-height: 25px;
+    line-height: 2.5rem;
+    color: #ccc;
+    display: inline-block;
+    height: 25px;
+    vertical-align: top; }
+  .console-toolbar .brand {
+    float: left;
+    font-size: 13px;
+    font-size: 1.3rem;
+    line-height: 25px;
+    line-height: 2.5rem; }
+    .console-toolbar .brand.pakyow {
+      color: #777; }
+      .console-toolbar .brand.pakyow:after {
+        content: '/'; }
+    .console-toolbar .brand.console {
+      color: #ccc; }
+  .console-toolbar > .avatar {
+    float: left;
+    margin-left: 10px; }
+  .console-toolbar .avatar {
+    line-height: 0;
+    margin-top: 3px; }
+    .console-toolbar .avatar:hover a {
+      border: 0; }
+    .console-toolbar .avatar:hover img {
+      opacity: 0.8; }
+    .console-toolbar .avatar img {
+      height: 20px;
+      height: 2rem;
+      width: 20px;
+      width: 2rem;
+      display: inline;
+      vertical-align: middle;
+      border-radius: 20px; }
+  .console-toolbar .collaborators {
+    float: right; }
+    .console-toolbar .collaborators .collaborator {
+      display: inline-block;
+      padding: 0;
+      margin-left: 0; }
+      .console-toolbar .collaborators .collaborator.offline {
+        opacity: 0.3;
+        filter: gray;
+        filter: grayscale(1);
+        -webkit-filter: grayscale(1); }
+    .console-toolbar .collaborators .avatar {
+      margin-right: 10px; }
 
 /*# sourceMappingURL=console.css.map */

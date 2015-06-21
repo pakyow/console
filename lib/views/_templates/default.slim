@@ -7,13 +7,11 @@ html
     link href="/console/styles/pakyow-css/structure.css" rel="stylesheet" type="text/css"
     link href="/console/styles/pakyow-css/style.css" rel="stylesheet" type="text/css"
 
-    link href="/console/styles/font-awesome.min.css" rel="stylesheet" type="text/css"
-
     link href="/console/styles/common.css" rel="stylesheet" type="text/css"
     link href="/console/styles/console.css" rel="stylesheet" type="text/css"
 
-    script src="//use.typekit.net/uhs8byw.js"
-    script try{Typekit.load();}catch(e){}
+    link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
+    link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,600,700" rel="stylesheet" type="text/css"
 
     link rel="shortcut icon" href="/console/favicon.ico"
 
@@ -32,11 +30,11 @@ body
 
     .nav-wrapper
       nav.side
-        /! @include header
-
         .nav-links
             /! @include side-nav
 
     .main-wrapper
       .container
         /! @container
+
+  /! @include toolbar

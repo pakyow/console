@@ -91,51 +91,8 @@ nav {
   box-sizing: border-box;
   padding: 5px 15px 0;
 
-  .brand {
-    float: left;
-    @include rem(font-size, 14);
-    @include rem(line-height, $header-h);
-
-    &.pakyow {
-      &:after {
-        content: '/';
-      }
-
-      color: $color-mgray;
-    }
-
-    &.console {
-      color: $color-lgray;
-    }
-  }
-
-  .avatar {
-    float: right;
-    margin-top:8px;
-
-    &:hover {
-      a {
-        border: 0;
-      }
-
-      img {
-        opacity: 0.8;
-      }
-    }
-
-    img {
-      $avatar-size: 20;
-      @include rem(height, $avatar-size);
-      @include rem(width, $avatar-size);
-      display: inline;
-      vertical-align: middle;
-      border-radius: 20px;
-    }
-  }
-
   .nav-links {
-    clear: both;
-    margin-top: 50px;
+    margin-top: 10px;
 
     h4 {
       color: $color-white;
@@ -418,3 +375,4 @@ h1 .button {
 @import "plugins";
 @import "data";
 @import "notifier";
+@import "toolbar";
