@@ -65,10 +65,12 @@ require_relative 'registries/panel_registry'
 require_relative 'registries/plugin_registry'
 require_relative 'registries/route_registry'
 
-require_relative 'plugins/core_plugin'
+# require_relative 'plugins/core_plugin'
 
-require '/Users/bryanp/code/pakyow/libs/pakyow-console-users/lib/pakyow-console-users'
-require '/Users/bryanp/code/pakyow/libs/pakyow-console-release/lib/pakyow-console-release'
+# require '/Users/bryanp/code/pakyow/libs/pakyow-console-users/lib/pakyow-console-users'
+# require '/Users/bryanp/code/pakyow/libs/pakyow-console-release/lib/pakyow-console-release'
+
+Pakyow::Console::PanelRegistry.register :users, mode: :production, nice_name: 'Users', icon_class: 'users' do; end
 
 app_path = File.join(CONSOLE_ROOT, 'app')
 res_path = File.join(CONSOLE_ROOT, 'resources', 'console')

@@ -12,4 +12,19 @@ Pakyow::App.bindings :'console-user' do
       }
     end
   end
+
+  scope :user do
+    restful :user
+
+    binding :'edit-href' do
+      { href: router.group(:user).path(:edit, user_id: bindable.id) }
+    end
+
+    binding :role do
+      {
+        content: bindable.role,
+        class: lambda { |c| c.ensure(bindable.role)}
+      }
+    end
+  end
 end

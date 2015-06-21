@@ -1,0 +1,29 @@
+---
+title: 'console/users'
+---
+
+h1
+  | console/users
+  a.button href="/console/users/new" data-ui="fastlink"
+    i.fa.fa-plus-circle
+    | New User
+
+.container.margin-t@@user data-version="empty"
+  p No users found :(
+
+.container.margin-t
+  .col
+    ul.styled-list.users.plain
+      li@@user
+        a@edit-href href="/console/users/edit" data-ui="fastlink"
+        img.avatar@avatar-small src="/console/images/avatar-bryan.png" title="Bryan P"
+        span.user-name@name
+          | Bob Dylan
+        span.user-aka
+          | aka
+        span.user-username@username
+          | bdylan
+        span.user-email@email
+          | bob@gmail.com
+        span.user-role@role
+          | Admin
