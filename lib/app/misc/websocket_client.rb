@@ -4,7 +4,24 @@ require 'httparty'
 require 'json'
 require 'securerandom'
 
-#TODO need to ping every 15s so heroku doesn't close the connection
+class WebSocketPing
+  include Celluloid
+
+  attr_reader :ws
+
+  def initialize(ws)
+    @ws = ws
+
+    async.run
+  end
+
+  def run
+    loop do
+      sleep 15
+      ws.send({ action: 'ping' }.to_json)
+    end
+  end
+end
 
 class WebSocketClient
   def initialize(context, platform_client, platform_info)
@@ -15,16 +32,18 @@ class WebSocketClient
       ws.on :message do |msg|
         msg = Hash.strhash(JSON.parse(msg.data.to_s))
 
-        if event = msg[:payload][:event]
-          context.data(:app_event).mutated(event)
-        end
+        if payload = msg[:payload]
+          if event = payload[:event]
+            context.data(:app_event).mutated(event)
+          end
 
-        if collaborator = msg[:payload][:collaborator]
-          context.data(:collaborator).mutated(collaborator)
-        end
+          if collaborator = payload[:collaborator]
+            context.data(:collaborator).mutated(collaborator)
+          end
 
-        if release = msg[:payload][:release]
-          context.data(:release).mutated(release)
+          if release = payload[:release]
+            context.data(:release).mutated(release)
+          end
         end
       end
 
@@ -42,6 +61,8 @@ class WebSocketClient
         puts e.message
         puts e.backtrace
       end
+
+      WebSocketPing.new(ws)
     end
   end
 
