@@ -5,6 +5,10 @@ class ReleaseAgent
   finalizer :shutdown
 
   DEPLOY_PATH = File.expand_path('./')
+  ADDONS = [
+    'heroku-postgresql:hobby-dev',
+    'heroku-redis:test',
+  ]
 
   attr_reader :heroku_client, :platform_client, :release_object
 
@@ -32,9 +36,18 @@ class ReleaseAgent
     path = File.expand_path('./.platform')
     config = Hash.strhash(JSON.parse(File.open(path).read))
     config[:release] = { app: app }
-    File.open(path, 'w').write(config.to_json)
+    f = File.open(path, 'w')
+    f.write(config.to_json)
+    f.close
 
-    #TODO create ze addons here
+    ADDONS.each do |name|
+      log "provisioning addon for #{app['id']}: #{name}"
+      heroku_client.addon.create(app['id'], {
+        plan: name
+      })
+    end
+
+    log 'setup complete'
   end
 
   def release
