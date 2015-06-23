@@ -19,6 +19,10 @@ class WebSocketClient
       if collaborator = msg[:payload][:collaborator]
         context.data(:collaborator).mutated(collaborator)
       end
+
+      if release = msg[:payload][:release]
+        context.data(:release).mutated(release)
+      end
     end
 
     socket.on :open do

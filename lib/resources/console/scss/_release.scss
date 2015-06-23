@@ -1,0 +1,117 @@
+$color-heroku: #430095;
+
+.release-setup {
+  border: 1px solid $color-heroku;
+  background: lighten($color-heroku, 68%);
+  position: relative;
+
+  background-repeat: no-repeat;
+  background-position: right center;
+  @include retina-image(/console/images/heroku-dark, 36px 36px);
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  p {
+    padding: 20px;
+    line-height: 0;
+    margin: 0;
+  }
+
+  a {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+}
+
+.button.heroku {
+  display: inline-block;
+  color: $color-white;
+  padding-left: 42px !important;
+  border: 0;
+  background: $color-heroku;
+  background-repeat: no-repeat;
+  background-position: left center;
+  @include retina-image(/console/images/heroku, 36px 36px);
+
+  &:hover {
+    background: lighten($color-heroku, 10%);
+    background-repeat: no-repeat;
+    background-position: left center;
+    @include retina-image(/console/images/heroku, 36px 36px);
+    color: $color-white;
+  }
+}
+
+.releases {
+  .rollback {
+    position: absolute;
+    color: $color-lgray;
+    margin-left: -30px;
+    margin-top: 10px;
+
+    &:hover {
+      color: $color-mgray;
+    }
+  }
+
+  .collaborator {
+    margin-left: 0;
+  }
+
+  .avatar {
+    display:inline-block;
+    line-height: 0;
+    margin-right: 10px;
+
+    &:hover {
+      a {
+        border: 0;
+      }
+
+      img {
+        opacity: 0.8;
+      }
+    }
+
+    img {
+      $avatar-size: 20;
+      @include rem(height, $avatar-size);
+      @include rem(width, $avatar-size);
+      display: inline;
+      vertical-align: middle;
+      border-radius: 20px;
+    }
+  }
+
+  .version {
+    margin-left: 10px;
+    display: inline-block;
+    @include rem(font-size, 15);
+    text-transform: uppercase;
+    font-weight: 600;
+    width: 40px;
+  }
+
+  .status {
+    font-family: Source Code Pro;
+    @include rem(font-size, 12);
+    text-transform: uppercase;
+    color: $color-mgray;
+  }
+
+  .datetime {
+    float:right;
+    @include rem(font-size, 12);
+    color: $color-mgray;
+  }
+}
+
+.release-form {
+  float: right;
+  margin-top: 20px;
+}

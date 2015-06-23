@@ -1,0 +1,18 @@
+h1
+  | release/setup
+
+p
+  | Go to your&nbsp;
+  a href="https://dashboard.heroku.com/account" target="_blank"
+    | Heroku Account Settings
+  | &nbsp;and generate a new API Key, then enter it below.
+
+form action="/console/release/setup/token" method="post"
+  fieldset
+    ul
+      li
+        input type="text" name="token" placeholder="Enter API Key"
+      li
+        button type="submit"
+          i.fa.fa-check-circle-o
+          span Save

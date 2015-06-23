@@ -83,13 +83,13 @@ CLOSING_HEAD_REGEX = /<\/head>/m
 CLOSING_BODY_REGEX = /<\/body>/m
 
 Pakyow::App.after :init do
-  @context = AppContext.new
+  @context = Pakyow::AppContext.new
   @socket ||= WebSocketClient.new(self, platform_client, platform_info)
 end
 
 Pakyow::App.after :process do
   if req.path_parts[0] != 'console' && @presenter.presented? && platform?
-    view = ViewContext.new(View.new(File.open(File.join(CONSOLE_ROOT, 'views', 'console', '_toolbar.slim')).read, format: :slim), self)
+    view = Pakyow::Presenter::ViewContext.new(Pakyow::Presenter::View.new(File.open(File.join(CONSOLE_ROOT, 'views', 'console', '_toolbar.slim')).read, format: :slim), self)
     setup_toolbar(view)
 
     console_css = '<link href="/console/styles/console-toolbar.css" rel="stylesheet" type="text/css">'
