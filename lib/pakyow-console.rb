@@ -1,6 +1,6 @@
-require '/Users/bryanp/code/pakyow/libs/pakyow/pakyow-support/lib/pakyow-support'
-require '/Users/bryanp/code/pakyow/libs/pakyow/pakyow-core/lib/pakyow-core'
-require '/Users/bryanp/code/pakyow/libs/pakyow/pakyow-presenter/lib/pakyow-presenter'
+require 'pakyow-support'
+require 'pakyow-core'
+require 'pakyow-presenter'
 
 require 'pakyow-slim'
 
