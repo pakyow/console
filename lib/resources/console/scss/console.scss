@@ -79,11 +79,15 @@ $header-h: 40;
 //   }
 // }
 
+body {
+  padding-bottom: 60px;
+}
+
 $nav-width: 200px;
 
 nav {
   background: $color-black;
-  position:absolute;
+  position:fixed;
   top:0;
   bottom:0;
   left:0;

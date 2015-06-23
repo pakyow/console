@@ -1,6 +1,9 @@
+body {
+  padding-bottom: 60px; }
+
 nav {
   background: #222;
-  position: absolute;
+  position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
