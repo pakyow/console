@@ -44,6 +44,7 @@ module Pakyow::Helpers
   end
 
   def platform_creds
+    return {} unless File.exists?(pakyow_platform_file_path)
     Hash.strhash(JSON.parse(File.open(pakyow_platform_file_path).read))
   end
 
