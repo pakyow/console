@@ -48,6 +48,7 @@ module Pakyow::Helpers
   end
 
   def platform_info
+    return {} unless File.exists?(platform_file_path)
     Hash.strhash(JSON.parse(File.open(platform_file_path).read))
   end
 
