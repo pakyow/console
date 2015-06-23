@@ -111,7 +111,7 @@ class ReleaseAgent
   def create_source(path)
     log 'making the build'
 
-    `cd #{path} && tar -czf build.tgz ./*`
+    `cd #{path} && tar -czf build.tgz ./* ./.platform`
 
     filepath = File.join(path, 'build.tgz')
 
