@@ -1,4 +1,17 @@
 class PlatformClient
+  class << self
+    def auth(email, password)
+      response = HTTParty.post(File.join($platform_url, 'auth/token'), body: {
+        login: email,
+        password: password,
+      })
+
+      if response.code == 200
+        Hash.strhash(JSON.parse(response.body))[:access_token]
+      end
+    end
+  end
+
   def initialize(email, token, info)
     @email = email
     @token = token

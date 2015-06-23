@@ -27,18 +27,18 @@ Pakyow::App.routes :setup do
       redirect router.group(:console).path(:setup_platform) if platform_token?
 
       email = params[:email]
-      token = params[:token]
+      password = params[:password]
 
-      client = platform_client(email, token)
-
-      if client.valid_token?
+      if token = PlatformClient.auth(params[:email], params[:password])
         auth = { email: email, token: token }
         file = File.expand_path('~/.pakyow')
-        File.open(file, 'w').write(auth.to_json)
+        f = File.open(file, 'w')
+        f.write(auth.to_json)
+        f.close
+
         redirect router.group(:console).path(:setup_platform)
       else
-        #TODO present error message
-        redirect router.group(:console).path(:setup_token)
+        #TODO handle failure
       end
     end
 

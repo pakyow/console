@@ -4,7 +4,7 @@ template: minimal
 
 h1 We need a token.
 
-p Go to your platform settings and generate a new personal access token, then enter it along with your email address below.
+p Login with your pakyow.com credentials below.
 
 form action="/console/setup/token" method="post"
   fieldset
@@ -12,7 +12,7 @@ form action="/console/setup/token" method="post"
       li
         input type="text" name="email" placeholder="Your email"
       li
-        input type="text" name="token" placeholder="Enter token"
+        input type="password" name="password" placeholder="Enter password"
       li
         button type="submit"
           i.fa.fa-check-circle-o

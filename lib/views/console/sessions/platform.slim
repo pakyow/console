@@ -1,0 +1,21 @@
+---
+template: minimal
+---
+
+h1 Hello! Please sign in.
+
+p Enter your pakyow.com credentials below.
+
+/! @include errors
+
+form.margin-t action="/console/sessions/platform" method="post"
+  fieldset
+    ul
+      li
+        input name="email" type="text" placeholder="Email Address"
+      li
+        input name="password" type="password" placeholder="Password"
+      li
+        button type="submit"
+          i.fa.fa-lock
+          span Onward!

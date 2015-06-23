@@ -83,8 +83,12 @@ CLOSING_HEAD_REGEX = /<\/head>/m
 CLOSING_BODY_REGEX = /<\/body>/m
 
 Pakyow::App.after :init do
-  @context = Pakyow::AppContext.new
-  @socket ||= WebSocketClient.new(self, platform_client, platform_info)
+  if Pakyow.app.env == :development
+    if info = platform_creds
+      @context = Pakyow::AppContext.new
+      setup_platform_socket(info)
+    end
+  end
 end
 
 Pakyow::App.after :process do
