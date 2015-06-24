@@ -91,6 +91,9 @@ class ReleaseAgent
       end
     end
 
+    log 'restarting the app'
+    heroku_client.dyno.restart_all(config[:id])
+
     log 'turning off maintenance mode'
     heroku_client.app.update(config[:id], { maintenance: false })
     platform_client.update_release(release_object[:id], { status: :done })
