@@ -131,7 +131,7 @@ Pakyow::App.after :process do
   end
 end
 
-Pakyow::App.before :load do
+Pakyow::App.after :load do
   Pakyow::Console.boot_plugins
   Pakyow::Console.sass.update_stylesheets
   Pakyow::Console.load_paths.each do |path|
