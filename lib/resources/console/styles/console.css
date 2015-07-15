@@ -1,3 +1,4 @@
+@import url("mixins().css");
 body {
   padding-bottom: 60px; }
 
@@ -343,6 +344,20 @@ h1 .button {
         -webkit-filter: grayscale(1); }
     .console-toolbar .collaborators .avatar {
       margin-right: 10px; }
+
+.dashboard-welcome {
+  height: 300px;
+  width: 700px;
+  background-image: url("/console/images/pakyow-dashboard.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute;
+  top: 50%;
+  margin-top: -300px; }
+  @media only screen and (-webkit-min-device-pixel-ratio: 1.3), only screen and (min--moz-device-pixel-ratio: 1.3), only screen and (-o-min-device-pixel-ratio: 1.3 / 1), only screen and (min-resolution: 125dpi), only screen and (min-resolution: 1.3dppx) {
+    .dashboard-welcome {
+      background-image: url("/console/images/pakyow-dashboard_2x.png");
+      background-size: 300px 300px; } }
 
 .dashboard-events .dashboard-event {
   height: 40px; }

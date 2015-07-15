@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency('pakyow', '> 0.9')
   s.add_dependency('pakyow-slim')
-  s.add_dependency('sass')
   s.add_dependency('sequel')
   s.add_dependency('pg')
   s.add_dependency('httparty')

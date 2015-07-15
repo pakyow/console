@@ -1,0 +1,21 @@
+h1 console/dashboard
+
+.container.margin-t.dashboard-events
+  .container@@app_event data-version="empty"
+    p No app events
+
+  .container.dashboard-event@@app_event
+    span.collaborator@@collaborator
+      .avatar
+        / TODO link this to their pakyow.com profile
+        img@avatar-small src="/console/images/avatar.png"
+    span.message@message message goes here
+    span.date@created_at blah
+
+.todo.margin-t pakyow news
+
+.container-2.margin-t
+  .col.r-5-3
+    .todo popular / new apps
+  .col.r-5-2
+    .todo friend list

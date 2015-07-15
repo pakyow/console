@@ -6,8 +6,6 @@ require 'pakyow-ui'
 
 require 'pakyow-slim'
 
-require 'sass/plugin/compiler'
-
 require 'sequel'
 Sequel::Model.plugin :timestamps, update_on_create: true
 
@@ -29,10 +27,6 @@ end
 
 module Pakyow
   module Console
-    def self.sass
-      @sass ||= Sass::Plugin::Compiler.new
-    end
-
     def self.loader
       @loader ||= Pakyow::Loader.new
     end
@@ -47,10 +41,6 @@ module Pakyow
 
     def self.add_load_path(path)
       load_paths << path
-    end
-
-    def self.add_import(path)
-      imports << Sass::Script::String.new(path)
     end
 
     def self.boot_plugins
@@ -89,18 +79,11 @@ require_relative 'processors/file_processor'
 require_relative 'processors/float_processor'
 require_relative 'processors/percentage_processor'
 
-# require_relative 'plugins/core_plugin'
-
-# require '/Users/bryanp/code/pakyow/libs/pakyow-console-users/lib/pakyow-console-users'
-# require '/Users/bryanp/code/pakyow/libs/pakyow-console-release/lib/pakyow-console-release'
-
 Pakyow::Console::PanelRegistry.register :users, mode: :production, nice_name: 'Users', icon_class: 'users' do; end
 Pakyow::Console::PanelRegistry.register :release, mode: :development, nice_name: 'Release', icon_class: 'paper-plane' do; end
 
 app_path = File.join(CONSOLE_ROOT, 'app')
-res_path = File.join(CONSOLE_ROOT, 'resources', 'console')
 
-Pakyow::Console.sass.add_template_location(File.join(res_path, 'scss'), File.join(res_path, 'styles'))
 Pakyow::Console.add_load_path(app_path)
 
 CLOSING_HEAD_REGEX = /<\/head>/m
@@ -132,7 +115,7 @@ end
 
 Pakyow::App.after :load do
   Pakyow::Console.boot_plugins
-  Pakyow::Console.sass.update_stylesheets
+
   Pakyow::Console.load_paths.each do |path|
     Pakyow::Console.loader.load_from_path(path)
   end
@@ -144,14 +127,6 @@ Pakyow::App.before :error do
     res.body << presenter.view.composed.to_html
     halt
   end
-end
-
-module Sass::Script::Functions
-  def mixins
-    Sass::Script::List.new(Pakyow::Console.imports, :comma)
-  end
-
-  declare :mixins, args: []
 end
 
 # plugin stubs

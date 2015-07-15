@@ -1,3 +1,15 @@
+.dashboard-welcome {
+  height: 300px;
+  width: 700px;
+  @include retina-image(/console/images/pakyow-dashboard, 300px 300px);
+  background-repeat: no-repeat;
+  background-position: center;
+
+  position: absolute;
+  top: 50%;
+  margin-top: -300px;
+}
+
 .dashboard-events {
   .dashboard-event {
     height: 40px;
