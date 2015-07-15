@@ -139,6 +139,14 @@ Pakyow::App.after :load do
   end
 end
 
+Pakyow::App.before :error do
+  if req.path_parts[0] == 'console'
+    presenter.path = 'console/errors/500'
+    res.body << presenter.view.composed.to_html
+    halt
+  end
+end
+
 module Sass::Script::Functions
   def mixins
     Sass::Script::List.new(Pakyow::Console.imports, :comma)

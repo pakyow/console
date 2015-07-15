@@ -1,12 +1,6 @@
 Pakyow::App.routes :console do
   include Pakyow::Console::SharedRoutes
 
-  handler 500 do
-    presenter.path = '/console/errors/500'
-    response.body << presenter.view.composed.to_html
-    halt
-  end
-
   namespace :console, '/console' do
     get :default, '/' do
       reroute router.group(:console).path(:dashboard)
