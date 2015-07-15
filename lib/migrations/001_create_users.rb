@@ -12,7 +12,6 @@ Sequel.migration do
       String        :role
       TrueClass     :active, default: true
       String        :crypted_password
-      String        :salt
       Time          :created_at
       Time          :updated_at
     end

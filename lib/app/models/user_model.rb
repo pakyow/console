@@ -1,3 +1,5 @@
+require 'bcrypt'
+
 module Pakyow::Console
   class User < Sequel::Model(:'pw-users')
     set_allowed_columns :name, :username, :email, :password, :password_confirmation, :active
@@ -38,8 +40,7 @@ module Pakyow::Console
       return if password.nil? || password.empty?
       @password = password
 
-      self.salt = Digest::SHA1.hexdigest("--#{Time.now.to_s}--#{email}--")
-      self.crypted_password = encrypt(password)
+      self.crypted_password = BCrypt::Password.create(password)
     end
 
     def self.authenticate(session)
@@ -53,22 +54,11 @@ module Pakyow::Console
     end
 
     def authenticated?(password)
-      true if crypted_password == encrypt(password)
+      true if BCrypt::Password.new(crypted_password) == password
     end
 
     def gravatar_hash
       Digest::MD5.hexdigest(email)
-    end
-
-    private
-
-    def encrypt(password)
-      self.class.encrypt(password, salt)
-    end
-
-    def self.encrypt(password, salt)
-      #TODO use whatever digest I suggest in my blog post
-      Digest::SHA1.hexdigest("--#{salt}--#{password}--")
     end
   end
 end
