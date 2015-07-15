@@ -2,9 +2,9 @@
 @import "pakyow-css/vars";
 @import "bourbon/bourbon";
 
-@each $mixin in mixins() {
-  @import url("#{$mixin}.css");
-}
+// @each $mixin in mixins() {
+//   @import url("#{$mixin}.css");
+// }
 
 $header-h: 40;
 
