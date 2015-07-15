@@ -18,8 +18,20 @@ module Pakyow::Console::SharedRoutes
       end
     end
 
-    types = Pakyow::Console::DataTypeRegistry.types
-    view.partial(:'side-nav').scope(:'console-panel-item').apply(Pakyow::Console::PanelRegistry.nav(:production)) do |view, item|
+    prd_items = Pakyow::Console::PanelRegistry.nav(:production)
+
+    # add custom data types
+    Pakyow::Console::DataTypeRegistry.types.each do |type|
+      prd_items << {
+        namespace: "data/#{type.name}",
+        nice_name: Inflecto.pluralize(type.nice_name),
+        icon_class: type.icon_class,
+      }
+    end
+
+    prd_items.sort! { |a, b| a[:nice_name] <=> b[:nice_name] }
+
+    view.partial(:'side-nav').scope(:'console-panel-item').apply(prd_items) do |view, item|
       if req.path.include?("/console/#{item[:namespace]}")
         view.attrs.class.ensure(:active)
       end

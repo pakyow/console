@@ -1,10 +1,11 @@
 class Pakyow::Console::DataType
-  attr_reader :id, :name
+  attr_reader :id, :name, :icon_class
   attr_accessor :model
 
-  def initialize(name, &block)
+  def initialize(name, icon_class, &block)
     @id = name
     @name = name
+    @icon_class = icon_class
     @relations = {}
     @attributes = {}
     @nice_names = {}

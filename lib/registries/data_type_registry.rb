@@ -5,8 +5,8 @@ module Pakyow::Console::DataTypeRegistry
     datatypes.values
   end
 
-  def self.register(name, &block)
-    datatypes[name] = Pakyow::Console::DataType.new(name, &block)
+  def self.register(name, icon_class: nil, &block)
+    datatypes[name] = Pakyow::Console::DataType.new(name, icon_class, &block)
   end
 
   def self.type(name)

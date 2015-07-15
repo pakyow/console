@@ -94,7 +94,6 @@ require_relative 'processors/percentage_processor'
 # require '/Users/bryanp/code/pakyow/libs/pakyow-console-users/lib/pakyow-console-users'
 # require '/Users/bryanp/code/pakyow/libs/pakyow-console-release/lib/pakyow-console-release'
 
-Pakyow::Console::PanelRegistry.register :data, mode: :production, nice_name: 'Data', icon_class: 'database' do; end
 Pakyow::Console::PanelRegistry.register :users, mode: :production, nice_name: 'Users', icon_class: 'users' do; end
 Pakyow::Console::PanelRegistry.register :release, mode: :development, nice_name: 'Release', icon_class: 'paper-plane' do; end
 

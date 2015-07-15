@@ -3,21 +3,7 @@ Pakyow::App.routes :'console-data' do
 
   namespace :console, '/console' do
     restful :data, '/data', before: [:auth], after: [:setup, :notify] do
-      fn :render_types do
-        @current_type = @current_type.to_sym if @current_type
-
-        types = Pakyow::Console::DataTypeRegistry.types
-        view.partial(:types).scope(:'console-data-type').apply(types) do |view, type|
-          if @current_type == type[:name]
-            view.attrs.class.ensure(:active)
-          end
-        end
-      end
-
-      list after: [:render_types] do
-      end
-
-      show after: [:render_types] do
+      show do
         @current_type = params[:data_id]
 
         type = Pakyow::Console::DataTypeRegistry.type(@current_type)
