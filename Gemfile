@@ -1,0 +1,12 @@
+gem "pakyow"
+gem "pakyow-slim"
+gem "sass"
+gem "sequel"
+gem "pg"
+gem "httparty"
+gem "websocket-client-simple"
+gem "inflecto"
+gem "platform-api"
+gem 'image_size'
+gem 'mini_magick'
+gem "bcrypt"

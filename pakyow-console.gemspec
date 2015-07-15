@@ -18,4 +18,15 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
 
   s.add_dependency('pakyow', '> 0.9')
+  s.add_dependency('pakyow-slim')
+  s.add_dependency('sass')
+  s.add_dependency('sequel')
+  s.add_dependency('pg')
+  s.add_dependency('httparty')
+  s.add_dependency('websocket-client-simple')
+  s.add_dependency('inflecto')
+  s.add_dependency('platform-api')
+  s.add_dependency('image_size')
+  s.add_dependency('mini_magick')
+  s.add_dependency('bcrypt')
 end
