@@ -34,7 +34,12 @@ module Pakyow::Helpers
   end
 
   def setup_toolbar(view)
-    view.scope(:'console-user').bind(current_console_user)
+    begin
+      view = view.partial(:toolbar)
+    rescue NoMethodError
+    end
+
+    view.scope(:'pw-user').bind(current_console_user)
 
     # collaborator presence
     view.scope(:collaborator).mutate(:list, with: data(:collaborator).all).subscribe

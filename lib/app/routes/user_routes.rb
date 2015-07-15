@@ -2,7 +2,7 @@ Pakyow::App.routes :'console-user' do
   include Pakyow::Console::SharedRoutes
 
   namespace :console, '/console' do
-    restful :user, '/users', before: [:auth], after: [:setup, :notify] do
+    restful :'pw-user', '/users', before: [:auth], after: [:setup, :notify] do
       list do
         # the mutation (list) is tied to the relation (all) so we know exactly how to perform updates in the future
         #TODO keep track of the mutation AND the relation when subscribing
@@ -11,7 +11,7 @@ Pakyow::App.routes :'console-user' do
         # the app instance runs the mutation again (which consists of the mutation itself and the data source)
         # when the mutation is finished it is broadcast via the same mechanisms we have currently so each app instance updates its views
         # for now, just track it on a single app instance; we can deal with it from there
-        view.container(:default).scope(:user).mutate(:list, with: data(:user).all).subscribe
+        view.container(:default).scope(:'pw-user').mutate(:list, with: data(:user).all).subscribe
 
         #TODO qualifications should be added to this:
         # mutate(:list, with: :all, qualify: { user_id: current_user.id }).subscribe
@@ -24,7 +24,7 @@ Pakyow::App.routes :'console-user' do
       new do
         view.title = "users/new"
 
-        view.partial(:form).scope(:user).with do |view|
+        view.partial(:form).scope(:'pw-user').with do |view|
           view.bind(@user || {})
         end
 
@@ -32,63 +32,63 @@ Pakyow::App.routes :'console-user' do
       end
 
       create do
-        @user = Pakyow::Console::User.new(params[:user])
+        @user = Pakyow::Console::User.new(params[:'pw-user'])
         @user.role = 'admin'
 
         if @user.valid?
           @user.save
 
-          notify('user created', :success, redirect: router.group(:user).path(:list))
+          notify('user created', :success, redirect: router.group(:'pw-user').path(:list))
         else
           notify('failed to create a user', :fail)
           res.status = 400
 
           @errors = @user.errors.full_messages
-          reroute router.group(:user).path(:new), :get
+          reroute router.group(:'pw-user').path(:new), :get
         end
       end
 
       edit do
-        handle 404 unless @user ||= Pakyow::Console::User[params[:user_id]]
+        handle 404 unless @user ||= Pakyow::Console::User[params[:'pw-user_id']]
 
         presenter.path = 'console/users/edit'
 
         view.title = "users/#{@user.username}"
-        view.container(:default).scope(:user).bind(@user)
-        view.partial(:form).scope(:user).bind(@user)
+        view.container(:default).scope(:'pw-user').bind(@user)
+        view.partial(:form).scope(:'pw-user').bind(@user)
 
         # setup delete user
         #TODO would be nice to have objects on the backend that define logic to be executed for some partial (after the route)
-        view.partial(:delete).scope(:user).with do |view|
+        view.partial(:delete).scope(:'pw-user').with do |view|
           #TODO need some sort of `setup_form` helper instead of binding objects
-          view.attrs.action = router.group(:user).path(:remove, user_id: params[:user_id])
+          view.attrs.action = router.group(:'pw-user').path(:remove, :'pw-user_id' => params[:'pw-user_id'])
         end
 
         handle_errors(view.partial(:errors), object_type: :user)
       end
 
       update do
-        handle 404 unless @user = Pakyow::Console::User[params[:user_id]]
-        @user.set(params[:user])
+        handle 404 unless @user = Pakyow::Console::User[params[:'pw-user_id']]
+        @user.set(params[:'pw-user'])
 
         if @user.valid?
           @user.save
 
-          notify('user updated', :success, redirect: router.group(:user).path(:list))
+          notify('user updated', :success, redirect: router.group(:'pw-user').path(:list))
         else
           notify('failed to update the user', :fail)
           res.status = 400
 
           @errors = @user.errors.full_messages
-          reroute router.group(:user).path(:edit, user_id: params[:user_id]), :get
+          reroute router.group(:'pw-user').path(:edit, user_id: params[:'pw-user_id']), :get
         end
       end
 
       remove do
-        handle 404 unless @user = Pakyow::Console::User[params[:user_id]]
+        handle 404 unless @user = Pakyow::Console::User[params[:'pw-user_id']]
         @user.delete
 
-        notify('user deleted', :success, redirect: router.group(:user).path(:list))
+        notify('user deleted', :success, redirect: router.group(:'pw-user').path(:list))
       end
     end
   end

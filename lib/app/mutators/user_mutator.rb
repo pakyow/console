@@ -1,4 +1,4 @@
-Pakyow::App.mutators :user do
+Pakyow::App.mutators :'pw-user' do
   mutator :list do |view, users|
     view.apply(users)
   end

@@ -13,7 +13,7 @@ Pakyow::App.routes :'console-settings' do
       end
 
       handle_errors(view.partial(:errors), object_type: :user)
-      view.scope(:user).bind(@user || current_console_user)
+      view.scope(:'pw-user').bind(@user || current_console_user)
     end
 
     post '/settings', before: [:auth], after: [:setup, :notify] do

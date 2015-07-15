@@ -12,7 +12,7 @@ Pakyow::App.routes :'console-setup' do
         end
 
       # setup the form
-      view.scope(:user).bind(@user || {})
+      view.scope(:'pw-user').bind(@user || {})
       handle_errors(view)
     end
 
