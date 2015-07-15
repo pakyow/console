@@ -6,18 +6,17 @@ module Pakyow::Console::DatumFormatterRegistry
   end
 
   def self.format(datum, as: nil)
-    as.attributes.inject({}) do |acc, attribute|
+    as.attributes.each do |attribute|
       name = attribute[:name]
       type = attribute[:type]
 
       begin
-        acc[name] = datum_formatters.fetch(type).call(datum[name])
+        datum[name] = datum_formatters.fetch(type).call(datum[name])
       rescue KeyError
-        acc[name] = datum[name]
       end
-
-      acc
     end
+
+    datum
   end
 
   def self.reset
