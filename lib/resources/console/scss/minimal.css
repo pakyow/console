@@ -1,0 +1,27 @@
+body {
+  background: #222;
+  color: #fff; }
+
+.main {
+  width: 400px;
+  position: absolute;
+  left: 50%;
+  margin-left: -200px;
+  margin-top: 15%; }
+
+form input[type='text'], form input[type='password'] {
+  box-sizing: border-box;
+  width: 100%; }
+form button[type='submit'] {
+  float: right; }
+
+hr {
+  background: #555; }
+
+a {
+  color: #fff; }
+  a:hover {
+    color: #fff;
+    border-bottom: 1px solid #555; }
+
+/*# sourceMappingURL=minimal.css.map */
