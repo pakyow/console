@@ -1,4 +1,4 @@
-Pakyow::App.routes :session do
+Pakyow::App.routes :'console-session' do
   include Pakyow::Console::SharedRoutes
 
   namespace :console, '/console' do
@@ -33,14 +33,20 @@ Pakyow::App.routes :session do
     end
 
     get :logout, '/logout' do
-      unauth
+      console_unauth
       redirect router.group(:console).path(:default)
     end
 
     restful :'console-session', '/sessions' do
       new do
-        redirect router.group(:console).path(:default) if authed?
-        redirect router.group(:console).path(:setup) unless setup?
+        redirect router.group(:console).path(:default) if console_authed?
+        redirect router.group(:console).path(:setup) unless console_setup?
+
+        if using_platform?
+          presenter.path = 'console/sessions/new-platform'
+        else
+          presenter.path = 'console/sessions/new'
+        end
 
         # setup the form
         view.scope(:'console-session').bind(@session || {})
@@ -49,12 +55,12 @@ Pakyow::App.routes :session do
 
       create do
         @session = params[:'console-session']
-        if user = Pakyow::Auth::User.authenticate(@session)
-          auth(user)
+        if user = Pakyow::Console::User.authenticate(@session)
+          console_auth(user)
           setup_platform_socket
           redirect router.group(:console).path(:default)
         else
-          @errors = ['Invalid email and/or password']
+          @errors = ['Invalid login and/or password']
           reroute router.group(:'console-session').path(:new), :get
         end
       end

@@ -4,7 +4,7 @@ title: 'console/users'
 
 h1
   | console/users
-  a.button href="/console/users/new" data-ui="fastlink"
+  a.button href="/console/users/new"
     i.fa.fa-plus-circle
     | New User
 
@@ -15,14 +15,15 @@ h1
   .col
     ul.styled-list.users.plain
       li@@user
-        a@edit-href href="/console/users/edit" data-ui="fastlink"
+        a@edit-href href="/console/users/edit"
         img.avatar@avatar-small src="/console/images/avatar-bryan.png" title="Bryan P"
-        span.user-name@name
-          | Bob Dylan
-        span.user-aka
-          | aka
-        span.user-username@username
-          | bdylan
+        span style="width:300px;display:inline-block"
+          span.user-name@name
+            | Bob Dylan
+          span.user-aka
+            | aka
+          span.user-username@username
+            | bdylan
         span.user-email@email
           | bob@gmail.com
         span.user-role@role

@@ -1,6 +1,8 @@
 require 'pakyow-support'
 require 'pakyow-core'
 require 'pakyow-presenter'
+require 'pakyow-realtime'
+require 'pakyow-ui'
 
 require 'pakyow-slim'
 
@@ -8,6 +10,8 @@ require 'sass/plugin/compiler'
 
 require 'sequel'
 Sequel::Model.plugin :timestamps, update_on_create: true
+
+require 'image_size'
 
 CONSOLE_ROOT = File.expand_path('../', __FILE__)
 
@@ -59,17 +63,38 @@ require_relative 'data_type'
 require_relative 'panel'
 require_relative 'plugin'
 require_relative 'route'
+require_relative 'config'
+require_relative 'file_store'
 
 require_relative 'registries/data_type_registry'
+require_relative 'registries/editor_registry'
 require_relative 'registries/panel_registry'
 require_relative 'registries/plugin_registry'
 require_relative 'registries/route_registry'
+require_relative 'registries/datum_processor_registry'
+require_relative 'registries/datum_formatter_registry'
+
+require_relative 'editors/string_editor'
+require_relative 'editors/text_editor'
+require_relative 'editors/enum_editor'
+require_relative 'editors/boolean_editor'
+require_relative 'editors/monetary_editor'
+require_relative 'editors/file_editor'
+require_relative 'editors/percentage_editor'
+
+require_relative 'formatters/percentage_formatter'
+
+require_relative 'processors/boolean_processor'
+require_relative 'processors/file_processor'
+require_relative 'processors/float_processor'
+require_relative 'processors/percentage_processor'
 
 # require_relative 'plugins/core_plugin'
 
 # require '/Users/bryanp/code/pakyow/libs/pakyow-console-users/lib/pakyow-console-users'
 # require '/Users/bryanp/code/pakyow/libs/pakyow-console-release/lib/pakyow-console-release'
 
+Pakyow::Console::PanelRegistry.register :data, mode: :production, nice_name: 'Data', icon_class: 'database' do; end
 Pakyow::Console::PanelRegistry.register :users, mode: :production, nice_name: 'Users', icon_class: 'users' do; end
 Pakyow::Console::PanelRegistry.register :release, mode: :development, nice_name: 'Release', icon_class: 'paper-plane' do; end
 
@@ -92,7 +117,7 @@ Pakyow::App.after :init do
 end
 
 Pakyow::App.after :process do
-  if req.path_parts[0] != 'console' && @presenter.presented? && platform?
+  if req.path_parts[0] != 'console' && @presenter.presented? && console_authed?
     view = Pakyow::Presenter::ViewContext.new(Pakyow::Presenter::View.new(File.open(File.join(CONSOLE_ROOT, 'views', 'console', '_toolbar.slim')).read, format: :slim), self)
     setup_toolbar(view)
 
@@ -121,3 +146,11 @@ module Sass::Script::Functions
 
   declare :mixins, args: []
 end
+
+# plugin stubs
+
+# Pakyow::Console::PanelRegistry.register :design, mode: :development, nice_name: 'Design', icon_class: 'eye' do; end
+# Pakyow::Console::PanelRegistry.register :plugins, mode: :development, nice_name: 'Plugins', icon_class: 'plug' do; end
+
+# Pakyow::Console::PanelRegistry.register :content, mode: :production, nice_name: 'Pages', icon_class: 'newspaper-o' do; end
+# Pakyow::Console::PanelRegistry.register :stats, mode: :production, nice_name: 'Stats', icon_class: 'bar-chart' do; end

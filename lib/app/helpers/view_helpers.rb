@@ -5,8 +5,8 @@ module Pakyow::Helpers
       object_id: object_id,
     }
 
-    unless current_user.nil?
-      q[:user_id] = current_user.id
+    unless current_console_user.nil?
+      q[:user_id] = current_console_user.id
     end
 
     if req.socket? && @errors && !@errors.empty?
@@ -34,7 +34,7 @@ module Pakyow::Helpers
   end
 
   def setup_toolbar(view)
-    view.scope(:'console-user').bind(current_user)
+    view.scope(:'console-user').bind(current_console_user)
 
     # collaborator presence
     view.scope(:collaborator).mutate(:list, with: data(:collaborator).all).subscribe

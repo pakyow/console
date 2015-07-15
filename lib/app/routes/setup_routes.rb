@@ -1,9 +1,15 @@
-Pakyow::App.routes :setup do
+Pakyow::App.routes :'console-setup' do
   include Pakyow::Console::SharedRoutes
 
   namespace :console, '/console' do
     get :setup, '/setup' do
-      redirect router.group(:console).path(:login) if setup?
+      redirect router.group(:console).path(:login) if console_setup?
+
+      if using_platform?
+          presenter.path = 'console/setup/index-platform'
+        else
+          presenter.path = 'console/setup/index'
+        end
 
       # setup the form
       view.scope(:user).bind(@user || {})
@@ -11,19 +17,19 @@ Pakyow::App.routes :setup do
     end
 
     get :setup_platform, '/setup/platform' do
-      redirect router.group(:console).path(:login) if setup?
+      redirect router.group(:console).path(:login) if console_setup?
       redirect router.group(:console).path(:setup_token) unless platform_token?
 
       view.scope(:app).apply(platform_client.apps)
     end
 
     get :setup_token, '/setup/token' do
-      redirect router.group(:console).path(:login) if setup?
+      redirect router.group(:console).path(:login) if console_setup?
       redirect router.group(:console).path(:setup_platform) if platform_token?
     end
 
     post '/setup/token' do
-      redirect router.group(:console).path(:login) if setup?
+      redirect router.group(:console).path(:login) if console_setup?
       redirect router.group(:console).path(:setup_platform) if platform_token?
 
       email = params[:email]
@@ -43,7 +49,7 @@ Pakyow::App.routes :setup do
     end
 
     get :setup_app, '/setup/app/:app_id' do
-      redirect router.group(:console).path(:login) if setup?
+      redirect router.group(:console).path(:login) if console_setup?
       redirect router.group(:console).path(:setup_token) unless platform_token?
 
       if app = platform_client.app(params[:app_id])
@@ -60,12 +66,12 @@ Pakyow::App.routes :setup do
     end
 
     post :setup, '/setup' do
-      @user = Pakyow::Auth::User.new(params[:user])
-      @user.role = Pakyow::Auth::User::ROLES[:admin]
+      @user = Pakyow::Console::User.new(params[:user])
+      @user.role = Pakyow::Console::User::ROLES[:admin]
 
       if @user.valid?
         @user.save
-        auth(@user)
+        console_auth(@user)
 
         redirect router.group(:console).path(:dashboard)
       else

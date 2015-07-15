@@ -1,13 +1,32 @@
-form.margin-t@@user data-ui="mutable"
+form.margin-t@@user
   /! @include errors
 
   fieldset
     ul
       li
-        .container
+        .container-2
           .col
-            label User Name:
+            label Full Name:
             input@name type="text"
+          .col
+            label Active?
+            input@active type="checkbox" value="1"
+      li.margin-t
+        .container-2
+          .col
+            label Username:
+            input@username type="text"
+          .col
+            label Email:
+            input@email type="text"
+      li.margin-t
+        .container-2
+          .col
+            label Password:
+            input@password type="password"
+          .col
+            label Confirm Password:
+            input@password_confirmation type="password"
 
   hr
 

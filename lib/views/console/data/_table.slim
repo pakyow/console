@@ -1,0 +1,20 @@
+.container-2.margin-t.data-wrapper
+  /! @include types
+  .col.r-5-4.data-list
+    table
+      tr
+        th@@console-data-field@nice_name
+          | Field1
+        th
+      tr@@console-datum data-version="empty"
+        td colspan="42"
+          p style="padding-top: 8px" No data found.
+      tr@@console-datum
+        td@@console-data-value@value
+          | Value1
+        td style="text-align:right"
+          a@edit-href
+            | Edit
+          | &nbsp;&bull;&nbsp;
+          a@delete-href data-ui="delete"
+            | Delete

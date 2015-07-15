@@ -1,4 +1,6 @@
 module Pakyow::Console::DataTypeRegistry
+  UNLISTABLE_TYPES = [:text, :file, :media]
+
   def self.types
     datatypes.values
   end
@@ -9,6 +11,10 @@ module Pakyow::Console::DataTypeRegistry
 
   def self.type(name)
     @datatypes[name.to_sym]
+  end
+
+  def self.reset
+    @datatypes = nil
   end
 
   private

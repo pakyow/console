@@ -32,41 +32,30 @@ Pakyow::App.routes :'console-user' do
       end
 
       create do
-        # user = User.new(params[:'console-user'])
+        @user = Pakyow::Console::User.new(params[:user])
+        @user.role = 'admin'
 
-        # if user.valid?
-        #   user.save
+        if @user.valid?
+          @user.save
 
-        #   # ui.scope(:'console-user').append(user)
-        #   # ui.scope(:'console-user').apply(user)
-
-        #   res.header['Pakyow-Notify'] = '\o/ user created'
-        #   redirect router.group(:'console-user').path(:list)
-        # else
-        # end
-
-        begin
-          @user = params[:user]
-
-          $rom.command(:users).create.call(@user)
-          ui.mutated(:user, data: $rom.relation(:users).as(:users).to_a)
-
-          notify('\o/ user created', redirect: router.group(:user).path(:list))
-        rescue ValidationError => error
-          notify(':( failed to create a user', :fail)
+          notify('user created', :success, redirect: router.group(:user).path(:list))
+        else
+          notify('failed to create a user', :fail)
           res.status = 400
 
-          @errors = error.errors.full_messages
+          @errors = @user.errors.full_messages
           reroute router.group(:user).path(:new), :get
         end
       end
 
       edit do
-        handle 404 unless user = $rom.relation(:users).by_id(params[:user_id]).as(:users).one
+        handle 404 unless @user ||= Pakyow::Console::User[params[:user_id]]
 
-        view.title = "users/#{user.username}"
-        view.container(:default).scope(:user).bind(user)
-        view.partial(:form).scope(:user).bind(user)
+        presenter.path = 'console/users/edit'
+
+        view.title = "users/#{@user.username}"
+        view.container(:default).scope(:user).bind(@user)
+        view.partial(:form).scope(:user).bind(@user)
 
         # setup delete user
         #TODO would be nice to have objects on the backend that define logic to be executed for some partial (after the route)
@@ -74,49 +63,32 @@ Pakyow::App.routes :'console-user' do
           #TODO need some sort of `setup_form` helper instead of binding objects
           view.attrs.action = router.group(:user).path(:remove, user_id: params[:user_id])
         end
+
+        handle_errors(view.partial(:errors), object_type: :user)
       end
 
       update do
-        # data(:users).update (could automatically determine id + params or allow to override)
-        if $rom.command(:users).update.by_id(params[:user_id]).call(params[:user])
-          res.header['Pakyow-Notify'] = '\o/ user info saved'
-          redirect router.group(:user).path(:list)
+        handle 404 unless @user = Pakyow::Console::User[params[:user_id]]
+        @user.set(params[:user])
+
+        if @user.valid?
+          @user.save
+
+          notify('user updated', :success, redirect: router.group(:user).path(:list))
         else
-          #TODO handle error presentation
-          # - returns nil if can't find by id
-          # - need to figure out how it handles failed validations
+          notify('failed to update the user', :fail)
+          res.status = 400
+
+          @errors = @user.errors.full_messages
+          reroute router.group(:user).path(:edit, user_id: params[:user_id]), :get
         end
-
-        # handle 404 unless user = Pakyow::Auth::User[params[:'console-user_id']]
-        # user.set(params[:'console-user'])
-
-        # if user.valid?
-        #   user.save
-
-        #   # describe how the state changed
-        #   # this could be handled automatically because restful
-        #   # (as could create / delete in some cases)
-        #   # dealing with lists of items becomes challenging
-        #   # ui.scope(:'console-user').update(user)
-
-        #   # would be nice to just do this:
-        #   # ui.mutate(:'console-user')
-        #   # and the proper mu
-
-        #   res.header['Pakyow-Notify'] = '\o/ user info saved'
-        #   redirect router.group(:'console-user').path(:list)
-        # else
-        #   #TODO handle error presentation
-        # end
       end
 
       remove do
-        if $rom.command(:users).delete.by_id(params[:user_id]).call
-          res.header['Pakyow-Notify'] = '\o/ user deleted'
-          redirect router.group(:user).path(:list)
-        else
-          #TODO handle error presentation
-        end
+        handle 404 unless @user = Pakyow::Console::User[params[:user_id]]
+        @user.delete
+
+        notify('user deleted', :success, redirect: router.group(:user).path(:list))
       end
     end
   end

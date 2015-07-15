@@ -1,4 +1,5 @@
 require 'securerandom'
+require 'celluloid/io'
 
 class ReleaseAgent
   include Celluloid::IO

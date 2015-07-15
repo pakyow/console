@@ -107,6 +107,21 @@ nav {
       margin-bottom: 15px;
       @include rem(font-size, 13);
 
+      &.active {
+        @include retina-image(/console/images/nav-active, 4px 7px);
+        background-repeat: no-repeat;
+        background-position: right;
+
+        a {
+          font-weight: bold;
+          color: $color-white;
+        }
+
+        i {
+          color: $color-white;
+        }
+      }
+
       i {
         @include rem(font-size, 15);
         color: $color-dgray;

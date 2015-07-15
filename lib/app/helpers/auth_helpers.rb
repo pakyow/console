@@ -1,12 +1,22 @@
 require 'httparty'
 
 module Pakyow::Helpers
-  def setup?
-    File.exists?(platform_file_path) || Pakyow::Auth::User.count > 0
+  CONSOLE_SESSION_KEY = :console_user
+
+  def using_platform?
+    Pakyow::Config.console.use_pakyow_platform == true
   end
 
-  def authed?
-    !session[:user].nil? || platform_authed?
+  def console_setup?
+    platform_setup? || Pakyow::Console::User.count > 0
+  end
+
+  def platform_setup?
+    File.exists?(platform_file_path)
+  end
+
+  def console_authed?
+    !session[CONSOLE_SESSION_KEY].nil? || platform_authed?
   end
 
   def platform_authed?
@@ -14,24 +24,28 @@ module Pakyow::Helpers
     !session[:platform_email].nil? && !session[:platform_token].nil?
   end
 
-  def unauth
-    session[:user] = nil
+  def console_auth(user)
+    session[CONSOLE_SESSION_KEY] = user.id
+  end
+
+  def console_unauth
+    session[CONSOLE_SESSION_KEY] = nil
     session[:platform_email] = nil
     session[:platform_token] = nil
     $socket = nil
   end
 
-  def current_user
+  def current_console_user
     if platform?
       { email: session[:platform_email] }
     else
-      Pakyow::Auth::User[session[:user]]
+      Pakyow::Console::User[session[CONSOLE_SESSION_KEY]]
     end
   end
 
   def platform?
-    return unless authed?
-    (setup? && platform_client.valid?)
+    return unless console_authed?
+    (platform_setup? && platform_client.valid?)
   end
 
   def platform_token?
@@ -53,7 +67,7 @@ module Pakyow::Helpers
       PlatformClient.new(email, token, platform_info)
     elsif Pakyow.app.env == :development && !platform_creds.empty?
       PlatformClient.new(platform_creds[:email], platform_creds[:token], platform_info)
-    elsif authed?
+    elsif console_authed?
       PlatformClient.new(session[:platform_email], session[:platform_token], platform_info)
     end
   end
@@ -79,6 +93,7 @@ module Pakyow::Helpers
   def setup_platform_socket(auth_info = nil)
     return if $socket
     return if (auth_info.nil? || auth_info.empty?) && !platform_authed?
+    return if $platform_uri.nil?
     auth_info ||= { email: session[:platform_email], token: session[:platform_token] }
     $socket = WebSocketClient.new(self, platform_client(auth_info[:email], auth_info[:token]), auth_info)
   end

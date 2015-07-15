@@ -28,12 +28,16 @@ class PlatformClient
   end
 
   def socket
-    response = HTTParty.post(File.join($platform_url, 'api/apps', @info[:app][:id].to_s, 'socket'), basic_auth: {
-      username: @email,
-      password: @token,
-    })
+    if app = @info[:app]
+      response = HTTParty.post(File.join($platform_url, 'api/apps', app[:id].to_s, 'socket'), basic_auth: {
+        username: @email,
+        password: @token,
+      })
 
-    Hash.strhash(JSON.parse(response.body))
+      Hash.strhash(JSON.parse(response.body))
+    else
+      {}
+    end
   end
 
   def apps
@@ -57,40 +61,50 @@ class PlatformClient
   end
 
   def events
-    response = HTTParty.get(File.join($platform_url, "api/apps/#{@info[:app][:id]}", 'events'), basic_auth: {
-      username: @email,
-      password: @token,
-    })
+    if app = @info[:app]
+      response = HTTParty.get(File.join($platform_url, "api/apps/#{app[:id]}", 'events'), basic_auth: {
+        username: @email,
+        password: @token,
+      })
 
-    JSON.parse(response.body).map { |event|
-      event = Hash.strhash(event)
-      event[:created_at] = DateTime.parse(event[:created_at]).to_time
-      event
-    }
+      JSON.parse(response.body).map { |event|
+        event = Hash.strhash(event)
+        event[:created_at] = DateTime.parse(event[:created_at]).to_time
+        event
+      }
+    else
+      []
+    end
   end
 
   def collaborators
-    response = HTTParty.get(File.join($platform_url, "api/apps/#{@info[:app][:id]}", 'collaborators'), basic_auth: {
-      username: @email,
-      password: @token,
-    })
+    if app = @info[:app]
+      response = HTTParty.get(File.join($platform_url, "api/apps/#{app[:id]}", 'collaborators'), basic_auth: {
+        username: @email,
+        password: @token,
+      })
 
-    JSON.parse(response.body).map { |app|
-      Hash.strhash(app)
-    }
+      JSON.parse(response.body).map { |app|
+        Hash.strhash(app)
+      }
+    else
+      []
+    end
   end
 
   def releases
-    response = HTTParty.get(File.join($platform_url, "api/apps/#{@info[:app][:id]}", 'releases'), basic_auth: {
-      username: @email,
-      password: @token,
-    })
+    if app = @info[:app]
+      response = HTTParty.get(File.join($platform_url, "api/apps/#{app[:id]}", 'releases'), basic_auth: {
+        username: @email,
+        password: @token,
+      })
 
-    JSON.parse(response.body).map { |release|
-      release = Hash.strhash(release)
-      release[:created_at] = DateTime.parse(release[:created_at]).to_time
-      release
-    }
+      JSON.parse(response.body).map { |release|
+        release = Hash.strhash(release)
+        release[:created_at] = DateTime.parse(release[:created_at]).to_time
+        release
+      }
+    end
   end
 
   def create_release

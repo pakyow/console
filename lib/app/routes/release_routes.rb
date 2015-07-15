@@ -1,4 +1,4 @@
-Pakyow::App.routes :release do
+Pakyow::App.routes :'console-release' do
   include Pakyow::Console::SharedRoutes
 
   namespace :console, '/console' do

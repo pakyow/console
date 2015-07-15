@@ -4,23 +4,13 @@ template: minimal
 
 h1 Hello! Please sign in.
 
-.notice
-  p
-    a href="/console/login/platform"
-    img src="/console/images/pakyow.png"
-    | Sign in with your pakyow.com account.
-
-p
-  a href="#" data-ui="toggle" data-config="name:manual"
-    | Or, login manually.
-
 /! @include errors
 
-form@@console-session data-ui="toggleable" data-config="name:manual"
+form@@console-session
   fieldset
     ul
       li
-        input@email type="text" placeholder="Email Address"
+        input@login type="text" placeholder="Username or Email Address"
       li
         input@password type="password" placeholder="Password"
       li

@@ -1,5 +1,5 @@
 Pakyow::App.mutable :user do
   query :all do
-    Pakyow::Auth::User.all
+    Pakyow::Console::User.all
   end
 end

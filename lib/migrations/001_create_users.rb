@@ -4,7 +4,7 @@ require_relative '../pakyow-console'
 # the appropriate order, then requiring this migration
 Sequel.migration do
   up do
-    create_table :users do
+    create_table :'pw-users' do
       primary_key   :id
       String        :email
       String        :username
@@ -19,6 +19,6 @@ Sequel.migration do
   end
 
   down do
-    drop_table :users
+    drop_table :'pw-users'
   end
 end
