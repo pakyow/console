@@ -114,7 +114,7 @@ Pakyow::App.after :process do
   end
 end
 
-Pakyow::App.after :load do
+Pakyow::App.before :load do
   Pakyow::Console.boot_plugins
 
   Pakyow::Console.load_paths.each do |path|
