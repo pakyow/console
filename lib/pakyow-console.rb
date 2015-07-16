@@ -130,6 +130,14 @@ Pakyow::App.before :error do
   end
 end
 
+Pakyow::App.after :route do
+  if !found? && req.path_parts[0] == 'console'
+    presenter.path = 'console/errors/404'
+    res.body << presenter.view.composed.to_html
+    halt
+  end
+end
+
 # plugin stubs
 
 # Pakyow::Console::PanelRegistry.register :design, mode: :development, nice_name: 'Design', icon_class: 'eye' do; end
