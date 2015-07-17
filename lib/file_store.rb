@@ -33,7 +33,7 @@ module Pakyow::Console
 
       id = SecureRandom.uuid
       file_path = File.join(@store_path, id)
-      File.open(file_path + ext, 'w') { |f| f.write(tempfile.read) }
+      File.open(file_path + ext, 'wb') { |f| f.write(tempfile.read) }
 
       type = self.class.type_for_ext(ext)
 
