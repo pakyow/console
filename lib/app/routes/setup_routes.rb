@@ -6,10 +6,10 @@ Pakyow::App.routes :'console-setup' do
       redirect router.group(:console).path(:login) if console_setup?
 
       if using_platform?
-          presenter.path = 'console/setup/index-platform'
-        else
-          presenter.path = 'console/setup/index'
-        end
+        presenter.path = 'console/setup/index-platform'
+      else
+        presenter.path = 'console/setup/index'
+      end
 
       # setup the form
       view.scope(:'pw-user').bind(@user || {})

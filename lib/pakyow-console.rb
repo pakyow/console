@@ -124,9 +124,11 @@ end
 
 Pakyow::App.before :error do
   if req.path_parts[0] == 'console'
-    presenter.path = 'console/errors/500'
-    res.body << presenter.view.composed.to_html
-    halt
+    if !Pakyow::Config.app.errors_in_browser
+      presenter.path = 'console/errors/500'
+      res.body << presenter.view.composed.to_html
+      halt
+    end
   end
 end
 
