@@ -18,7 +18,7 @@ Pakyow::App.routes :'console-settings' do
 
     post '/settings', before: [:auth], after: [:setup, :notify] do
       @user = current_console_user
-      @user.set_only(params[:user], :name, :username, :email, :password, :password_confirmation)
+      @user.set_only(params[:'pw-user'], :name, :username, :email, :password, :password_confirmation)
 
       if @user.valid?
         @user.save

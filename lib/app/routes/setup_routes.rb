@@ -66,7 +66,7 @@ Pakyow::App.routes :'console-setup' do
     end
 
     post :setup, '/setup' do
-      @user = Pakyow::Console::User.new(params[:user])
+      @user = Pakyow::Console::User.new(params[:'pw-user'])
       @user.role = Pakyow::Console::User::ROLES[:admin]
 
       if @user.valid?
