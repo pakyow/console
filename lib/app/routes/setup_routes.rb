@@ -61,6 +61,11 @@ Pakyow::App.routes :'console-setup' do
         f = File.open('./.platform', 'w')
         f.write(opts.to_json)
         f.close
+
+        reconnect_platform_socket(platform_creds)
+        session[:platform_email] = platform_creds[:email]
+        session[:platform_token] = platform_creds[:token]
+
         redirect '/console'
       else
         res.status = 404

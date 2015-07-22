@@ -97,4 +97,13 @@ module Pakyow::Helpers
     auth_info ||= { email: session[:platform_email], token: session[:platform_token] }
     $socket = WebSocketClient.new(self, platform_client(auth_info[:email], auth_info[:token]), auth_info)
   end
+
+  def reconnect_platform_socket(auth_info = nil)
+    if $socket
+      $socket.shutdown
+      $socket = nil
+    end
+
+    setup_platform_socket(auth_info)
+  end
 end
