@@ -8,7 +8,7 @@ class ReleaseAgent
   DEPLOY_PATH = File.expand_path('./')
   ADDONS = [
     'heroku-postgresql:hobby-dev',
-    'heroku-redis:test',
+    'heroku-redis:hobby-dev',
   ]
 
   attr_reader :heroku_client, :platform_client, :release_object
