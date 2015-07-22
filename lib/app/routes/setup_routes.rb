@@ -58,7 +58,9 @@ Pakyow::App.routes :'console-setup' do
             id: app[:id]
           }
         }
-        File.open('./.platform', 'w').write(opts.to_json)
+        f = File.open('./.platform', 'w')
+        f.write(opts.to_json)
+        f.close
         redirect '/console'
       else
         res.status = 404

@@ -24,7 +24,9 @@ Pakyow::App.routes :'console-release' do
       if client.valid?
         auth = { release: { token: token } }
         file = File.expand_path('./.platform-private')
-        File.open(file, 'w').write(auth.to_json)
+        f = File.open(file, 'w')
+        f.write(auth.to_json)
+        f.close
         redirect router.group(:console).path(:release)
       else
         #TODO present error message
