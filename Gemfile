@@ -1,12 +1,12 @@
-gem "pakyow"
-gem "pakyow-slim"
-gem "sass"
-gem "sequel"
-gem "pg"
-gem "httparty"
-gem "websocket-client-simple"
-gem "inflecto"
-gem "platform-api"
-gem 'image_size'
-gem 'mini_magick'
-gem "bcrypt"
+gem 'pakyow', '> 0.9'
+gem 'pakyow-slim', '~> 0.2'
+gem 'sass', '~> 3.4'
+gem 'sequel', '~> 4.25'
+gem 'pg', '~> 0.18'
+gem 'httparty', '~> 0.13'
+gem 'websocket-client-simple', '~> 0.2'
+gem 'inflecto', '~> 0.0'
+gem 'platform-api', '~> 0.3'
+gem 'image_size', '~> 1.4'
+gem 'mini_magick', '~> 4.2'
+gem 'bcrypt', '~> 3.1'
