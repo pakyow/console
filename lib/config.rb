@@ -3,6 +3,10 @@ Pakyow::Config.register(:console) { |config|
   config.opt :file_storage_path
   config.opt :use_pakyow_platform, true
 
+  config.opt :models, {
+    user: 'Pakyow::Console::User'
+  }
+
 }.env(:development) { |opts|
 
   opts.file_storage_path = lambda {

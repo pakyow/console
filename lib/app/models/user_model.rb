@@ -2,11 +2,11 @@ require 'bcrypt'
 
 module Pakyow::Console
   class User < Sequel::Model(:'pw-users')
-    set_allowed_columns :name, :username, :email, :password, :password_confirmation, :active
-
     ROLES = {
       admin: 'admin'
     } unless defined?(ROLES)
+
+    set_allowed_columns :name, :username, :email, :password, :password_confirmation, :active
 
     EMAIL_REGEX = /^[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}$/i unless defined? EMAIL_REGEX
 
@@ -59,6 +59,14 @@ module Pakyow::Console
 
     def gravatar_hash
       Digest::MD5.hexdigest(email)
+    end
+
+    def consolify
+      self.role = ROLES[:admin]
+    end
+
+    def console?
+      role == ROLES[:admin]
     end
   end
 end

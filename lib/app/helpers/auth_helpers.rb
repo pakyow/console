@@ -8,7 +8,7 @@ module Pakyow::Helpers
   end
 
   def console_setup?
-    platform_setup? || Pakyow::Console::User.count > 0
+    platform_setup? || Pakyow::Console.model(:user).count > 0
   end
 
   def platform_setup?
@@ -39,7 +39,7 @@ module Pakyow::Helpers
     if platform?
       { email: session[:platform_email] }
     else
-      Pakyow::Console::User[session[CONSOLE_SESSION_KEY]]
+      Pakyow::Console.model(:user)[session[CONSOLE_SESSION_KEY]]
     end
   end
 

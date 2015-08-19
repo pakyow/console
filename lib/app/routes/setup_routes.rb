@@ -73,8 +73,8 @@ Pakyow::App.routes :'console-setup' do
     end
 
     post :setup, '/setup' do
-      @user = Pakyow::Console::User.new(params[:'pw-user'])
-      @user.role = Pakyow::Console::User::ROLES[:admin]
+      @user = Pakyow::Console.model(:user).new(params[:'pw-user'])
+      @user.consolify
 
       if @user.valid?
         @user.save
@@ -82,7 +82,7 @@ Pakyow::App.routes :'console-setup' do
 
         redirect router.group(:console).path(:dashboard)
       else
-        @errors = @user.errors
+        @errors = @user.errors.full_messages
         reroute router.group(:console).path(:setup), :get
       end
     end

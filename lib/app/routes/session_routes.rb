@@ -55,10 +55,14 @@ Pakyow::App.routes :'console-session' do
 
       create do
         @session = params[:'console-session']
-        if user = Pakyow::Console::User.authenticate(@session)
-          console_auth(user)
-          setup_platform_socket
-          redirect router.group(:console).path(:default)
+        if user = Pakyow::Console.model(:user).authenticate(@session)
+          if user.console?
+            console_auth(user)
+            setup_platform_socket
+            redirect router.group(:console).path(:default)
+          else
+            handle 403
+          end
         else
           @errors = ['Invalid login and/or password']
           reroute router.group(:'console-session').path(:new), :get

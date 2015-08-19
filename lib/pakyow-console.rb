@@ -46,6 +46,10 @@ module Pakyow
     def self.boot_plugins
       PluginRegistry.boot
     end
+
+    def self.model(name)
+      Object.const_get(Pakyow::Config.console.models[name])
+    end
   end
 end
 

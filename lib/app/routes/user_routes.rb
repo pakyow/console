@@ -32,8 +32,8 @@ Pakyow::App.routes :'console-user' do
       end
 
       create do
-        @user = Pakyow::Console::User.new(params[:'pw-user'])
-        @user.role = 'admin'
+        @user = Pakyow::Console.model(:user).new(params[:'pw-user'])
+        @user.consolify
 
         if @user.valid?
           @user.save
@@ -49,7 +49,7 @@ Pakyow::App.routes :'console-user' do
       end
 
       edit do
-        handle 404 unless @user ||= Pakyow::Console::User[params[:'pw-user_id']]
+        handle 404 unless @user ||= Pakyow::Console.model(:user)[params[:'pw-user_id']]
 
         presenter.path = 'console/users/edit'
 
@@ -68,7 +68,7 @@ Pakyow::App.routes :'console-user' do
       end
 
       update do
-        handle 404 unless @user = Pakyow::Console::User[params[:'pw-user_id']]
+        handle 404 unless @user = Pakyow::Console.model(:user)[params[:'pw-user_id']]
         @user.set(params[:'pw-user'])
 
         if @user.valid?
@@ -85,7 +85,7 @@ Pakyow::App.routes :'console-user' do
       end
 
       remove do
-        handle 404 unless @user = Pakyow::Console::User[params[:'pw-user_id']]
+        handle 404 unless @user = Pakyow::Console.model(:user)[params[:'pw-user_id']]
         @user.delete
 
         notify('user deleted', :success, redirect: router.group(:'pw-user').path(:list))
