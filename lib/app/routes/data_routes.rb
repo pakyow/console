@@ -4,29 +4,41 @@ Pakyow::App.routes :'console-data' do
   namespace :console, '/console' do
     restful :data, '/data', before: [:auth], after: [:setup, :notify] do
       show do
+        begin # try to use a custom view and fallback on the schema builder
+          presenter.path = req.path
+          @custom = true
+        rescue Pakyow::Presenter::MissingView
+        end
+
         @current_type = params[:data_id]
-
         type = Pakyow::Console::DataTypeRegistry.type(@current_type)
-        listables = type.attributes.reject { |a|
-          Pakyow::Console::DataTypeRegistry::UNLISTABLE_TYPES.include?(a[:type])
-        }
+        data = type.model_object.all
 
-        view.scope(:'console-data-field').apply(listables)
-
+        # setup the page header
         view.container(:default).scope(:'console-data-type').bind(type)
 
-        data = type.model_object.all
-        view.partial(:table).scope(:'console-datum').apply(data) do |view, datum|
-          view.scope(:'console-data-value').repeat(listables) do |view, type|
-            value = datum[type[:name]]
+        if @custom
+          view.scope(:"pw-#{@current_type}").apply(data)
+        else
+          # find the fields we want to display
+          listables = type.attributes.reject { |a|
+            Pakyow::Console::DataTypeRegistry::UNLISTABLE_TYPES.include?(a[:type])
+          }
 
-            if value.nil? || (value.is_a?(String) && value.empty?)
-              text = '-'
-            else
-              text = value.to_s
+          view.scope(:'console-data-field').apply(listables)
+
+          view.partial(:table).scope(:'console-datum').apply(data) do |view, datum|
+            view.scope(:'console-data-value').repeat(listables) do |view, type|
+              value = datum[type[:name]]
+
+              if value.nil? || (value.is_a?(String) && value.empty?)
+                text = '-'
+              else
+                text = value.to_s
+              end
+
+              view.text = text
             end
-
-            view.text = text
           end
         end
       end
@@ -44,7 +56,9 @@ Pakyow::App.routes :'console-data' do
 
         create do
           @type = Pakyow::Console::DataTypeRegistry.type(params[:data_id])
-          @datum = @type.model_object.new(Pakyow::Console::DatumProcessorRegistry.process(params[:'console-datum'], as: @type))
+
+          @datum = @type.model_object.new
+          @datum.set_all(Pakyow::Console::DatumProcessorRegistry.process(params[:'console-datum'], as: @type))
 
           if @datum.valid?
             #TODO this is where we'll want to let registered processors process
@@ -77,7 +91,7 @@ Pakyow::App.routes :'console-data' do
           @type = Pakyow::Console::DataTypeRegistry.type(params[:data_id])
 
           current = @type.model_object[params[:datum_id]]
-          @datum = current.set(Pakyow::Console::DatumProcessorRegistry.process(params[:'console-datum'], current, as: @type))
+          @datum = current.set_all(Pakyow::Console::DatumProcessorRegistry.process(params[:'console-datum'], current, as: @type))
 
           if @datum.valid?
             #TODO this is where we'll want to let registered processors process
