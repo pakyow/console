@@ -67,6 +67,7 @@ require_relative 'registries/plugin_registry'
 require_relative 'registries/route_registry'
 require_relative 'registries/datum_processor_registry'
 require_relative 'registries/datum_formatter_registry'
+require_relative 'registries/service_hook_registry'
 
 require_relative 'editors/string_editor'
 require_relative 'editors/text_editor'
