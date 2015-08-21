@@ -43,7 +43,7 @@ class Pakyow::Console::Route
       last_modified: Time.now,
       author: {
         name: @author[:name],
-        gravatar: @author[:gravatar] || @author.gravatar_hash
+        gravatar: @author[:gravatar] || Digest::MD5.hexdigest(@author.email)
       },
       functions: @functions
     }

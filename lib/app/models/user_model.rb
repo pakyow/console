@@ -57,10 +57,6 @@ module Pakyow::Console
       true if BCrypt::Password.new(crypted_password) == password
     end
 
-    def gravatar_hash
-      Digest::MD5.hexdigest(email)
-    end
-
     def consolify
       self.role = ROLES[:admin]
     end
