@@ -76,6 +76,7 @@ require_relative 'editors/monetary_editor'
 require_relative 'editors/file_editor'
 require_relative 'editors/percentage_editor'
 require_relative 'editors/html_editor'
+require_relative 'editors/sensitive_editor'
 
 require_relative 'formatters/percentage_formatter'
 
