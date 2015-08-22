@@ -13,7 +13,7 @@ gem 'pakyow-console', git: 'git@github.com:pakyow/console.git'
 Run `bundle install` and you're ready to go. Start your Pakyow app and navigate
 to `/console` in a web browser. You'll be taken through a setup process.
 
-# Console Schema
+# Console Data
 
 Console can be used to manage your app's data. Just tell Console about a data
 type and it will bootstrap a management interface for you.
@@ -95,6 +95,16 @@ Converts string values to floating point.
 **Percentage**
 
 Converts a percentage value to a floating point value.
+
+# Console Data Views
+
+It's possible to override the default views for Console's data management
+interface (currently, only the `list` view). Just create a view in your app's
+`views` folder, following this naming convention:
+
+```
+console/data/{type}/index.html
+```
 
 # Custom Editors / Formatters / Processors
 
