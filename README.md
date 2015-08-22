@@ -13,6 +13,95 @@ gem 'pakyow-console', git: 'git@github.com:pakyow/console.git'
 Run `bundle install` and you're ready to go. Start your Pakyow app and navigate
 to `/console` in a web browser. You'll be taken through a setup process.
 
+# Console Schema
+
+Console can be used to manage your app's data. Just tell Console about a data
+type and it will bootstrap a management interface for you.
+
+Let's say we're building a blog and we want to manage our blog posts. First,
+create a `app/lib/schema.rb` file (this is best practice, but really data type
+definitions can live anywhere in your app). Now, add the following code:
+
+```ruby
+Pakyow::Console.data :post, icon: 'newspaper-o' do
+  self.model = :Post
+
+  attribute :title, :string
+  attribute :description, :html
+end
+```
+
+The first argument (`:post`) is the name of our datatype. The `icon` argument
+defines a Font Awesome class for Console to use when representing this datatype.
+
+Within the block, we define our model class. This is expected to be a Sequel
+model. Console will respect all validations and hooks defined on your model.
+Next, we define the attributes we want Console to manage. Here, an interface
+will be built for us to manage the `title` and `description` of our posts.
+
+The second argument to `attribute` defines the editor to use. For `title`, we
+want to use a string editor, or a text box. The `description` attribute will be
+managed via a WYSIWYG editor.
+
+## Editor Types
+
+Console ships with editors for the following types:
+
+**String**
+
+**Text**
+
+**Enum**
+
+**Boolean**
+
+**Monetary**
+
+**File**
+
+**Percentage**
+
+**HTML**
+
+**Sensitive**
+
+## Type Formatters
+
+A formatter formats data of a particular type when rendering it in a Console
+view. Console ships with formatters for the following types:
+
+**Percentage**
+
+Percent values are stored as floating point (e.g. 0.50 rather than 50%). This
+formatter will render the value as a percentage.
+
+## Type Processors
+
+A processor will process form data and santitize before handing it to the model
+to be saved. Console ships with processors for the following types:
+
+**Boolean**
+
+Converts form values (e.g. `0` or `1`) to a boolean value.
+
+**File**
+
+Saves the file in Console's file store.
+
+**Float**
+
+Converts string values to floating point.
+
+**Percentage**
+
+Converts a percentage value to a floating point value.
+
+# Custom Editors / Formatters / Processors
+
+It's possible to extend Console with custom Editors, Formatters, and Processors.
+
+Take a look at the ones defined in the Console source code for examples.
+
 # Custom User Model
 
 By default, Console will use its built-in `User` model. This means users for
