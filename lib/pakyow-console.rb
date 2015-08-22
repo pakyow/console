@@ -58,6 +58,10 @@ module Pakyow
     def self.after(object, action, &block)
       ServiceHookRegistry.register :after, action, object, &block
     end
+
+    def self.data(type, icon: nil, &block)
+      DataTypeRegistry.register type, icon_class: icon, &block
+    end
   end
 end
 
