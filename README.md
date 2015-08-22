@@ -49,21 +49,43 @@ Console ships with editors for the following types:
 
 **String**
 
+A `input[type=text]` field.
+
 **Text**
+
+A `textarea` field.
 
 **Enum**
 
+A `select` field. Define options like this:
+
+```ruby
+attribute :type, :enum, values: [['', ''], [:foo, 'foo'], [:bar, 'bar']]
+```
+
 **Boolean**
+
+A `checkbox` field.
 
 **Monetary**
 
+A `String` field, with a dollar sign.
+
 **File**
+
+A `input[type=file]` field.
 
 **Percentage**
 
+A `String` field, with a percent sign.
+
 **HTML**
 
+A WYSIWYG field (via Redactor).
+
 **Sensitive**
+
+A `input[type=password]` field.
 
 ## Type Formatters
 
