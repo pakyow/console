@@ -50,6 +50,14 @@ module Pakyow
     def self.model(name)
       Object.const_get(Pakyow::Config.console.models[name])
     end
+
+    def self.before(object, action, &block)
+      ServiceHookRegistry.register :before, action, object, &block
+    end
+
+    def self.after(object, action, &block)
+      ServiceHookRegistry.register :after, action, object, &block
+    end
   end
 end
 
