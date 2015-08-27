@@ -122,7 +122,26 @@ Pakyow::App.routes :'console-data' do
           datum.delete
           Pakyow::Console::ServiceHookRegistry.call(:after, :delete, type.name, datum)
 
+          notify("#{@type.nice_name.downcase} deleted", :success)
           redirect router.group(:data).path(:show, data_id: params[:data_id])
+        end
+
+        #FIXME why doesn't `member` or `collection` work on nested restful resources?
+        # it may also be incorrectly triggering an incorrect message when an error
+        # occurs during dynamic route creation :/
+        Pakyow::Console::DataTypeRegistry.types.each do |type|
+          type.actions.each do |action|
+            url = ":datum_id/#{action[:name]}"
+            method = action[:name] == :remove ? :delete : :post
+
+            send(method, url) do
+              type = Pakyow::Console::DataTypeRegistry.type(params[:data_id])
+              datum = type.model_object[params[:datum_id]]
+              action[:logic].call(datum)
+              notify(action[:notification], :success)
+              redirect router.group(:datum).path(:edit, data_id: params[:data_id], datum_id: params[:datum_id])
+            end
+          end
         end
       end
     end

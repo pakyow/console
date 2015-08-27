@@ -10,6 +10,7 @@ class Pakyow::Console::DataType
     @attributes = {}
     @nice_names = {}
     @extras = {}
+    @actions = {}
     instance_exec(self, &block)
   end
 
@@ -38,6 +39,10 @@ class Pakyow::Console::DataType
     }
   end
 
+  def actions
+    @actions.values
+  end
+
   def [](var)
     instance_variable_get(:"@#{var}")
   end
@@ -48,5 +53,15 @@ class Pakyow::Console::DataType
 
   def nice_name
     Inflecto.humanize(Inflecto.underscore(name.to_s))
+  end
+
+  def action(name, label: nil, notification: nil, display: nil, &block)
+    @actions[name] = {
+      name: name,
+      label: label || Inflecto.humanize(name),
+      notification: notification,
+      display: display,
+      logic: block,
+    }
   end
 end
