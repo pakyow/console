@@ -95,7 +95,7 @@
   *[class*="container"] .col, .container-1 .col {
     width: $start-width;
   }
-  
+
   @media all and (max-width: $container-width) {
     *[class*="container"] {
       width: auto;
@@ -132,7 +132,7 @@
           }
         }
       }
-    }  
+    }
   }
 }
 

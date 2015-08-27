@@ -45,7 +45,4 @@ table {
   border-collapse: collapse;
   border-spacing: 0; }
 
-input {
-  /* Commenting out because this was keeping TOS checkbox from being visible. Not sure what it's here for though... */ }
-
 /*# sourceMappingURL=reset.css.map */
