@@ -68,3 +68,21 @@
     }
   }
 }
+
+.data-actions {
+  button {
+    display:block;
+    background: none;
+    border: none;
+    border-top: 1px solid $color-lgray;
+    padding: 10px 0 !important;
+    width: 100%;
+    text-align: left;
+  }
+
+  li:last-child {
+    button {
+      border-bottom: 1px solid $color-lgray;
+    }
+  }
+}

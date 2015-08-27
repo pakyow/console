@@ -1,12 +1,9 @@
----
-title: 'console/users'
----
-
-h1
-  | console/users
-  a.button href="/console/users/new"
+h1@@console-data-type
+  | console/
+  span@name data
+  a.button@new-href href="#"
     i.fa.fa-plus-circle
-    | New User
+    span@new-text New
 
 .container.margin-t@@pw-user data-version="empty"
   p No users found :(

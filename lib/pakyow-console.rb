@@ -18,13 +18,6 @@ CONSOLE_ROOT = File.expand_path('../', __FILE__)
 Pakyow::App.config.presenter.view_stores[:console] = [File.join(CONSOLE_ROOT, 'views')]
 Pakyow::App.config.app.resources[:console] = File.join(CONSOLE_ROOT, 'resources')
 
-module Sass
-  module Plugin
-    #HACK this fixes some sass bug
-    def self.checked_for_updates=(*args); end
-  end
-end
-
 module Pakyow
   module Console
     def self.loader
@@ -98,7 +91,6 @@ require_relative 'processors/file_processor'
 require_relative 'processors/float_processor'
 require_relative 'processors/percentage_processor'
 
-Pakyow::Console::PanelRegistry.register :users, mode: :production, nice_name: 'Users', icon_class: 'users' do; end
 Pakyow::Console::PanelRegistry.register :release, mode: :development, nice_name: 'Release', icon_class: 'paper-plane' do; end
 
 app_path = File.join(CONSOLE_ROOT, 'app')
@@ -137,6 +129,23 @@ Pakyow::App.before :load do
 
   Pakyow::Console.load_paths.each do |path|
     Pakyow::Console.loader.load_from_path(path)
+  end
+
+  unless Pakyow::Console::DataTypeRegistry.names.include?(:user)
+    Pakyow::Console::DataTypeRegistry.register :user, icon_class: 'users' do
+      self.model = Pakyow::Config.console.models[:user]
+
+      attribute :name, :string, nice: 'Full Name'
+      attribute :username, :string
+      attribute :email, :string
+      attribute :password, :sensitive
+      attribute :password_confirmation, :sensitive
+      attribute :active, :boolean
+
+      action :remove, label: 'Delete', notification: 'user deleted' do
+        reroute router.group(:datum).path(:remove, data_id: params[:data_id], datum_id: params[:datum_id])
+      end
+    end
   end
 end
 

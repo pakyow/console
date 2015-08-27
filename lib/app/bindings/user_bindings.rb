@@ -3,7 +3,7 @@ Pakyow::App.bindings :'pw-user' do
     restful :'pw-user'
 
     binding :'edit-href' do
-      { href: router.group(:'pw-user').path(:edit, :'pw-user_id' => bindable.id) }
+      { href: router.group(:datum).path(:edit, data_id: 'user', datum_id: bindable.id) }
     end
 
     binding :role do

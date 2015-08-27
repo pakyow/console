@@ -134,8 +134,7 @@ nav {
 h1 .button {
   float: right;
   line-height: 13px;
-  line-height: 1.3rem;
-  margin-top: 15px; }
+  line-height: 1.3rem; }
 
 .function-detail {
   min-height: 300px;
@@ -254,6 +253,17 @@ h1 .button {
     .data-list td:last-child, .data-list th:last-child {
       border: 0; }
 
+.data-actions button {
+  display: block;
+  background: none;
+  border: none;
+  border-top: 1px solid #ccc;
+  padding: 10px 0 !important;
+  width: 100%;
+  text-align: left; }
+.data-actions li:last-child button {
+  border-bottom: 1px solid #ccc; }
+
 .notifier {
   position: absolute;
   top: 0;
@@ -279,7 +289,7 @@ h1 .button {
     top: -30px; }
 
 .console-toolbar {
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, sans-serif;
+  font-family: "Open Sans", Helvetica, sans-serif;
   background: #222;
   position: fixed;
   left: 0;

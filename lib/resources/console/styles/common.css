@@ -10,8 +10,7 @@ input {
   padding: 10px 8px !important; }
 
 button, .button {
-  padding: 10px 12px !important;
-  font-weight: 500; }
+  padding: 10px 12px !important; }
   button i, .button i {
     margin-right: 8px; }
 
