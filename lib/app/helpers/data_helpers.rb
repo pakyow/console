@@ -15,7 +15,7 @@ module Pakyow::Helpers
     handle_errors(view.partial(:errors), object_type: :datum)
 
     view.partial(:actions).with do |view|
-      if @datum.id
+      if @datum && @datum.id
         actions = @type.actions.select { |action|
           action[:display].nil? || action[:display].call(@datum)
         }
