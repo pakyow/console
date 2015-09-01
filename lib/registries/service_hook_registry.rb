@@ -5,12 +5,12 @@ class Pakyow::Console::ServiceHookRegistry
     (for_action[subject.to_sym] ||= []) << block
   end
 
-  def self.call(type, action, subject, data)
+  def self.call(type, action, subject, data, context)
     hooks
       .fetch(type.to_sym, {})
       .fetch(action.to_sym, {})
       .fetch(subject.to_sym, [])
-      .each { |fn| fn.call(data) }
+      .each { |fn| context.instance_exec(data, &fn) }
   end
 
   private

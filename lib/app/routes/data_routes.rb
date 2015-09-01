@@ -60,14 +60,14 @@ Pakyow::App.routes :'console-data' do
           @datum = @type.model_object.new
           @datum.set_all(Pakyow::Console::DatumProcessorRegistry.process(params[:'console-datum'], as: @type))
 
-          Pakyow::Console::ServiceHookRegistry.call(:before, :create, @type.name, @datum)
+          Pakyow::Console::ServiceHookRegistry.call(:before, :create, @type.name, @datum, self)
 
           if @datum.valid?
             #TODO this is where we'll want to let registered processors process
             # the incoming data (especially important for media + file types)
 
             @datum.save
-            Pakyow::Console::ServiceHookRegistry.call(:after, :create, @type.name, @datum)
+            Pakyow::Console::ServiceHookRegistry.call(:after, :create, @type.name, @datum, self)
             notify("#{@type.nice_name.downcase} created", :success)
             redirect router.group(:datum).path(:edit, data_id: params[:data_id], datum_id: @datum.id)
           else
@@ -95,14 +95,14 @@ Pakyow::App.routes :'console-data' do
 
           current = @type.model_object[params[:datum_id]]
           @datum = current.set_all(Pakyow::Console::DatumProcessorRegistry.process(params[:'console-datum'], current, as: @type))
-          Pakyow::Console::ServiceHookRegistry.call(:before, :update, @type.name, @datum)
+          Pakyow::Console::ServiceHookRegistry.call(:before, :update, @type.name, @datum, self)
 
           if @datum.valid?
             #TODO this is where we'll want to let registered processors process
             # the incoming data (especially important for media + file types)
 
             @datum.save
-            Pakyow::Console::ServiceHookRegistry.call(:after, :update, @type.name, @datum)
+            Pakyow::Console::ServiceHookRegistry.call(:after, :update, @type.name, @datum, self)
             notify("#{@type.nice_name.downcase} updated", :success)
             redirect router.group(:datum).path(:edit, data_id: params[:data_id], datum_id: @datum.id)
           else
@@ -118,9 +118,9 @@ Pakyow::App.routes :'console-data' do
           type = Pakyow::Console::DataTypeRegistry.type(params[:data_id])
           datum = type.model_object[params[:datum_id]]
 
-          Pakyow::Console::ServiceHookRegistry.call(:before, :delete, type.name, datum)
+          Pakyow::Console::ServiceHookRegistry.call(:before, :delete, type.name, datum, self)
           datum.delete
-          Pakyow::Console::ServiceHookRegistry.call(:after, :delete, type.name, datum)
+          Pakyow::Console::ServiceHookRegistry.call(:after, :delete, type.name, datum, self)
 
           notify("#{@type.nice_name.downcase} deleted", :success)
           redirect router.group(:data).path(:show, data_id: params[:data_id])
@@ -137,7 +137,7 @@ Pakyow::App.routes :'console-data' do
             send(method, url) do
               type = Pakyow::Console::DataTypeRegistry.type(params[:data_id])
               datum = type.model_object[params[:datum_id]]
-              action[:logic].call(datum)
+              instance_exec(datum, &action[:logic])
               notify(action[:notification], :success)
               redirect router.group(:datum).path(:edit, data_id: params[:data_id], datum_id: params[:datum_id])
             end
