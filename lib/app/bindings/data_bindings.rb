@@ -2,7 +2,7 @@ Pakyow::App.bindings :'console-data-type' do
   scope :'console-data-type' do
     binding :'show-link' do
       {
-        content: Inflecto.pluralize(bindable.nice_name),
+        content: bindable.display_name,
         href: router.group(:data).path(:show, data_id: bindable.id)
       }
     end
@@ -14,7 +14,7 @@ Pakyow::App.bindings :'console-data-type' do
     end
 
     binding :'back-text' do
-      "All #{Inflecto.pluralize(bindable.nice_name)}"
+      "All #{bindable.display_name}"
     end
 
     binding :'new-href' do

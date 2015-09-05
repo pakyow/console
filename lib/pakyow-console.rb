@@ -83,6 +83,7 @@ require_relative 'editors/file_editor'
 require_relative 'editors/percentage_editor'
 require_relative 'editors/html_editor'
 require_relative 'editors/sensitive_editor'
+require_relative 'editors/relation_editor'
 
 require_relative 'formatters/percentage_formatter'
 
@@ -90,6 +91,7 @@ require_relative 'processors/boolean_processor'
 require_relative 'processors/file_processor'
 require_relative 'processors/float_processor'
 require_relative 'processors/percentage_processor'
+require_relative 'processors/relation_processor'
 
 Pakyow::Console::PanelRegistry.register :release, mode: :development, nice_name: 'Release', icon_class: 'paper-plane' do; end
 
@@ -133,7 +135,7 @@ Pakyow::App.before :load do
 
   unless Pakyow::Console::DataTypeRegistry.names.include?(:user)
     Pakyow::Console::DataTypeRegistry.register :user, icon_class: 'users' do
-      self.model = Pakyow::Config.console.models[:user]
+      model Pakyow::Config.console.models[:user]
 
       attribute :name, :string, nice: 'Full Name'
       attribute :username, :string

@@ -67,6 +67,7 @@ Pakyow::App.routes :'console-data' do
             # the incoming data (especially important for media + file types)
 
             @datum.save
+            ui.mutated(:datum, self)
             Pakyow::Console::ServiceHookRegistry.call(:after, :create, @type.name, @datum, self)
             notify("#{@type.nice_name.downcase} created", :success)
             redirect router.group(:datum).path(:edit, data_id: params[:data_id], datum_id: @datum.id)
@@ -102,11 +103,12 @@ Pakyow::App.routes :'console-data' do
             # the incoming data (especially important for media + file types)
 
             @datum.save
+            ui.mutated(:datum, self)
             Pakyow::Console::ServiceHookRegistry.call(:after, :update, @type.name, @datum, self)
             notify("#{@type.nice_name.downcase} updated", :success)
             redirect router.group(:datum).path(:edit, data_id: params[:data_id], datum_id: @datum.id)
           else
-            notify("failed to create a #{@type.nice_name.downcase}", :fail)
+            notify("failed to update a #{@type.nice_name.downcase}", :fail)
             res.status = 400
 
             @errors = @datum.errors.full_messages
@@ -122,7 +124,7 @@ Pakyow::App.routes :'console-data' do
           datum.delete
           Pakyow::Console::ServiceHookRegistry.call(:after, :delete, type.name, datum, self)
 
-          notify("#{@type.nice_name.downcase} deleted", :success)
+          notify("#{type.nice_name.downcase} deleted", :success)
           redirect router.group(:data).path(:show, data_id: params[:data_id])
         end
 

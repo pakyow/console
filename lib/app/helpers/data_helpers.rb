@@ -2,7 +2,7 @@ module Pakyow::Helpers
   def setup_datum_form
     view.partial(:form).scope(:'console-datum').with do |view|
       view.scope(:'console-data-field').apply(@type.attributes) do |view, attribute|
-        editor = Pakyow::Console::EditorRegistry.editor_for_attribute(attribute, @datum || {})
+        editor = Pakyow::Console::EditorRegistry.editor_for_attribute(attribute, @datum || {}, self)
 
         view.prop(:editor)[0].replace(editor)
         view.attrs[:'data-scope'] = nil
@@ -12,7 +12,7 @@ module Pakyow::Helpers
       view.bind(Pakyow::Console::DatumFormatterRegistry.format(@datum || {}, as: @type))
     end
 
-    handle_errors(view.partial(:errors), object_type: :datum)
+    handle_errors(view.partial(:errors), object_type: @type.name)
 
     view.partial(:actions).with do |view|
       if @datum && @datum.id

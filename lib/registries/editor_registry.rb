@@ -5,8 +5,9 @@ module Pakyow::Console::EditorRegistry
     end
   end
 
-  def self.editor_for_attribute(attribute, datum)
-    view = editors.fetch(attribute[:type]).call(attribute[:extras], datum[attribute[:name]])
+  def self.editor_for_attribute(attribute, datum, context)
+    value = datum.is_a?(Hash) ? datum[attribute[:name]] : datum.send(attribute[:name])
+    view = context.instance_exec(attribute[:extras], value, attribute, &editors.fetch(attribute[:type]))
     view.scope(:editor).attrs.class.ensure("editor-#{attribute[:type]}")
     view.scope(:editor).attrs[:'data-prop'] = attribute[:name].to_s
     view.scope(:editor).attrs[:'data-scope'] = nil

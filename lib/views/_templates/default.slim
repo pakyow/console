@@ -21,6 +21,8 @@ html
     script src="/console/scripts/pakyow-js/components/mutable.js"
     script src="/console/scripts/pakyow-js/components/navigator.js"
     script src="/console/scripts/pakyow-js/components/notifier.js"
+    script src="/console/scripts/pakyow-js/components/modal.js"
+    script src="/console/scripts/pakyow-js/components/loader.js"
 
     script src="/console/scripts/components/toggle.js"
     script src="/console/scripts/components/delete.js"
@@ -31,6 +33,11 @@ html
     link href="/console/scripts/redactor/redactor.css" rel="stylesheet" type="text/css"
 
 body
+  .loader-wrapper data-ui="loader"
+    .spinner
+
+.loader data-ui="loader"
+
   .page-wrapper
     /! @include notifier
 
