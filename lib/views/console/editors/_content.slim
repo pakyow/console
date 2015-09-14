@@ -1,0 +1,52 @@
+script src="/console/scripts/content-editor/editor.js"
+script src="/console/scripts/content-editor/plaintext.js"
+script src="/console/scripts/content-editor/embed.js"
+
+.console-content data-ui="content-editor"
+  input type="hidden" name="console-datum[content]"
+
+  / default editor
+  .console-content-editor-wrapper.console-content-plaintext data-scope="content" data-template="" data-version="default"
+    /! @include shared
+
+    .console-content-editor data-c="editor"
+      /! @include actions
+
+      textarea rows="1" placeholder="text goes here" data-ui="content-editor-plaintext" data-prop="content"
+
+  / image editor
+  .console-content-editor-wrapper.console-content-image data-scope="content" data-template="" data-version="image"
+    /! @include shared
+    /! @include alignment
+
+    .console-content-editor data-c="editor"
+      /! @include actions
+
+      .console-content-image-wrapper
+        i.fa.fa-image
+
+  / embed editor
+  .console-content-editor-wrapper.console-content-embed data-scope="content" data-template="" data-version="embed"
+    /! @include shared
+    /! @include alignment
+
+    .console-content-editor data-c="editor"
+      /! @include actions
+
+      textarea rows="5" placeholder="paste embed code here, press enter" data-ui="content-editor-embed" data-prop="code"
+
+  / break editor
+  .console-content-editor-wrapper.console-content-break data-scope="content" data-template="" data-version="break"
+    /! @include shared
+
+    .console-content-editor data-c="editor"
+      /! @include actions
+
+      hr
+
+.clear
+
+a.console-content-add href="#" data-ui="content-add"
+  i.fa.fa-plus
+
+  | Add Content

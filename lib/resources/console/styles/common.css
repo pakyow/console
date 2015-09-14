@@ -4,7 +4,7 @@ body {
   color: #222; }
 
 a {
-  text-decoration: none !important; }
+  text-decoration: none; }
 
 input {
   padding: 10px 8px !important; }
