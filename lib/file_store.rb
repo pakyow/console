@@ -1,4 +1,5 @@
 require 'mini_magick'
+require 'fileutils'
 
 module Pakyow::Console
   class FileStore
@@ -33,7 +34,7 @@ module Pakyow::Console
 
       id = SecureRandom.uuid
       file_path = File.join(@store_path, id)
-      File.open(file_path + ext, 'wb') { |f| f.write(tempfile.read) }
+      FileUtils.mv(tempfile.path, file_path + ext)
 
       type = self.class.type_for_ext(ext)
 
