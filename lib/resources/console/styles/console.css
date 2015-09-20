@@ -535,6 +535,8 @@ h1 .button {
 .ui-modal {
   background: #fff;
   width: 800px;
+  height: 700px;
+  overflow-y: scroll;
   position: absolute;
   left: 50%;
   margin-left: -400px;
