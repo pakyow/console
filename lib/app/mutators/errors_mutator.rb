@@ -6,9 +6,7 @@ def pretty_errors(errors)
 end
 
 Pakyow::App.mutators :errors do
-  mutator :list, qualify: [:object_type] do |view, data|
-    errors = data[:errors]
-
+  mutator :list do |view, errors|
     if errors.empty?
       view.remove
     else

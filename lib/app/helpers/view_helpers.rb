@@ -3,13 +3,7 @@ module Pakyow::Helpers
     @errors
   end
 
-  def error_object_type
-    @error_object_type
-  end
-
   def handle_errors(view, object_type: nil, object_id: nil)
-    @error_object_type = object_type
-
     q = {
       object_type: object_type,
       object_id: object_id,
@@ -20,7 +14,7 @@ module Pakyow::Helpers
     end
 
     if req.socket? && @errors && !@errors.empty?
-      ui.mutated(:errors, self)
+      ui.mutated(:errors, q)
     else
       view.scope(:errors).mutate(:list, with: data(:errors).all).subscribe(q)
     end
