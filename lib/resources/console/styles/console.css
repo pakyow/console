@@ -535,11 +535,13 @@ h1 .button {
 .ui-modal {
   background: #fff;
   width: 800px;
+  overflow-y: scroll;
   position: absolute;
   left: 50%;
   margin-left: -400px;
   padding: 20px;
-  margin-top: 100px; }
+  top: 100px;
+  bottom: 100px; }
   .ui-modal > h1 {
     margin-top: 0; }
 

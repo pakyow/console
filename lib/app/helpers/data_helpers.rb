@@ -12,7 +12,8 @@ module Pakyow::Helpers
       view.bind(Pakyow::Console::DatumFormatterRegistry.format(@datum || {}, as: @type))
     end
 
-    handle_errors(view.partial(:errors), object_type: @type.name)
+    object_id = @datum ? @datum.id : nil
+    handle_errors(view.partial(:errors), object_type: @type.name, object_id: object_id)
 
     view.partial(:actions).with do |view|
       if @datum && @datum.id

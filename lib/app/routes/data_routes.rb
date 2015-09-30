@@ -67,7 +67,7 @@ Pakyow::App.routes :'console-data' do
             # the incoming data (especially important for media + file types)
 
             @datum.save
-            ui.mutated(:datum, self)
+            ui.mutated(:datum)
             Pakyow::Console::ServiceHookRegistry.call(:after, :create, @type.name, @datum, self)
             notify("#{@type.nice_name.downcase} created", :success)
             redirect router.group(:datum).path(:edit, data_id: params[:data_id], datum_id: @datum.id)
@@ -103,7 +103,7 @@ Pakyow::App.routes :'console-data' do
             # the incoming data (especially important for media + file types)
 
             @datum.save
-            ui.mutated(:datum, self)
+            ui.mutated(:datum)
             Pakyow::Console::ServiceHookRegistry.call(:after, :update, @type.name, @datum, self)
             notify("#{@type.nice_name.downcase} updated", :success)
             redirect router.group(:datum).path(:edit, data_id: params[:data_id], datum_id: @datum.id)
