@@ -15,6 +15,8 @@ module Pakyow::Console
         'video'
       when '.mp3', '.wav'
         'audio'
+      else
+        'unknown'
       end
     end
 
@@ -42,8 +44,6 @@ module Pakyow::Console
       when 'image'
         s = ImageSize.new(File.open(file_path + ext))
         [s.width, s.height]
-      when 'video'
-        [0, 0] #TODO determine video size
       end
 
       config = {
@@ -75,7 +75,6 @@ module Pakyow::Console
 
     def process(id, w: nil, h: nil)
       file = find(id)
-
       return unless file[:type] == 'image'
 
       ext = file[:ext]

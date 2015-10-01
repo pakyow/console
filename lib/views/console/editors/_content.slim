@@ -1,7 +1,3 @@
-script src="/console/scripts/content-editor/editor.js"
-script src="/console/scripts/content-editor/plaintext.js"
-script src="/console/scripts/content-editor/embed.js"
-
 .console-content data-ui="content-editor"
   input type="hidden" name="console-datum[content]"
 
@@ -22,7 +18,8 @@ script src="/console/scripts/content-editor/embed.js"
     .console-content-editor data-c="editor"
       /! @include actions
 
-      .console-content-image-wrapper
+      .console-content-image-wrapper data-ui="content-editor-media"
+        input type="hidden" data-prop="image_id"
         i.fa.fa-image
 
   / embed editor
