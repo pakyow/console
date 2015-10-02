@@ -16,7 +16,7 @@ module Pakyow::Helpers
   end
 
   def console_authed?
-    (!session[CONSOLE_SESSION_KEY].nil? || platform_authed?) && current_console_user.console?
+    !session[CONSOLE_SESSION_KEY].nil? || platform_authed?
   end
 
   def platform_authed?
@@ -39,7 +39,8 @@ module Pakyow::Helpers
     if platform?
       { email: session[:platform_email] }
     else
-      Pakyow::Console.model(:user)[session[CONSOLE_SESSION_KEY]]
+      user = Pakyow::Console.model(:user)[session[CONSOLE_SESSION_KEY]]
+      return user if user && user.console?
     end
   end
 
