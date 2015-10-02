@@ -16,7 +16,7 @@ module Pakyow::Helpers
   end
 
   def console_authed?
-    !session[CONSOLE_SESSION_KEY].nil? || platform_authed?
+    (!session[CONSOLE_SESSION_KEY].nil? || platform_authed?) && current_console_user.console?
   end
 
   def platform_authed?
