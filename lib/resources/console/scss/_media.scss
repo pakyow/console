@@ -1,13 +1,18 @@
 .media-items {
-
 }
 
 .media-item {
+  &.active {
+    .media-thumb {
+      border-color: $color-blue;
+    }
+  }
+
   .media-thumb {
     width: 175px;
     height: 175px;
     background-color: $color-xgray;
-    border: 5px solid $color-xgray;
+    border: 3px solid $color-xgray;
   }
 
   .media-meta {

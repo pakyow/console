@@ -643,11 +643,13 @@ textarea {
   font-size: 13px;
   font-size: 1.3rem; }
 
+.media-item.active .media-thumb {
+  border-color: #4986e8; }
 .media-item .media-thumb {
   width: 175px;
   height: 175px;
   background-color: #eee;
-  border: 5px solid #eee; }
+  border: 3px solid #eee; }
 .media-item .media-meta {
   font-size: 11px;
   font-size: 1.1rem;

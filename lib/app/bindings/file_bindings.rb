@@ -1,16 +1,5 @@
 Pakyow::App.bindings :'console-file' do
   scope :file do
-    binding :_root do
-      id = bindable[:id]
-
-      config = {
-        id: id,
-        thumb: router.group(:file).path(:show, file_id: id)
-      }
-
-      { :'data-config' => config.map { |c| c.join(':') }.join(';') }
-    end
-
     binding :thumbnail do
       src = case bindable[:type]
       when 'image'

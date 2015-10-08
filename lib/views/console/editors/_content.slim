@@ -1,5 +1,5 @@
 .console-content data-ui="content-editor"
-  input type="hidden" name="console-datum[content]"
+  input type="hidden" data-scope="editor" name="console-datum[content]"
 
   / default editor
   .console-content-editor-wrapper.console-content-plaintext data-scope="content" data-template="" data-version="default"
@@ -19,7 +19,7 @@
       /! @include actions
 
       .console-content-image-wrapper data-ui="content-editor-media"
-        input type="hidden" data-prop="image_id"
+        input type="hidden" data-prop="images"
         i.fa.fa-image
 
   / embed editor
