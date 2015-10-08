@@ -1,0 +1,18 @@
+div data-ui="media-editor"
+  h1
+    | console/media
+    a.button href="#" data-ui="media-upload"
+      input type="file" style="display:none" multiple="multiple"
+      i.fa.fa-upload
+      span Upload
+
+  .media-items.container.flow
+    .media-item.col@@file data-ui="media-item"
+      .media-thumb@thumbnail
+
+      .media-meta
+        span.media-meta-name@filename
+        span.media-meta-size@filesize
+
+    .media-item@@file data-version="empty"
+      p nothing here :(

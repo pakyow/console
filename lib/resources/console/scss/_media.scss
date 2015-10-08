@@ -1,0 +1,31 @@
+.media-items {
+}
+
+.media-item {
+  &.active {
+    .media-thumb {
+      border-color: $color-blue;
+    }
+  }
+
+  .media-thumb {
+    width: 175px;
+    height: 175px;
+    background-color: $color-xgray;
+    border: 3px solid $color-xgray;
+  }
+
+  .media-meta {
+    @include rem(font-size, 11);
+    color: $color-mgray;
+    margin-top: 10px;
+
+    .media-meta-size {
+      float: right;
+    }
+
+    .media-meta-name {
+      font-weight: 600;
+    }
+  }
+}

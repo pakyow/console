@@ -1,11 +1,11 @@
 .console-content {
+  margin-left: -50px;
+  margin-right: -25px;
 }
 
 .console-content-editor-wrapper {
   overflow: hidden;
-  margin-left: -50px;
   padding-left: 50px;
-  margin-right: -25px;
   padding-right: 25px;
   position: relative;
   margin-bottom: 10px;
@@ -167,6 +167,8 @@
 
 .console-content-image-wrapper {
   background: $color-xgray;
+  background-repeat: no-repeat;
+  background-size: cover;
   text-align: center;
   padding: 50px 0;
 

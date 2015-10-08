@@ -73,6 +73,7 @@ require_relative 'registries/route_registry'
 require_relative 'registries/datum_processor_registry'
 require_relative 'registries/datum_formatter_registry'
 require_relative 'registries/service_hook_registry'
+require_relative 'registries/content_type_registry'
 
 require_relative 'editors/string_editor'
 require_relative 'editors/text_editor'
@@ -87,14 +88,12 @@ require_relative 'editors/relation_editor'
 require_relative 'editors/content_editor'
 
 require_relative 'formatters/percentage_formatter'
-require_relative 'formatters/content_formatter'
 
 require_relative 'processors/boolean_processor'
 require_relative 'processors/file_processor'
 require_relative 'processors/float_processor'
 require_relative 'processors/percentage_processor'
 require_relative 'processors/relation_processor'
-require_relative 'processors/content_processor'
 
 Pakyow::Console::PanelRegistry.register :release, mode: :development, nice_name: 'Release', icon_class: 'paper-plane' do; end
 

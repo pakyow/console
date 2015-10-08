@@ -3,6 +3,23 @@ Pakyow::App.routes :'console-file' do
 
   namespace :console, '/console' do
     restful :file, '/files' do
+      create before: [:auth] do
+        name = request.env['HTTP_X_FILENAME']
+        file = request.env['rack.input']
+
+        # this works around a presumable bug in rack where a file
+        # upload via ajax is sometimes a Tempfile object and
+        # sometimes a StringIO object
+        if file.is_a?(StringIO)
+          tmp = Tempfile.new(name)
+          tmp.binmode
+          tmp.write(file.string)
+          file = tmp
+        end
+
+        data(:file).create(name, file)
+      end
+
       show do
         if file = Pakyow::Console::FileStore.instance.find(params[:file_id])
           w = params[:w]

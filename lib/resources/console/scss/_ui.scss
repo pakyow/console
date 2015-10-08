@@ -8,7 +8,7 @@
   }
 }
 
-.ui-modal {
+.ui-modal, .ui-media {
   background: $color-white;
   width: 800px;
   overflow-y: scroll;
@@ -24,7 +24,7 @@
   }
 }
 
-.ui-modal-blinder {
+.ui-modal-blinder, .ui-media-blinder {
   opacity: 0;
   position: fixed;
   top: 0;
