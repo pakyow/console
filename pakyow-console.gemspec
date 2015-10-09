@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.version     = version
   s.summary     = 'pakyow-console'
   s.description = "pakyow-console"
-  s.license     = 'MIT'
+  s.license     = 'LGPL-3.0'
 
   s.required_ruby_version     = '>= 2.0.0'
 
