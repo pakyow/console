@@ -1,4 +1,6 @@
 require 'securerandom'
+
+require 'celluloid'
 require 'celluloid/io'
 
 class ReleaseAgent
