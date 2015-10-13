@@ -28,4 +28,5 @@ Gem::Specification.new do |s|
   s.add_dependency('image_size', '~> 1.4')
   s.add_dependency('mini_magick', '~> 4.2')
   s.add_dependency('bcrypt', '~> 3.1')
+  s.add_dependency('celluloid', '~> 0.17')
 end
