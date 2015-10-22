@@ -1,4 +1,4 @@
-Pakyow::Console::EditorRegistry.register :enum do |options|
+Pakyow::Console.editor :enum do |options|
   view = Pakyow::Presenter::View.new('<select data-scope="editor"></select>')
 
   options[:values].each do |value|

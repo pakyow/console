@@ -56,6 +56,10 @@ module Pakyow
       DataTypeRegistry.register type, icon_class: icon, &block
     end
 
+    def self.editor(*types, &block)
+      EditorRegistry.register *types, &block
+    end
+
     def self.script(path)
       ScriptRegistry.register path
     end

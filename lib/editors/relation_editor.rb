@@ -1,4 +1,4 @@
-Pakyow::Console::EditorRegistry.register :relation do |options, datum, attribute|
+Pakyow::Console.editor :relation do |options, datum, attribute|
   view = Pakyow::Presenter::ViewContext.new(presenter.store(:console).partial('console/editors', :relation).dup, self)
   editor = view.scope(:editor)[0]
   editor.scoped_as = :datum

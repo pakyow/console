@@ -1,4 +1,4 @@
-Pakyow::Console::EditorRegistry.register :file do |options, value|
+Pakyow::Console.editor :file do |options, value|
   if file = Pakyow::Console::FileStore.instance.find(value)
     path = Pakyow.app.router.group(:file).path(:show, file_id: value)
     name = file[:filename]

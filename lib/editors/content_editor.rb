@@ -1,6 +1,6 @@
 require 'uri'
 
-Pakyow::Console::EditorRegistry.register :content do |_, value|
+Pakyow::Console.editor :content do |_, value|
   partial = presenter.store(:console).partial('console/editors', :content).dup
 
   partial.includes({
