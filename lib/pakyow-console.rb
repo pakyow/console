@@ -55,6 +55,10 @@ module Pakyow
     def self.data(type, icon: nil, &block)
       DataTypeRegistry.register type, icon_class: icon, &block
     end
+
+    def self.script(path)
+      ScriptRegistry.register path
+    end
   end
 end
 
@@ -74,6 +78,7 @@ require_relative 'registries/datum_processor_registry'
 require_relative 'registries/datum_formatter_registry'
 require_relative 'registries/service_hook_registry'
 require_relative 'registries/content_type_registry'
+require_relative 'registries/script_registry'
 
 require_relative 'editors/string_editor'
 require_relative 'editors/text_editor'

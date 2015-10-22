@@ -48,4 +48,10 @@ module Pakyow::Helpers
     # collaborator presence
     view.scope(:collaborator).mutate(:list, with: data(:collaborator).all).subscribe
   end
+
+  def mixin_scripts(view)
+    Pakyow::Console::ScriptRegistry.scripts.each do |path|
+      view.scope(:head).append(Pakyow::Presenter::View.new('<script src="' + path + '"></script>'))
+    end
+  end
 end

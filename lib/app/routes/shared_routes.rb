@@ -38,6 +38,7 @@ module Pakyow::Console::SharedRoutes
     end
 
     setup_toolbar(view)
+    mixin_scripts(view)
   end
 
   fn :notify do
