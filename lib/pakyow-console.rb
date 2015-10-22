@@ -18,6 +18,8 @@ CONSOLE_ROOT = File.expand_path('../', __FILE__)
 Pakyow::App.config.presenter.view_stores[:console] = [File.join(CONSOLE_ROOT, 'views')]
 Pakyow::App.config.app.resources[:console] = File.join(CONSOLE_ROOT, 'resources')
 
+require_relative 'version'
+
 module Pakyow
   module Console
     def self.loader
