@@ -97,6 +97,7 @@ require_relative 'editors/html_editor'
 require_relative 'editors/sensitive_editor'
 require_relative 'editors/relation_editor'
 require_relative 'editors/content_editor'
+require_relative 'editors/date_editor'
 
 require_relative 'formatters/percentage_formatter'
 
