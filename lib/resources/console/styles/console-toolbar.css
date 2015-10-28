@@ -5,7 +5,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  height: 25px; }
+  height: 25px;
+  z-index: 1000; }
   .console-toolbar .brand-wrap {
     display: inline-block;
     margin-left: 10px;
