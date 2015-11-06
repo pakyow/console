@@ -37,7 +37,7 @@ module Pakyow::Helpers
 
   def current_console_user
     if platform?
-      { email: session[:platform_email] }
+      { email: session[:platform_email], id: session[:platform_email] }
     else
       user = Pakyow::Console.model(:user)[session[CONSOLE_SESSION_KEY]]
       return user if user && user.console?

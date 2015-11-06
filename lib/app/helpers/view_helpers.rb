@@ -10,7 +10,7 @@ module Pakyow::Helpers
     }
 
     unless current_console_user.nil?
-      q[:user_id] = current_console_user.id
+      q[:user_id] = current_console_user[:id]
     end
 
     if req.socket? && @errors && !@errors.empty?
