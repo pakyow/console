@@ -21,7 +21,13 @@ class Pakyow::Console::DataType
     @reference = block
   end
 
-  def attribute(name, type, nice: nil, **extras)
+  def attribute(name, type = nil, nice: nil, **extras)
+    if type.nil?
+      return {
+        extras: @extras[name]
+      }
+    end
+
     @attributes[name] = type
     @nice_names[name] = nice unless nice.nil?
     @extras[name] = extras

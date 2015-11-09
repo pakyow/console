@@ -21,6 +21,12 @@ module Pakyow::Console::DataTypeRegistry
     @datatypes = nil
   end
 
+  def self.for_model(model)
+    @datatypes.find { |name, datatype|
+      datatype.model_object == model
+    }[1]
+  end
+
   private
 
   def self.datatypes
