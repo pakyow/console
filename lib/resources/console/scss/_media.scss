@@ -2,10 +2,16 @@
 }
 
 .media-item {
+  margin-bottom: 20px;
+
   &.active {
     .media-thumb {
       border-color: $color-blue;
     }
+  }
+
+  &:nth-child(4n + 1) {
+    margin-left: 0 !important;
   }
 
   .media-thumb {
@@ -26,6 +32,12 @@
 
     .media-meta-name {
       font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 140px;
+      height: 15px;
+      display: inline-block;
     }
   }
 }

@@ -644,22 +644,32 @@ textarea {
   font-size: 13px;
   font-size: 1.3rem; }
 
-.media-item.active .media-thumb {
-  border-color: #4986e8; }
-.media-item .media-thumb {
-  width: 175px;
-  height: 175px;
-  background-color: #eee;
-  border: 3px solid #eee; }
-.media-item .media-meta {
-  font-size: 11px;
-  font-size: 1.1rem;
-  color: #777;
-  margin-top: 10px; }
-  .media-item .media-meta .media-meta-size {
-    float: right; }
-  .media-item .media-meta .media-meta-name {
-    font-weight: 600; }
+.media-item {
+  margin-bottom: 20px; }
+  .media-item.active .media-thumb {
+    border-color: #4986e8; }
+  .media-item:nth-child(4n + 1) {
+    margin-left: 0 !important; }
+  .media-item .media-thumb {
+    width: 175px;
+    height: 175px;
+    background-color: #eee;
+    border: 3px solid #eee; }
+  .media-item .media-meta {
+    font-size: 11px;
+    font-size: 1.1rem;
+    color: #777;
+    margin-top: 10px; }
+    .media-item .media-meta .media-meta-size {
+      float: right; }
+    .media-item .media-meta .media-meta-name {
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 140px;
+      height: 15px;
+      display: inline-block; }
 
 .console-content {
   margin-left: -50px;
