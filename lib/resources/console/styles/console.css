@@ -769,12 +769,12 @@ textarea {
   background: #eee;
   background-repeat: no-repeat;
   background-size: cover;
-  text-align: center;
-  padding: 50px 0; }
+  text-align: center; }
   .console-content-image-wrapper i {
     color: #fff;
     font-size: 50px;
-    font-size: 5rem; }
+    font-size: 5rem;
+    margin: 50px 0; }
 
 .console-content-embed textarea {
   font-family: "Source Code Pro", Menlo, monospace; }

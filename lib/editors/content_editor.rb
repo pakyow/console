@@ -17,7 +17,10 @@ Pakyow::Console.editor :content do |extras, value|
     view.scope(:editor).attrs.value = value
   end
 
-  view.scope(:constraints).attrs.value = URI.escape(extras[:constraints].to_json)
+  view.scope(:constraints)[0].with do
+    attrs.value = URI.escape(extras[:constraints].to_json)
+    attrs[:'data-scope'] = nil
+  end
 
   view.scope(:editor).attrs[:'data-scope'] = nil
   view.instance_variable_get(:@view)

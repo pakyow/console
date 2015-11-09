@@ -170,11 +170,11 @@
   background-repeat: no-repeat;
   background-size: cover;
   text-align: center;
-  padding: 50px 0;
 
   i {
     color: $color-white;
     @include rem(font-size, 50);
+    margin: 50px 0;
   }
 }
 
