@@ -121,7 +121,7 @@ Pakyow::App.routes :'console-data' do
           datum = type.model_object[params[:datum_id]]
 
           Pakyow::Console::ServiceHookRegistry.call(:before, :delete, type.name, datum, self)
-          datum.delete
+          datum.destroy
           Pakyow::Console::ServiceHookRegistry.call(:after, :delete, type.name, datum, self)
 
           notify("#{type.nice_name.downcase} deleted", :success)
