@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.license                = 'LGPL-3.0'
   spec.required_ruby_version  = '>= 2.0.0'
 
-  spec.add_dependency('pakyow', '> 0.9')
+  spec.add_dependency('pakyow', '~> 0.10')
   spec.add_dependency('pakyow-slim', '~> 1.0')
   spec.add_dependency('sequel', '~> 4.25')
   spec.add_dependency('pg', '~> 0.18')
