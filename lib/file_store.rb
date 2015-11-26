@@ -1,11 +1,12 @@
 require 'mini_magick'
 require 'fileutils'
 
+require_relative 'file_store_adapters/database_adapter'
+require_relative 'file_store_adapters/file_system_adapter'
+
 module Pakyow::Console
   class FileStore
     include Singleton
-
-    SKIPPED = ['.', '..', '.DS_Store', 'thumbnails', 'processed']
 
     def self.type_for_ext(ext)
       case ext.downcase
@@ -21,99 +22,72 @@ module Pakyow::Console
     end
 
     def initialize
-      @store_path = Pakyow::Config.console.file_storage_path
+      @adapter = Pakyow::Config.console.file_store_adapter.new
     end
 
     def store!(filename, tempfile)
       #TODO raise exception rather than return
       return if filename.nil? || tempfile.nil?
 
-      unless Dir.exists?(@store_path)
-        Dir.mkdir(@store_path)
-      end
-
       ext = File.extname(filename).downcase
 
+      #TODO md5 digest of file
+      #TODO handle file already existing
       id = SecureRandom.uuid
-      file_path = File.join(@store_path, id)
-      FileUtils.mv(tempfile.path, file_path + ext)
 
       type = self.class.type_for_ext(ext)
 
       width, height = case type
       when 'image'
-        s = ImageSize.new(File.open(file_path + ext))
-        [s.width, s.height]
+        size = ImageSize.new(tempfile)
+        [size.width, size.height]
       end
 
-      config = {
+      metadata = {
         id: id,
-        path: file_path + ext,
         filename: filename,
-        size: File.size(file_path + ext),
+        size: File.size(tempfile),
         ext: ext,
         type: type,
       }
 
-      config[:width] = width unless width.nil?
-      config[:height] = height unless height.nil?
+      metadata[:width] = width unless width.nil?
+      metadata[:height] = height unless height.nil?
 
-      File.write(file_path + '.yml', config.to_yaml)
+      @adapter.store!(filename, tempfile, metadata)
 
-      reset
-
-      config
+      # always return the metadata
+      metadata
     end
 
     def find(id)
-      files.find { |f| f[:id] == id }
-    end
-
-    def files
-      @files ||= load
+      @adapter.find(id)
     end
 
     def process(id, w: nil, h: nil)
       file = find(id)
-      return unless file[:type] == 'image'
+      return if file[:type] != 'image'
 
-      ext = file[:ext]
+      @adapter.processed(file[:id], w: w, h: h) || process!(file, w: w, h: h)
+    end
 
-      path = id
-      processed_path = File.join(@store_path, 'processed')
-      sized_path = File.join(processed_path, path)
-
-      Dir.mkdir(processed_path) unless Dir.exists?(processed_path)
-      Dir.mkdir(sized_path)     unless Dir.exists?(sized_path)
-
-      new_path = File.join(sized_path, w.to_s + 'x' + h.to_s + ext)
-
-      unless File.exists?(new_path)
-        image = MiniMagick::Image.open(File.join(@store_path, path + ext))
-        image.resize "#{w}x#{h}^"
-        image.combine_options do |i|
-          i.gravity "center"
-          i.extent "#{w}x#{h}"
-        end
-        image.write new_path
+    def process!(file, w: nil, h: nil)
+      image = MiniMagick::Image.read(@adapter.data(file[:id]))
+      image.resize "#{w}x#{h}^"
+      image.combine_options do |i|
+        i.gravity "center"
+        i.extent "#{w}x#{h}"
       end
 
-      File.open(new_path)
+      data = image.to_blob
+      @adapter.process!(file, data, w: w, h: h)
+
+      # always return the processed data
+      data
     end
 
-    private
-
-    def reset
-      @files = nil
-    end
-
-    def load
-      Dir.entries(@store_path).map { |file|
-        next if SKIPPED.include?(file) || File.extname(file) == '.yml'
-
-        config_file = File.join(@store_path, file.split('.')[0..-2].join('.') + '.yml')
-        YAML::load_file(config_file)
-      }.reject(&:nil?)
+    def data(id)
+      data(id)
     end
   end
 end

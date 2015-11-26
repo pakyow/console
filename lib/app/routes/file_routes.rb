@@ -26,12 +26,12 @@ Pakyow::App.routes :'console-file' do
           h = params[:h]
 
           if w && h && file[:type] == 'image'
-            file = Pakyow::Console::FileStore.instance.process(params[:file_id], w: w, h: h)
+            data = Pakyow::Console::FileStore.instance.process(params[:file_id], w: w, h: h)
           else
-            file = File.open(file[:path])
+            data = Pakyow::Console::FileStore.instance.data(params[:file_id])
           end
 
-          send(file)
+          send(data, Rack::Mime.mime_type(file[:ext]))
         else
           handle 404
         end

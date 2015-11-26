@@ -1,11 +1,15 @@
+require_relative 'file_store_adapters/file_system_adapter'
+
 Pakyow::Config.register(:console) { |config|
 
-  config.opt :file_storage_path
   config.opt :use_pakyow_platform, true
 
   config.opt :models, {
     user: 'Pakyow::Console::User'
   }
+
+  config.opt :file_store_adapter, Pakyow::Console::FileSystemAdapter
+  config.opt :file_storage_path
 
 }.env(:development) { |opts|
 
