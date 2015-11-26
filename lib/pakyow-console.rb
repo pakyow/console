@@ -1,9 +1,10 @@
-# require 'pakyow-support'
-# require 'pakyow-core'
-# require 'pakyow-presenter'
-# require 'pakyow-realtime'
-# require 'pakyow-ui'
+require 'pakyow-support'
+require 'pakyow-core'
+require 'pakyow-presenter'
+require 'pakyow-realtime'
+require 'pakyow-ui'
 
+require 'pakyow-assets'
 require 'pakyow-slim'
 
 require 'sequel'
@@ -115,6 +116,10 @@ Pakyow::Console.add_load_path(app_path)
 
 CLOSING_HEAD_REGEX = /<\/head>/m
 CLOSING_BODY_REGEX = /<\/body>/m
+
+Pakyow::App.before :init do
+  config.assets.stores[:console] = File.expand_path('../app/assets', __FILE__)
+end
 
 Pakyow::App.after :init do
   if Pakyow.app.env == :development

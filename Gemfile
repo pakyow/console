@@ -1,5 +1,6 @@
 gem 'pakyow', '> 0.9'
 gem 'pakyow-slim', '~> 0.2'
+gem 'pakyow-assets', '~> 0.1'
 gem 'sass', '~> 3.4'
 gem 'sequel', '~> 4.25'
 gem 'pg', '~> 0.18'

@@ -15,6 +15,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency('pakyow', '~> 0.10')
   spec.add_dependency('pakyow-slim', '~> 1.0')
+  spec.add_dependency('pakyow-assets', '~> 0.1')
   spec.add_dependency('sequel', '~> 4.25')
   spec.add_dependency('pg', '~> 0.18')
   spec.add_dependency('httparty', '~> 0.13')
