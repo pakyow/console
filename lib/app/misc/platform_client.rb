@@ -1,7 +1,7 @@
 class PlatformClient
   class << self
     def auth(email, password)
-      response = HTTParty.post(File.join($platform_url, 'auth/token'), body: {
+      response = HTTParty.post(File.join(PLATFORM_URL, 'auth/token'), body: {
         login: email,
         password: password,
       })
@@ -19,7 +19,7 @@ class PlatformClient
   end
 
   def valid?
-    response = HTTParty.get(File.join($platform_url, 'api/apps'), basic_auth: {
+    response = HTTParty.get(File.join(PLATFORM_URL, 'api/apps'), basic_auth: {
       username: @email,
       password: @token,
     })
@@ -29,7 +29,7 @@ class PlatformClient
 
   def socket
     if app = @info[:app]
-      response = HTTParty.post(File.join($platform_url, 'api/apps', app[:id].to_s, 'socket'), basic_auth: {
+      response = HTTParty.post(File.join(PLATFORM_URL, 'api/apps', app[:id].to_s, 'socket'), basic_auth: {
         username: @email,
         password: @token,
       })
@@ -40,8 +40,9 @@ class PlatformClient
     end
   end
 
+  # TODO: refactor to `projects`
   def apps
-    response = HTTParty.get(File.join($platform_url, 'api/apps'), basic_auth: {
+    response = HTTParty.get(File.join(PLATFORM_URL, 'api/projects'), basic_auth: {
       username: @email,
       password: @token,
     })
@@ -51,8 +52,9 @@ class PlatformClient
     }
   end
 
+  # TODO: refactor to `project`
   def app(id)
-    response = HTTParty.get(File.join($platform_url, 'api/apps', id.to_s), basic_auth: {
+    response = HTTParty.get(File.join(PLATFORM_URL, 'api/projects', id.to_s), basic_auth: {
       username: @email,
       password: @token,
     })
@@ -62,7 +64,7 @@ class PlatformClient
 
   def events
     if app = @info[:app]
-      response = HTTParty.get(File.join($platform_url, "api/apps/#{app[:id]}", 'events'), basic_auth: {
+      response = HTTParty.get(File.join(PLATFORM_URL, "api/projects/#{app[:id]}", 'events'), basic_auth: {
         username: @email,
         password: @token,
       })
@@ -79,7 +81,7 @@ class PlatformClient
 
   def collaborators
     if app = @info[:app]
-      response = HTTParty.get(File.join($platform_url, "api/apps/#{app[:id]}", 'collaborators'), basic_auth: {
+      response = HTTParty.get(File.join(PLATFORM_URL, "api/projects/#{app[:id]}", 'collaborators'), basic_auth: {
         username: @email,
         password: @token,
       })
@@ -94,7 +96,7 @@ class PlatformClient
 
   def releases
     if app = @info[:app]
-      response = HTTParty.get(File.join($platform_url, "api/apps/#{app[:id]}", 'releases'), basic_auth: {
+      response = HTTParty.get(File.join(PLATFORM_URL, "api/projects/#{app[:id]}", 'releases'), basic_auth: {
         username: @email,
         password: @token,
       })
@@ -108,7 +110,7 @@ class PlatformClient
   end
 
   def create_release
-    response = HTTParty.post(File.join($platform_url, 'api/apps', @info[:app][:id].to_s, 'releases'), basic_auth: {
+    response = HTTParty.post(File.join(PLATFORM_URL, 'api/projects', @info[:app][:id].to_s, 'releases'), basic_auth: {
       username: @email,
       password: @token,
     })
@@ -117,7 +119,7 @@ class PlatformClient
   end
 
   def update_release(id, body)
-    response = HTTParty.patch(File.join($platform_url, 'api/apps', @info[:app][:id].to_s, 'releases', id.to_s), basic_auth: {
+    response = HTTParty.patch(File.join(PLATFORM_URL, 'api/projects', @info[:app][:id].to_s, 'releases', id.to_s), basic_auth: {
       username: @email,
       password: @token,
     }, body: { release: body })

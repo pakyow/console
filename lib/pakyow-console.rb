@@ -13,9 +13,8 @@ Sequel::Model.plugin :timestamps, update_on_create: true
 require 'image_size'
 
 CONSOLE_ROOT = File.expand_path('../', __FILE__)
+PLATFORM_URL = 'https://pakyow.com'
 
-#TODO need to be smarter about view reloading in development by keeping up with changed views
-# it's currently taking a 5ms response to a 400ms one; might also be worth doing a performance audit
 Pakyow::App.config.presenter.view_stores[:console] = [File.join(CONSOLE_ROOT, 'views')]
 Pakyow::App.config.app.resources[:console] = File.join(CONSOLE_ROOT, 'resources')
 
