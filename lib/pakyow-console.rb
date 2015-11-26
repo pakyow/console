@@ -121,13 +121,41 @@ Pakyow::App.before :init do
   config.assets.stores[:console] = File.expand_path('../app/assets', __FILE__)
 end
 
+Pakyow::App.before :load do
+  # try and access the database connection
+  # will raise an error if undefined
+  config.app.db
+end
+
 Pakyow::App.after :init do
   if Pakyow.app.env == :development
     if info = platform_creds
       @context = Pakyow::AppContext.new
       setup_platform_socket(info)
     end
+
+    app_migration_dir = File.join(config.app.root, 'migrations')
+
+    unless File.exists?(app_migration_dir)
+      FileUtils.mkdir(app_migration_dir)
+      app_migrations = []
+    end
+
+    console_migration_dir = File.expand_path('../migrations', __FILE__)
+    console_migrations = Dir.glob(File.join(console_migration_dir, '*.rb')).map { |path|
+      File.basename(path)
+    }
+
+    app_migrations = Dir.glob(File.join(app_migration_dir, '*.rb')).map { |path|
+      File.basename(path)
+    }
+
+    (console_migrations - app_migrations).each do |migration|
+      FileUtils.cp(File.join(console_migration_dir, migration), app_migration_dir)
+    end
   end
+
+  system "bundle exec sequel -m #{app_migration_dir} #{config.app.db.url}"
 end
 
 Pakyow::App.after :process do
