@@ -19,7 +19,7 @@ class PlatformClient
   end
 
   def valid?
-    response = HTTParty.get(File.join(PLATFORM_URL, 'api/apps'), basic_auth: {
+    response = HTTParty.get(File.join(PLATFORM_URL, 'api/projects'), basic_auth: {
       username: @email,
       password: @token,
     })
@@ -29,7 +29,7 @@ class PlatformClient
 
   def socket
     if app = @info[:app]
-      response = HTTParty.post(File.join(PLATFORM_URL, 'api/apps', app[:id].to_s, 'socket'), basic_auth: {
+      response = HTTParty.post(File.join(PLATFORM_URL, 'api/projects', app[:id].to_s, 'socket'), basic_auth: {
         username: @email,
         password: @token,
       })
