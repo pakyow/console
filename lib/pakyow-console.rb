@@ -65,6 +65,22 @@ module Pakyow
     def self.script(path)
       ScriptRegistry.register path
     end
+
+    def self.db
+      return @db unless @db.nil?
+
+      Pakyow.logger.info '[console] establishing database connection'
+
+      @db = Sequel.connect(ENV.fetch('DATABASE_URL'))
+      @db.extension :pg_json
+
+      Sequel.default_timezone = :utc
+      Sequel::Model.plugin :validation_helpers
+      Sequel::Model.plugin :timestamps, update_on_create: true
+      Sequel.extension :pg_json_ops
+
+      @db
+    end
   end
 end
 
@@ -124,15 +140,7 @@ Pakyow::App.after :configure do
   begin
     config.app.db
   rescue Pakyow::ConfigError
-    Pakyow.logger.info '[console] establishing database connection'
-
-    config.app.db = Sequel.connect(ENV.fetch('DATABASE_URL'))
-    config.app.db.extension :pg_json
-
-    Sequel.default_timezone = :utc
-    Sequel::Model.plugin :validation_helpers
-    Sequel::Model.plugin :timestamps, update_on_create: true
-    Sequel.extension :pg_json_ops
+    config.app.db = Pakyow::Console.db
   end
 end
 
