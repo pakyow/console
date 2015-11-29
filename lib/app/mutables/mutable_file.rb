@@ -7,6 +7,6 @@ Pakyow::App.mutable :file do
   end
 
   action :create do |name, file|
-    Pakyow::Console::FileStore.instance.store!(name, file)
+    Pakyow::Console::FileStore.instance.store(name, file)
   end
 end

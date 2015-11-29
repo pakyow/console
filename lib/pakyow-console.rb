@@ -154,6 +154,8 @@ Pakyow::App.after :init do
     end
   end
 
+  # TODO: incorporate this rather than blindly running:
+  # http://sequel.jeremyevans.net/rdoc/files/doc/migration_rdoc.html#label-Checking+for+Current+Migrations
   system "bundle exec sequel -m #{app_migration_dir} #{config.app.db.url}"
 end
 

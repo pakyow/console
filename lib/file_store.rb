@@ -25,17 +25,13 @@ module Pakyow::Console
       @adapter = Pakyow::Config.console.file_store_adapter.new
     end
 
-    def store!(filename, tempfile)
+    def store(filename, tempfile)
       #TODO raise exception rather than return
       return if filename.nil? || tempfile.nil?
 
       ext = File.extname(filename).downcase
-
-      #TODO md5 digest of file
-      #TODO handle file already existing
-      id = SecureRandom.uuid
-
       type = self.class.type_for_ext(ext)
+      hash = Digest::MD5.file(tempfile).hexdigest
 
       width, height = case type
       when 'image'
@@ -44,7 +40,7 @@ module Pakyow::Console
       end
 
       metadata = {
-        id: id,
+        hash: hash,
         filename: filename,
         size: File.size(tempfile),
         ext: ext,
@@ -54,25 +50,25 @@ module Pakyow::Console
       metadata[:width] = width unless width.nil?
       metadata[:height] = height unless height.nil?
 
-      @adapter.store!(filename, tempfile, metadata)
+      @adapter.store(tempfile, metadata)
 
       # always return the metadata
       metadata
     end
 
-    def find(id)
-      @adapter.find(id)
+    def find(hash)
+      @adapter.find(hash)
     end
 
-    def process(id, w: nil, h: nil)
-      file = find(id)
+    def processed(hash, w: nil, h: nil)
+      file = find(hash)
       return if file[:type] != 'image'
 
-      @adapter.processed(file[:id], w: w, h: h) || process!(file, w: w, h: h)
+      @adapter.processed(file[:hash], w: w, h: h) || process(file, w: w, h: h)
     end
 
-    def process!(file, w: nil, h: nil)
-      image = MiniMagick::Image.read(@adapter.data(file[:id]))
+    def process(file, w: nil, h: nil)
+      image = MiniMagick::Image.read(@adapter.data(file[:hash]))
       image.resize "#{w}x#{h}^"
       image.combine_options do |i|
         i.gravity "center"
@@ -80,14 +76,14 @@ module Pakyow::Console
       end
 
       data = image.to_blob
-      @adapter.process!(file, data, w: w, h: h)
+      @adapter.process(file, data, w: w, h: h)
 
       # always return the processed data
       data
     end
 
-    def data(id)
-      data(id)
+    def data(hash)
+      @adapter.data(hash)
     end
   end
 end

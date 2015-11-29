@@ -1,4 +1,4 @@
-require_relative 'file_store_adapters/file_system_adapter'
+require_relative 'file_store_adapters/database_adapter'
 
 Pakyow::Config.register(:console) { |config|
 
@@ -8,7 +8,7 @@ Pakyow::Config.register(:console) { |config|
     user: 'Pakyow::Console::User'
   }
 
-  config.opt :file_store_adapter, Pakyow::Console::FileSystemAdapter
+  config.opt :file_store_adapter, Pakyow::Console::DBFileAdapter
   config.opt :file_storage_path
 
 }.env(:development) { |opts|

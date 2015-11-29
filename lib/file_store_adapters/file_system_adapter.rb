@@ -7,12 +7,14 @@ module Pakyow
         @store_path = Pakyow::Config.console.file_storage_path
       end
 
-      def store!(filename, tempfile, metadata)
+      def store(tempfile, metadata)
         unless Dir.exists?(@store_path)
           Dir.mkdir(@store_path)
         end
 
-        file_path = File.join(@store_path, metadata[:id])
+        # TODO: check for existence of hash before blindly moving
+
+        file_path = File.join(@store_path, metadata[:hash])
         metadata[:path] = file_path + metadata[:ext]
         FileUtils.mv(tempfile.path, file_path + metadata[:ext])
         File.write(file_path + '.yml', metadata.to_yaml)
@@ -20,23 +22,25 @@ module Pakyow
         reset
       end
 
-      def process!(file, processed_data, w: nil, h: nil)
-        path = processed_path(file[:id], w: w, h: h)
-        File.open(processed_path(file[:id], w: w, h: h), 'wb+').write(processed_data)
+      def process(file, processed_data, w: nil, h: nil)
+        path = processed_path(file[:hash], w: w, h: h)
+        File.open(processed_path(file[:hash], w: w, h: h), 'wb+') do |f|
+          f.write(processed_data)
+        end
       end
 
-      def find(id)
-        files.find { |f| f[:id] == id }
+      def find(hash)
+        files.find { |f| f[:hash] == hash }
       end
 
-      def processed(id, w: nil, h: nil)
-        path = processed_path(id, w: w, h: h)
+      def processed(hash, w: nil, h: nil)
+        path = processed_path(hash, w: w, h: h)
         return nil unless File.exists?(path)
-        File.open(path).read
+        File.read(path)
       end
 
-      def data(id)
-        File.open(find(id)[:path], 'rb')
+      def data(hash)
+        File.open(find(hash)[:path], 'rb')
       end
 
       private
@@ -58,11 +62,11 @@ module Pakyow
         @files ||= load
       end
 
-      def processed_path(id, w: nil, h: nil)
-        file = find(id)
+      def processed_path(hash, w: nil, h: nil)
+        file = find(hash)
 
         ext = file[:ext]
-        path = file[:id]
+        path = file[:hash]
 
         processed_path = File.join(@store_path, 'processed')
         sized_path = File.join(processed_path, path)
