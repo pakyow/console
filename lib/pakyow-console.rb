@@ -120,20 +120,30 @@ Pakyow::App.before :init do
   config.assets.stores[:console] = File.expand_path('../app/assets', __FILE__)
 end
 
-Pakyow::App.before :load do
-  # try and access the database connection
-  # will raise an error if undefined
-  config.app.db
+Pakyow::App.after :configure do
+  begin
+    config.app.db
+  rescue Pakyow::ConfigError
+    Pakyow.logger.info '[console] establishing database connection'
+
+    config.app.db = Sequel.connect(ENV.fetch('DATABASE_URL'))
+    config.app.db.extension :pg_json
+
+    Sequel.default_timezone = :utc
+    Sequel::Model.plugin :validation_helpers
+    Sequel::Model.plugin :timestamps, update_on_create: true
+    Sequel.extension :pg_json_ops
+  end
 end
 
 Pakyow::App.after :init do
+  app_migration_dir = File.join(config.app.root, 'migrations')
+
   if Pakyow.app.env == :development
     if info = platform_creds
       @context = Pakyow::AppContext.new
       setup_platform_socket(info)
     end
-
-    app_migration_dir = File.join(config.app.root, 'migrations')
 
     unless File.exists?(app_migration_dir)
       FileUtils.mkdir(app_migration_dir)
@@ -150,13 +160,21 @@ Pakyow::App.after :init do
     }
 
     (console_migrations - app_migrations).each do |migration|
+      Pakyow.logger.info "[console] copying migration #{migration}"
       FileUtils.cp(File.join(console_migration_dir, migration), app_migration_dir)
     end
   end
 
-  # TODO: incorporate this rather than blindly running:
-  # http://sequel.jeremyevans.net/rdoc/files/doc/migration_rdoc.html#label-Checking+for+Current+Migrations
-  system "bundle exec sequel -m #{app_migration_dir} #{config.app.db.url}"
+  begin
+    Pakyow.logger.info '[console] checking for missing migrations'
+    Sequel.extension :migration
+    Sequel::Migrator.check_current(config.app.db, app_migration_dir)
+  rescue Sequel::Migrator::NotCurrentError
+    Pakyow.logger.info '[console] not current; running migrations now'
+    Sequel::Migrator.run(config.app.db, app_migration_dir)
+  end
+
+  Pakyow.logger.info '[console] migrations are current'
 end
 
 Pakyow::App.after :process do
