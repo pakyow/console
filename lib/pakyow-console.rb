@@ -20,6 +20,8 @@ Pakyow::App.config.app.resources[:console] = File.join(CONSOLE_ROOT, 'resources'
 
 require_relative 'version'
 
+Pakyow::Assets.preprocessor :eot, :svg, :ttf, :woff, :woff2, :otf
+
 module Pakyow
   module Console
     def self.loader
