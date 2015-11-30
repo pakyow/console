@@ -16,7 +16,6 @@ CONSOLE_ROOT = File.expand_path('../', __FILE__)
 PLATFORM_URL = 'https://pakyow.com'
 
 Pakyow::App.config.presenter.view_stores[:console] = [File.join(CONSOLE_ROOT, 'views')]
-Pakyow::App.config.app.resources[:console] = File.join(CONSOLE_ROOT, 'resources')
 
 require_relative 'version'
 
@@ -134,11 +133,11 @@ Pakyow::Console.add_load_path(app_path)
 CLOSING_HEAD_REGEX = /<\/head>/m
 CLOSING_BODY_REGEX = /<\/body>/m
 
-Pakyow::App.before :init do
+# make sure this after configure block executes first
+# FIXME: need an api for this on Pakyow::App
+Pakyow::App.class_variable_get(:@@stacks)[:after][:configure].unshift(lambda  {
   config.assets.stores[:console] = File.expand_path('../app/assets', __FILE__)
-end
 
-Pakyow::App.after :configure do
   begin
     config.app.db
   rescue Pakyow::ConfigError
@@ -178,7 +177,7 @@ Pakyow::App.after :configure do
   end
 
   Pakyow.logger.info '[console] migrations are current'
-end
+})
 
 Pakyow::App.after :init do
   if Pakyow::Config.env == :development
