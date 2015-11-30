@@ -144,17 +144,10 @@ Pakyow::App.after :configure do
   rescue Pakyow::ConfigError
     config.app.db = Pakyow::Console.db
   end
-end
 
-Pakyow::App.after :init do
   app_migration_dir = File.join(config.app.root, 'migrations')
 
-  if Pakyow.app.env == :development
-    if info = platform_creds
-      @context = Pakyow::AppContext.new
-      setup_platform_socket(info)
-    end
-
+  if Pakyow::Config.env == :development
     unless File.exists?(app_migration_dir)
       FileUtils.mkdir(app_migration_dir)
       app_migrations = []
@@ -185,6 +178,15 @@ Pakyow::App.after :init do
   end
 
   Pakyow.logger.info '[console] migrations are current'
+end
+
+Pakyow::App.after :init do
+  if Pakyow::Config.env == :development
+    if info = platform_creds
+      @context = Pakyow::AppContext.new
+      setup_platform_socket(info)
+    end
+  end
 end
 
 Pakyow::App.after :process do
