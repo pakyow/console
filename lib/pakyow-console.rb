@@ -171,6 +171,9 @@ Pakyow::App.class_variable_get(:@@stacks)[:after][:configure].unshift(lambda  {
     Pakyow.logger.info '[console] checking for missing migrations'
     Sequel.extension :migration
     Sequel::Migrator.check_current(config.app.db, app_migration_dir)
+  rescue Sequel::DatabaseConnectionError
+    Pakyow.logger.warn '[console] could not connect to database'
+    next
   rescue Sequel::Migrator::NotCurrentError
     Pakyow.logger.info '[console] not current; running migrations now'
     Sequel::Migrator.run(config.app.db, app_migration_dir)
