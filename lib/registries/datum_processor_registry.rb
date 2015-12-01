@@ -10,10 +10,12 @@ module Pakyow::Console::DatumProcessorRegistry
       name = attribute[:name]
       type = attribute[:type]
 
+      field = attribute[:extras][:relationship] || name
+
       begin
-        acc[name] = datum_processors.fetch(type).call(params[name], datum[name])
+        acc[field] = datum_processors.fetch(type).call(params[name], datum[name])
       rescue KeyError
-        acc[name] = params[name]
+        acc[field] = params[name]
       end
 
       acc
