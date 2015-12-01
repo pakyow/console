@@ -197,6 +197,11 @@ Pakyow::App.after :process do
     setup_toolbar(view)
 
     console_css = '<link href="/console/styles/console-toolbar.css" rel="stylesheet" type="text/css">'
+
+    if config.assets.compile_on_startup
+      console_css = Pakyow::Assets.mixin_fingerprints(console_css)
+    end
+
     font_css = '<link href="//fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,600,700" rel="stylesheet" type="text/css">'
     fa_css = '<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">'
 
