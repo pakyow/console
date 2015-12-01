@@ -43,6 +43,10 @@ module Pakyow
         File.open(find(hash)[:path], 'rb')
       end
 
+      def all
+        files
+      end
+
       private
 
       def reset

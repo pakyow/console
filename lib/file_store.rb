@@ -8,6 +8,10 @@ module Pakyow::Console
   class FileStore
     include Singleton
 
+    CONTEXT_MEDIA = 'media'
+    CONTEXT_THUMB = 'thumb'
+    CONTEXT_APP   = 'app'
+
     def self.type_for_ext(ext)
       case ext.downcase
       when '.png', '.gif', '.jpg', '.jpeg'
@@ -25,7 +29,7 @@ module Pakyow::Console
       @adapter = Pakyow::Config.console.file_store_adapter.new
     end
 
-    def store(filename, tempfile)
+    def store(filename, tempfile, context: CONTEXT_APP)
       #TODO raise exception rather than return
       return if filename.nil? || tempfile.nil?
 
@@ -40,11 +44,12 @@ module Pakyow::Console
       end
 
       metadata = {
-        hash: hash,
+        id: hash,
         filename: filename,
         size: File.size(tempfile),
         ext: ext,
         type: type,
+        context: context,
       }
 
       metadata[:width] = width unless width.nil?
@@ -60,15 +65,26 @@ module Pakyow::Console
       @adapter.find(hash)
     end
 
+    def all
+      @adapter.all
+    end
+
     def processed(hash, w: nil, h: nil)
       file = find(hash)
       return if file[:type] != 'image'
 
-      @adapter.processed(file[:hash], w: w, h: h) || process(file, w: w, h: h)
+      processed = @adapter.processed(file[:id], w: w, h: h)
+      return processed unless processed.nil?
+
+      file[:width] = w
+      file[:height] = h
+      file[:context] = CONTEXT_THUMB
+
+      process(file, w: w, h: h)
     end
 
     def process(file, w: nil, h: nil)
-      image = MiniMagick::Image.read(@adapter.data(file[:hash]))
+      image = MiniMagick::Image.read(@adapter.data(file[:id]))
       image.resize "#{w}x#{h}^"
       image.combine_options do |i|
         i.gravity "center"

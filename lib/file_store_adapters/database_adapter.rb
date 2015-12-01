@@ -25,9 +25,6 @@ module Pakyow
       end
 
       def process(metadata, data, w: nil, h: nil)
-        metadata['width'] = w
-        metadata['height'] = h
-
         file = StoredFile.new
         file.data = data
         file.metadata = metadata
@@ -40,10 +37,16 @@ module Pakyow
         file.data
       end
 
+      def all
+        StoredFile.all.map { |file|
+          Hash.strhash(file.metadata)
+        }
+      end
+
       protected
 
       def find_object(hash, w: nil, h: nil)
-        query = StoredFile.where("(metadata ->> 'hash') = '#{hash}'").order(:created_at)
+        query = StoredFile.where("(metadata ->> 'id') = '#{hash}'").order(:created_at)
         query = query.where("(metadata ->> 'width') = '#{w}'") unless w.nil?
         query = query.where("(metadata ->> 'height') = '#{h}'") unless h.nil?
         query.first
