@@ -135,7 +135,7 @@ CLOSING_BODY_REGEX = /<\/body>/m
 
 # make sure this after configure block executes first
 # FIXME: need an api for this on Pakyow::App
-Pakyow::App.instance_variable_get(:@stacks)[:after][:configure].unshift(lambda  {
+Pakyow::App.hook(:after, :configure).unshift(lambda  {
   config.assets.stores[:console] = File.expand_path('../app/assets', __FILE__)
 
   begin
