@@ -192,7 +192,7 @@ Pakyow::App.after :init do
 end
 
 Pakyow::App.after :process do
-  if req.path_parts[0] != 'console' && @presenter.presented? && console_authed? && res.body
+  if req.path_parts[0] != 'console' && @presenter && @presenter.presented? && console_authed? && res.body
     view = Pakyow::Presenter::ViewContext.new(Pakyow::Presenter::View.new(File.open(File.join(CONSOLE_ROOT, 'views', 'console', '_toolbar.slim')).read, format: :slim), self)
     setup_toolbar(view)
 
