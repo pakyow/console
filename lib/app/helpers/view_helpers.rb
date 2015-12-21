@@ -21,7 +21,7 @@ module Pakyow::Helpers
   end
 
   def gravatar_url(hash)
-    if Pakyow.app.env == :development
+    if Pakyow::Config.env == :development
       d = 'retro'
     else
       # d = CGI::escape("http://#{request.env['HTTP_HOST']}/images/avatar-default.png")
