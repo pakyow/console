@@ -141,12 +141,16 @@ module Pakyow::Console::Content
   class Embed
     def self.render(data, view, attribute)
       embed_code = data['code']
+      alignment = data['align']
+      alignment = 'default' if alignment.empty?
 
       if embed_code.match('vimeo.com')
         id = embed_code.split('vimeo.com/')[1]
-        html = '<iframe src="//player.vimeo.com/video/' + id + '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
+        html = '<div class="console-content-vimeo-wrapper"><iframe src="//player.vimeo.com/video/' + id + '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>'
         view.html = html
       end
+
+      view.attrs.class << "align-#{alignment}"
 
       view
     end
