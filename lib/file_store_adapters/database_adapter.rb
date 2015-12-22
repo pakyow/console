@@ -2,7 +2,7 @@ module Pakyow
   module Console
     class DBFileAdapter
       def store(tempfile, metadata)
-        file = find(metadata[:hash], w: metadata[:width], h: metadata[:height])
+        file = find(metadata[:id], w: metadata[:width], h: metadata[:height])
         return unless file.nil?
 
         file = StoredFile.new
