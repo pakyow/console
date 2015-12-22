@@ -7,7 +7,7 @@ Pakyow::App.routes :'console-session' do
     end
 
     get :platform_login, '/login/platform' do
-      if Pakyow.app.env == :development && !platform_creds.empty?
+      if Pakyow::Config.env == :development && !platform_creds.empty?
         session[:platform_email] = platform_creds[:email]
         session[:platform_token] = platform_creds[:token]
 

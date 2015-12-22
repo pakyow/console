@@ -90,7 +90,7 @@ module Pakyow::Console::Content
       alignment = 'default' if alignment.empty?
 
       JSON.parse(data['images']).each do |image|
-        src = Pakyow.app.router.group(:file).path(:show, file_id: image['id'])
+        src = Pakyow::Router.instance.group(:file).path(:show, file_id: image['id'])
         file = Pakyow::Console::FileStore.instance.find(image['id'])
 
         width, height = file.values_at(:width, :height)
