@@ -11,12 +11,11 @@ h1 Hello! Let's get setup.
     | Connect your pakyow.com account.
 
 p
-  a href="#" data-ui="toggle" data-config="name:setup"
-    | Or, create an account manually.
+  | Or, create an account manually.
 
 /! @include errors
 
-form@@pw-user action="/console/setup" method="post" data-ui="toggleable" data-config="name:setup"
+form@@pw-user action="/console/setup" method="post"
   fieldset
     ul
       li
