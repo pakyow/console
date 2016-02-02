@@ -9,7 +9,10 @@
     .console-content-editor data-c="editor"
       /! @include actions
 
-      textarea rows="1" placeholder="text goes here" data-ui="content-editor-plaintext" data-prop="content"
+      / textarea rows="1" placeholder="text goes here" data-ui="content-editor-plaintext" data-prop="content"
+
+      div data-ui="trix"
+        input type="hidden" data-prop="content"
 
   / image editor
   .console-content-editor-wrapper.console-content-image data-scope="content" data-template="" data-version="image"

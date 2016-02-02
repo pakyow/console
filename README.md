@@ -81,7 +81,7 @@ A `String` field, with a percent sign.
 
 **HTML**
 
-A WYSIWYG field (via Redactor).
+A WYSIWYG field (via Trix).
 
 **Sensitive**
 
