@@ -16,8 +16,8 @@
   }
 
   .to-site {
-    @include rem(font-size, 15);
-    @include rem(line-height, 25);
+    font-size: 15px;
+    line-height: 25px;
     color: $color-lgray;
     display:inline-block;
     height:25px;
@@ -26,8 +26,8 @@
 
   .brand {
     float: left;
-    @include rem(font-size, 13);
-    @include rem(line-height, 25);
+    font-size: 13px;
+    line-height: 25px;
 
     &.pakyow {
       &:after {
@@ -62,9 +62,9 @@
     }
 
     img {
-      $avatar-size: 20;
-      @include rem(height, $avatar-size);
-      @include rem(width, $avatar-size);
+      $avatar-size: 20px;
+      height: $avatar-size;
+      width: $avatar-size;
       display: inline;
       vertical-align: middle;
       border-radius: 20px;
