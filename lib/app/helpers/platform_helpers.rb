@@ -1,6 +1,8 @@
 module Pakyow
   module Helpers
     module Platform
+      include Pakyow::Helpers
+
       def platform_client(email = nil, token = nil)
         if email && token
           PlatformClient.new(email, token, platform_info)
