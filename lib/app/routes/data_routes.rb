@@ -87,6 +87,8 @@ Pakyow::App.routes :'console-data' do
           @type = Pakyow::Console::DataTypeRegistry.type(params[:data_id])
           view.container(:default).scope(:'console-data-type').bind(@type)
 
+          Pakyow::Console::ServiceHookRegistry.call(:before, :edit, @type.name, nil, self)
+
           @datum ||= @type.model_object[params[:datum_id]]
           setup_datum_form
         end

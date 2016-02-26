@@ -1,11 +1,11 @@
-require 'pakyow-support'
-require 'pakyow-core'
-require 'pakyow-presenter'
-require 'pakyow-realtime'
-require 'pakyow-ui'
+# require 'pakyow-support'
+# require 'pakyow-core'
+# require 'pakyow-presenter'
+# require 'pakyow-realtime'
+# require 'pakyow-ui'
 
-require 'pakyow-assets'
-require 'pakyow-slim'
+# require 'pakyow-assets'
+# require 'pakyow-slim'
 
 require 'sequel'
 Sequel::Model.plugin :timestamps, update_on_create: true
@@ -31,12 +31,20 @@ module Pakyow
       @load_paths ||= []
     end
 
+    def self.migration_paths
+      @migration_paths ||= []
+    end
+
     def self.imports
       @imports ||= []
     end
 
     def self.add_load_path(path)
       load_paths << path
+    end
+
+    def self.add_migration_path(path)
+      migration_paths << path
     end
 
     def self.boot_plugins
@@ -78,9 +86,18 @@ module Pakyow
       Sequel.default_timezone = :utc
       Sequel::Model.plugin :validation_helpers
       Sequel::Model.plugin :timestamps, update_on_create: true
+      Sequel::Model.plugin :uuid
       Sequel.extension :pg_json_ops
 
       @db
+    end
+
+    def self.pages
+      @pages ||= Pakyow::Console::Page.where(published: true).all
+    end
+
+    def self.invalidate_pages
+      @pages = nil
     end
   end
 end
@@ -152,10 +169,18 @@ Pakyow::App.hook(:after, :configure).unshift(lambda  {
       app_migrations = []
     end
 
+    migration_map = {}
     console_migration_dir = File.expand_path('../migrations', __FILE__)
-    console_migrations = Dir.glob(File.join(console_migration_dir, '*.rb')).map { |path|
-      File.basename(path)
-    }
+    migration_paths = Pakyow::Console.migration_paths.push(console_migration_dir)
+    console_migrations = []
+
+    migration_paths.each do |migration_path|
+      console_migrations.concat Dir.glob(File.join(migration_path, '*.rb')).map { |path|
+        basename = File.basename(path)
+        migration_map[basename] = path
+        basename
+      }
+    end
 
     app_migrations = Dir.glob(File.join(app_migration_dir, '*.rb')).map { |path|
       File.basename(path)
@@ -163,7 +188,7 @@ Pakyow::App.hook(:after, :configure).unshift(lambda  {
 
     (console_migrations - app_migrations).each do |migration|
       Pakyow.logger.info "[console] copying migration #{migration}"
-      FileUtils.cp(File.join(console_migration_dir, migration), app_migration_dir)
+      FileUtils.cp(migration_map[migration], app_migration_dir)
     end
   end
 
@@ -213,14 +238,20 @@ end
 
 Pakyow::App.before :load do
   Pakyow::Console.boot_plugins
+end
 
+Pakyow::App.after :load do
   Pakyow::Console.load_paths.each do |path|
     Pakyow::Console.loader.load_from_path(path)
   end
 
+  # make sure the console routes are last (since they have the catch-all)
+  Pakyow::App.routes[:console] = Pakyow::App.routes.delete(:console)
+
   unless Pakyow::Console::DataTypeRegistry.names.include?(:user)
     Pakyow::Console::DataTypeRegistry.register :user, icon_class: 'users' do
       model Pakyow::Config.console.models[:user]
+      pluralize
 
       attribute :name, :string, nice: 'Full Name'
       attribute :username, :string
@@ -234,6 +265,95 @@ Pakyow::App.before :load do
       end
     end
   end
+
+  unless Pakyow::Console::DataTypeRegistry.names.include?(:page)
+    Pakyow::Console::DataTypeRegistry.register :page, icon_class: 'columns' do
+      model Pakyow::Config.console.models[:page]
+      pluralize
+
+      attribute :name, :string
+
+      # TODO: make the slug editable on the edit page only
+      # attribute :slug, :string
+
+      # TODO: add more user-friendly template descriptions (embedded in the top-matter?)
+      attribute :page, :relation, class: Pakyow::Config.console.models[:page], nice: 'Parent Page', relationship: :parent
+
+      # TODO: (later) add configuration to containers so that content can be an image or whatever (look at GIRT)
+      # TODO: (later) we definitely need the concept of content templates (perhaps in _content) or something
+      attribute :template, :enum, values: Pakyow.app.presenter.store.templates.keys.map { |k| [k,k] }.unshift(['', ''])
+
+      # TODO: render a unique content editor per container
+      #   we're currently setting the single content editor under `default` for compatibility
+      attribute :content, :content
+
+      # TODO: we need a metadata editor with the ability for the user to add k / v OR for the editor to define keys
+
+      action :publish,
+             label: 'Publish',
+             notification: 'page published',
+             display: ->(page) { !page.published? } do |page|
+        page.published = true
+        page.save
+
+        Pakyow::Console.invalidate_pages
+      end
+
+      action :unpublish,
+             label: 'Unpublish',
+             notification: 'page unpublished',
+             display: ->(page) { page.published? } do |page|
+        page.published = false
+        page.save
+
+        Pakyow::Console.invalidate_pages
+      end
+    end
+  end
+
+  editables = {}
+  presenter.store(:default).views do |view, path|
+    editables = view.doc.editables
+    next if editables.empty?
+
+    page = Pakyow::Console::Page.where(slug: path).first
+    next unless page.nil?
+
+    composer = presenter.store(:default).composer(path)
+
+    # TODO: support multiple editables
+    # this will take place once the pw-content table is created
+    # each editable would have an associated content record and
+    # would be isomorphicly related to the page (this will also
+    # solve the multiple container problem)
+
+    content = {
+      id: SecureRandom.uuid,
+      scope: :content,
+    }
+
+    editable = editables.first
+
+    # TODO: I think this is where we'd check for editable-parts
+
+    content[:type] = :default
+    content[:content] = editables.first[:doc].to_html
+
+    page = Pakyow::Console::Page.new
+    page.slug = path
+    page.name = path.split('/').last
+    page.template = composer.page.info[:template] || :default
+    puts editables.first.inspect
+    page.content = [content]
+    page.published = true
+    page.save
+  end
+
+  # TODO: we need a navigation datatype; this would let you build a navigation containing particular
+  #   pages, plugin endpoints, etc; essentially anything that registers a route with console.
+  #   the items could be ordered with each navigation.
+  #   nested pages would be taken into account somehow.
+  #   we'd need to figure out the rendering; perhaps we'll have to define navigation types (extendable)...
 end
 
 Pakyow::App.before :error do
@@ -261,3 +381,41 @@ end
 
 # Pakyow::Console::PanelRegistry.register :content, mode: :production, nice_name: 'Pages', icon_class: 'newspaper-o' do; end
 # Pakyow::Console::PanelRegistry.register :stats, mode: :production, nice_name: 'Stats', icon_class: 'bar-chart' do; end
+
+Pakyow::Presenter::StringDocParser::SIGNIFICANT << :editable?
+
+module Pakyow
+  module Presenter
+    class StringDocParser
+      private
+
+      def editable?(node)
+        return false unless node['data-editable']
+        return true
+      end
+    end
+
+    class StringDoc
+      def editables
+        find_editables(@node ? [@node] : @structure)
+      end
+
+      private
+
+      def find_editables(structure, primary_structure = @structure, editables = [])
+        ret_editables = structure.inject(editables) { |s, e|
+          if e[1].has_key?(:'data-editable')
+            s << {
+              doc: StringDoc.from_structure(primary_structure, node: e),
+              editable: e[1][:'data-editable'].to_sym,
+            }
+          end
+          find_editables(e[2], e[2], s)
+          s
+        } || []
+
+        ret_editables
+      end
+    end
+  end
+end

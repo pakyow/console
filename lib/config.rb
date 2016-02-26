@@ -5,7 +5,8 @@ Pakyow::Config.register(:console) { |config|
   config.opt :use_pakyow_platform, true
 
   config.opt :models, {
-    user: 'Pakyow::Console::User'
+    user: 'Pakyow::Console::User',
+    page: 'Pakyow::Console::Page'
   }
 
   config.opt :file_store_adapter, Pakyow::Console::DBFileAdapter

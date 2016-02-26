@@ -29,4 +29,20 @@ Pakyow::App.routes :console do
   #     end
   #   end
   # end
+
+  # This is the catch-all route for mapping to configured endpoints (plugins, pages, etc).
+  #
+  get /.*/ do
+    page = Pakyow::Console.pages.find { |p| p.matches?(req.path) }
+
+    if page.nil?
+      begin
+        presenter.path = req.path
+      rescue Pakyow::Presenter::MissingView
+        handle 404
+      end
+    else
+      reroute router.group(:page).path(:show, page_id: page.id)
+    end
+  end
 end

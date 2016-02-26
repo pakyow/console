@@ -30,13 +30,16 @@ module Pakyow::Console
   class ContentRenderer
     TYPES = [:default, :image, :embed, :break]
 
+    # TODO: constraints should probably be passed in here
+    # rather than being looked up as part of the attribute
+    # basically decouple content rendering from datatypes
     def self.render(content, view: nil, attr: :content)
       templates = find_templates(view)
       datatype = DataTypeRegistry.for_model(content.class)
       attribute = datatype.attribute(attr)
 
       view.apply(content) do |view, datum|
-        datum[attr].each do |piece|
+        datum.send(attr).each do |piece|
           type = piece['type'].to_sym
           template = templates[type].dup
           renderer = ContentTypeRegistry.type(type)
@@ -57,7 +60,12 @@ module Pakyow::Console
         tv = view.scope("content-#{type}")[0]
         next if tv.nil?
 
-        templates[type] = tv.subject.dup
+        if tv.is_a?(Pakyow::Presenter::View)
+          templates[type] = tv.dup
+        else
+          templates[type] = tv.subject.dup
+        end
+
         tv.remove
       end
 
@@ -69,12 +77,11 @@ end
 module Pakyow::Console::Content
   class Default
     def self.render(data, view, attribute)
-      processor = Pakyow.app.presenter.processor_store[:md]
       content = data['content']
 
-      if processor
-        content = processor.call(content)
-      end
+      # NOTE: this is a workaround for trix, which uses <div> rather than <p>
+      content.gsub!('<div>', '<p>')
+      content.gsub!('</div>', '</p>')
 
       view.html = content
       view
@@ -84,7 +91,10 @@ module Pakyow::Console::Content
   class Image
     def self.render(data, view, attribute)
       working = view
-      constraints = attribute[:extras][:constraints][:image]
+
+      if attribute[:extras] && attribute[:extras][:constraints]
+        constraints = attribute[:extras][:constraints][:image]
+      end
 
       alignment = data['align']
       alignment = 'default' if alignment.empty?
