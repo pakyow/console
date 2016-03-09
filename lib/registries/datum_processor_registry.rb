@@ -6,16 +6,21 @@ module Pakyow::Console::DatumProcessorRegistry
   end
 
   def self.process(params, datum = {}, as: nil)
-    as.attributes.inject({}) do |acc, attribute|
+    as.attributes(datum).inject({}) do |acc, attribute|
       name = attribute[:name]
       type = attribute[:type]
 
       field = attribute[:extras][:relationship] || name
+      setter = attribute[:extras][:setter]
 
-      begin
-        acc[field] = datum_processors.fetch(type).call(params[name], datum[name])
-      rescue KeyError
-        acc[field] = params[name]
+      if setter
+        setter.call(datum, params)
+      else
+        begin
+          acc[field] = datum_processors.fetch(type).call(params[name], datum[name])
+        rescue KeyError
+          acc[field] = params[name] if params.key?(name.to_s)
+        end
       end
 
       acc

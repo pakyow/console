@@ -1,6 +1,8 @@
 .console-content {
   margin-left: -50px;
   margin-right: -25px;
+  position: relative;
+  padding-bottom: 20px;
 }
 
 .console-content-editor-wrapper {
@@ -127,6 +129,9 @@
   display: block;
   padding-top: 10px;
   color: $color-lgray;
+  position: absolute;
+  bottom: 0;
+  left: 50px;
 
   &:hover {
     color: $color-red;

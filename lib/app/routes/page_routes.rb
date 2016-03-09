@@ -13,7 +13,7 @@ Pakyow::App.routes :'console-page' do
         view = presenter.store(:console).view('/console/pages/template')
         Pakyow::Console::ContentRenderer.render(page, view: view.scope(:content)[0])
 
-        vpage = Pakyow::Presenter::Page.new(page.name, view.scope(:content)[0].to_html, '/')
+        vpage = Pakyow::Presenter::Models::Page.new(page.name, view.scope(:content)[0].to_html, '/')
         presenter.compose_at('/', template: page.template.to_sym, page: vpage)
 
         # TODO: we need a way to configure the title template; e.g. !Magic: {page-title}

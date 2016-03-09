@@ -10,7 +10,8 @@ class Pakyow::Console::DataType
     @nice_names = {}
     @extras = {}
     @actions = {}
-    instance_exec(self, &block)
+    @dynamic = []
+    instance_exec(self, &block) if block_given?
   end
 
   def related_to(name, as: nil)
@@ -33,7 +34,7 @@ class Pakyow::Console::DataType
     @extras[name] = extras
   end
 
-  def attributes
+  def attributes(datum = nil)
     @attributes.map { |attribute|
       {
         name: attribute[0],
@@ -41,7 +42,7 @@ class Pakyow::Console::DataType
         nice: @nice_names.fetch(attribute[0], Inflecto.humanize(attribute[0])),
         extras: @extras[attribute[0]],
       }
-    }
+    }.concat(attributes_for_datum(datum))
   end
 
   def actions
@@ -96,9 +97,23 @@ class Pakyow::Console::DataType
     !@hidden
   end
 
+  def dynamic(&block)
+    @dynamic << block
+  end
+
   private
 
   def pluralize?
     @pluralize == true
+  end
+
+  def attributes_for_datum(datum = nil)
+    return [] if datum.nil?
+
+    @dynamic.inject([]) do |arr, block|
+      datatype = Pakyow::Console::DataType.new(name, icon_class)
+      datatype.instance_exec(datum, &block)
+      arr.concat(datatype.attributes)
+    end
   end
 end

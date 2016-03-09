@@ -29,7 +29,7 @@ Pakyow::App.routes :'console-data' do
 
           view.partial(:table).scope(:'console-datum').apply(data) do |view, datum|
             view.scope(:'console-data-value').repeat(listables) do |view, type|
-              value = datum[type[:name]]
+              value = datum.send(type[:name])
 
               if value.nil? || (value.is_a?(String) && value.empty?)
                 text = '-'
@@ -101,9 +101,6 @@ Pakyow::App.routes :'console-data' do
           Pakyow::Console::ServiceHookRegistry.call(:before, :update, @type.name, @datum, self)
 
           if @datum.valid?
-            #TODO this is where we'll want to let registered processors process
-            # the incoming data (especially important for media + file types)
-
             @datum.save
             ui.mutated(:datum)
             Pakyow::Console::ServiceHookRegistry.call(:after, :update, @type.name, @datum, self)

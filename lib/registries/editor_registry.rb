@@ -6,8 +6,13 @@ module Pakyow::Console::EditorRegistry
   end
 
   def self.editor_for_attribute(attribute, datum, type, context)
-    value = datum.is_a?(Hash) ? datum[attribute[:name]] : datum.send(attribute[:name])
-    view = context.instance_exec(attribute[:extras], value, attribute, datum, type, &editors.fetch(attribute[:type]))
+    value = if attribute[:extras].key?(:value)
+      attribute[:extras][:value].call(datum)
+    else
+      datum.is_a?(Hash) ? datum[attribute[:name]] : datum.send(attribute[:name])
+    end
+
+    view = context.instance_exec(attribute, value, attribute, datum, type, &editors.fetch(attribute[:type]))
     # In a custom editor that either sets everything literally or maybe returns a view
     #   with multiple form elements, it might not have an 'editor' scope.
     if view.scope(:editor)

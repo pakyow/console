@@ -1,6 +1,7 @@
 require 'uri'
 
-Pakyow::Console.editor :content do |extras, value|
+Pakyow::Console.editor :content do |attribute, value|
+  extras = attribute[:extras]
   partial = presenter.store(:console).partial('console/editors', :content).dup
 
   partial.includes({
@@ -22,6 +23,7 @@ Pakyow::Console.editor :content do |extras, value|
     attrs[:'data-scope'] = nil
   end
 
+  view.scope(:editor).attrs[:name] = "console-datum[#{attribute[:name]}]"
   view.scope(:editor).attrs[:'data-scope'] = nil
   view.instance_variable_get(:@view)
 end

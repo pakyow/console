@@ -8,7 +8,14 @@
 # require 'pakyow-slim'
 
 require 'sequel'
+
+Sequel.extension :pg_json_ops
+Sequel.default_timezone = :utc
+
 Sequel::Model.plugin :timestamps, update_on_create: true
+Sequel::Model.plugin :polymorphic
+Sequel::Model.plugin :validation_helpers
+Sequel::Model.plugin :uuid
 
 require 'image_size'
 
@@ -82,18 +89,11 @@ module Pakyow
 
       @db = Sequel.connect(ENV.fetch('DATABASE_URL'))
       @db.extension :pg_json
-
-      Sequel.default_timezone = :utc
-      Sequel::Model.plugin :validation_helpers
-      Sequel::Model.plugin :timestamps, update_on_create: true
-      Sequel::Model.plugin :uuid
-      Sequel.extension :pg_json_ops
-
       @db
     end
 
     def self.pages
-      @pages ||= Pakyow::Console::Page.where(published: true).all
+      @pages ||= Pakyow::Console::Models::Page.where(published: true).all
     end
 
     def self.invalidate_pages
@@ -273,21 +273,50 @@ Pakyow::App.after :load do
 
       attribute :name, :string
 
-      # TODO: make the slug editable on the edit page only
-      # attribute :slug, :string
+      attribute :slug, :string, display: -> (datum) {
+        !datum.nil? && !datum.id.nil?
+      }
 
-      # TODO: add more user-friendly template descriptions (embedded in the top-matter?)
+      # TODO: (later) add more user-friendly template descriptions (embedded in the top-matter?)
       attribute :page, :relation, class: Pakyow::Config.console.models[:page], nice: 'Parent Page', relationship: :parent
 
       # TODO: (later) add configuration to containers so that content can be an image or whatever (look at GIRT)
       # TODO: (later) we definitely need the concept of content templates (perhaps in _content) or something
-      attribute :template, :enum, values: Pakyow.app.presenter.store.templates.keys.map { |k| [k,k] }.unshift(['', ''])
+      attribute :template, :enum, values: Pakyow.app.presenter.store.templates.keys.map { |k| [k,k] }.unshift(['', '']), display: -> (datum) {
+        datum.nil? || datum.fully_editable?
+      }
 
-      # TODO: render a unique content editor per container
-      #   we're currently setting the single content editor under `default` for compatibility
-      attribute :content, :content
+      dynamic do |page|
+        next unless page.is_a?(Pakyow::Console::Models::Page)
 
-      # TODO: we need a metadata editor with the ability for the user to add k / v OR for the editor to define keys
+        if page.fully_editable?
+          Pakyow.app.presenter.store(:default).template(page.template.to_sym).doc.containers.each do |container|
+            attribute :"content-#{container[0]}", :content, nice: container[0].capitalize, value: -> (page) {
+              content = page.content_for(container[0])
+              content.content unless content.nil?
+            }, setter: -> (page, params) {
+              Pakyow.app.presenter.store(:default).template(page.template.to_sym).doc.containers.each do |container|
+                container_name = container[0]
+                content = page.content_for(container_name)
+                content.update(content: params[:"content-#{container_name}"])
+              end
+            }
+          end
+        else
+          page.editables.each do |editable|
+            attribute :"content-#{editable[:id]}", :content, nice: editable[:id].to_s.capitalize, value: -> (page) {
+              page.content_for(editable[:id]).content
+            }, setter: -> (page, params) {
+              page.editables.each do |editable|
+                content = page.content_for(editable[:id])
+                content.update(content: params[:"content-#{editable[:id]}"])
+              end
+            }
+          end
+        end
+      end
+
+      # TODO: (later) we need a metadata editor with the ability for the user to add k / v OR for the editor to define keys
 
       action :publish,
              label: 'Publish',
@@ -311,45 +340,39 @@ Pakyow::App.after :load do
     end
   end
 
-  editables = {}
   presenter.store(:default).views do |view, path|
     editables = view.doc.editables
     next if editables.empty?
 
-    page = Pakyow::Console::Page.where(slug: path).first
+    page = Pakyow::Console::Models::Page.where(slug: path).first
     next unless page.nil?
 
     composer = presenter.store(:default).composer(path)
 
-    # TODO: support multiple editables
-    # this will take place once the pw-content table is created
-    # each editable would have an associated content record and
-    # would be isomorphicly related to the page (this will also
-    # solve the multiple container problem)
+    config.app.db.transaction do
+      page = Pakyow::Console::Models::Page.new
+      page.slug = path
+      page.name = path.split('/').last
+      page.template = :__editable
+      page.published = true
+      page.save
 
-    content = {
-      id: SecureRandom.uuid,
-      scope: :content,
-    }
+      Pakyow::Console::Models::Page.editables_for_view(view).each do |editable|
+        # TODO: I think this is where we'd check for editable-parts
 
-    editable = editables.first
+        content = {
+          id: SecureRandom.uuid,
+          scope: :content,
+          type: :default,
+          content: editable[:doc].html
+        }
 
-    # TODO: I think this is where we'd check for editable-parts
-
-    content[:type] = :default
-    content[:content] = editables.first[:doc].to_html
-
-    page = Pakyow::Console::Page.new
-    page.slug = path
-    page.name = path.split('/').last
-    page.template = composer.page.info[:template] || :default
-    puts editables.first.inspect
-    page.content = [content]
-    page.published = true
-    page.save
+        page.add_content(content: [content], metadata: { id: editable[:id] })
+      end
+    end
   end
 
-  # TODO: we need a navigation datatype; this would let you build a navigation containing particular
+  # TODO: (later) we need a navigation datatype; this would let you build a navigation containing particular
   #   pages, plugin endpoints, etc; essentially anything that registers a route with console.
   #   the items could be ordered with each navigation.
   #   nested pages would be taken into account somehow.

@@ -1,6 +1,8 @@
 module Pakyow
   module Console
-    class StoredFile < Sequel::Model(:'pw-files')
+    module Models
+      class StoredFile < Sequel::Model(:'pw-files')
+      end
     end
   end
 end
