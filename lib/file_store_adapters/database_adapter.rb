@@ -5,7 +5,7 @@ module Pakyow
         file = find(metadata[:id], w: metadata[:width], h: metadata[:height])
         return unless file.nil?
 
-        file = StoredFile.new
+        file = Pakyow::Console::Models::StoredFile.new
         file.data = tempfile.read
         file.metadata = metadata
         file.save
@@ -25,7 +25,7 @@ module Pakyow
       end
 
       def process(metadata, data, w: nil, h: nil)
-        file = StoredFile.new
+        file = Pakyow::Console::Models::StoredFile.new
         file.data = data
         file.metadata = metadata
         file.save
@@ -38,7 +38,7 @@ module Pakyow
       end
 
       def all
-        StoredFile.all.map { |file|
+        Pakyow::Console::Models::StoredFile.all.map { |file|
           Hash.strhash(file.metadata)
         }
       end
@@ -46,7 +46,7 @@ module Pakyow
       protected
 
       def find_object(hash, w: nil, h: nil)
-        query = StoredFile.where("(metadata ->> 'id') = '#{hash}'").order(:created_at)
+        query = Pakyow::Console::Models::StoredFile.where("(metadata ->> 'id') = '#{hash}'").order(:created_at)
         query = query.where("(metadata ->> 'width') = '#{w}'") unless w.nil?
         query = query.where("(metadata ->> 'height') = '#{h}'") unless h.nil?
         query.first

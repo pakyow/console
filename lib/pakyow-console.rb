@@ -358,16 +358,38 @@ Pakyow::App.after :load do
       page.save
 
       Pakyow::Console::Models::Page.editables_for_view(view).each do |editable|
-        # TODO: I think this is where we'd check for editable-parts
+        parts = editable[:doc].editable_parts
 
-        content = {
-          id: SecureRandom.uuid,
-          scope: :content,
-          type: :default,
-          content: editable[:doc].html
-        }
+        if parts.empty?
+          content = {
+            id: SecureRandom.uuid,
+            scope: :content,
+            type: :default,
+            content: editable[:doc].html
+          }
 
-        page.add_content(content: [content], metadata: { id: editable[:id] })
+          page.add_content(content: [content], metadata: { id: editable[:id] })
+        else
+          content = []
+          parts.each do |part|
+            part_type = part[:doc].get_attribute(:'data-editable-part').to_sym
+            part_hash = {
+              id: SecureRandom.uuid,
+              scope: :content,
+              type: part_type,
+            }
+
+            if part_type == :default
+              part_hash[:content] = part[:doc].html
+            elsif part_type == :image
+              part_hash[:images] = []
+            end
+
+            content << part_hash
+          end
+
+          page.add_content(content: content, metadata: { id: editable[:id] })
+        end
       end
     end
   end
@@ -406,6 +428,7 @@ end
 # Pakyow::Console::PanelRegistry.register :stats, mode: :production, nice_name: 'Stats', icon_class: 'bar-chart' do; end
 
 Pakyow::Presenter::StringDocParser::SIGNIFICANT << :editable?
+Pakyow::Presenter::StringDocParser::SIGNIFICANT << :editable_part?
 
 module Pakyow
   module Presenter
@@ -416,11 +439,20 @@ module Pakyow
         return false unless node['data-editable']
         return true
       end
+
+      def editable_part?(node)
+        return false unless node['data-editable-part']
+        return true
+      end
     end
 
     class StringDoc
       def editables
         find_editables(@node ? [@node] : @structure)
+      end
+
+      def editable_parts
+        find_editable_parts(@node ? [@node] : @structure)
       end
 
       private
@@ -438,6 +470,21 @@ module Pakyow
         } || []
 
         ret_editables
+      end
+
+      def find_editable_parts(structure, primary_structure = @structure, editable_parts = [])
+        ret_editable_parts = structure.inject(editable_parts) { |s, e|
+          if e[1].has_key?(:'data-editable-part')
+            s << {
+              doc: StringDoc.from_structure(primary_structure, node: e),
+              editable_part: e[1][:'data-editable-part'].to_sym,
+            }
+          end
+          find_editable_parts(e[2], e[2], s)
+          s
+        } || []
+
+        ret_editable_parts
       end
     end
   end
