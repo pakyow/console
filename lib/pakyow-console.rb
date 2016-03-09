@@ -311,7 +311,7 @@ Pakyow::App.after :load do
                 content = page.content_for(editable[:id])
                 content.update(content: params[:"content-#{editable[:id]}"])
               end
-            }
+            }, restricted: true
           end
         end
       end

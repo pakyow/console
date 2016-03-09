@@ -25,6 +25,11 @@ Pakyow::Console.editor :content do |attribute, value|
 
   view.scope(:editor).attrs[:name] = "console-datum[#{attribute[:name]}]"
   view.scope(:editor).attrs[:'data-scope'] = nil
+
+  if extras[:restricted]
+    view.component(:'content-editor').attrs[:'data-config'] = 'restricted: true'
+  end
+
   view.instance_variable_get(:@view)
 end
 
