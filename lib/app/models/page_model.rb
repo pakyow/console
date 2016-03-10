@@ -75,6 +75,10 @@ module Pakyow
           content_dataset.where("metadata ->> 'id' = '#{editable_id}'").first
         end
 
+        def content
+          content_dataset.first.content
+        end
+
         def template
           template = @values[:template]
 

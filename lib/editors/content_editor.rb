@@ -104,9 +104,10 @@ module Pakyow::Console::Content
       end
 
       alignment = data['align']
-      alignment = 'default' if alignment.empty?
+      alignment = 'default' if alignment.nil? || alignment.empty?
 
-      JSON.parse(data['images']).each do |image|
+      images = data['images'].is_a?(String) ? JSON.parse(data['images']) : data['images']
+      images.each do |image|
         src = Pakyow::Router.instance.group(:file).path(:show, file_id: image['id'])
         file = Pakyow::Console::FileStore.instance.find(image['id'])
 
