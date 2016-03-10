@@ -347,6 +347,9 @@ Pakyow::App.after :load do
     page = Pakyow::Console::Models::Page.where(slug: path).first
     next unless page.nil?
 
+    # TODO: update certain aspects of the existing page (e.g. the alignment)
+    #  it might be better to add the alignment to the rendering of the content and when rendering the editor; dunno
+
     composer = presenter.store(:default).composer(path)
 
     config.app.db.transaction do
@@ -373,10 +376,12 @@ Pakyow::App.after :load do
           content = []
           parts.each do |part|
             part_type = part[:doc].get_attribute(:'data-editable-part').to_sym
+            part_alignment = part[:doc].get_attribute(:'data-align')
             part_hash = {
               id: SecureRandom.uuid,
               scope: :content,
               type: part_type,
+              align: part_alignment,
             }
 
             if part_type == :default

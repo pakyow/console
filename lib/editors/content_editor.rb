@@ -37,25 +37,19 @@ module Pakyow::Console
   class ContentRenderer
     TYPES = [:default, :image, :embed, :break]
 
-    # TODO: constraints should probably be passed in here
-    # rather than being looked up as part of the attribute
-    # basically decouple content rendering from datatypes
-    def self.render(content, view: nil, attr: :content)
+    def self.render(content, view: nil, constraints: nil)
       templates = find_templates(view)
-      datatype = DataTypeRegistry.for_model(content.class)
-      attribute = datatype.attribute(attr)
 
-      view.apply(content) do |view, datum|
-        datum.send(attr).each do |piece|
-          type = piece['type'].to_sym
-          template = templates[type].dup
-          renderer = ContentTypeRegistry.type(type)
+      view.apply(content) do |view, piece|
+        type = piece['type'].to_sym
+        template = templates[type].dup
+        renderer = ContentTypeRegistry.type(type)
 
-          if renderer.nil?
-            Pakyow.logger.debug "No content renderer for #{type}"
-          else
-            view.append(renderer.render(piece, template, attribute))
-          end
+        if renderer.nil?
+          Pakyow.logger.debug "No content renderer for #{type}"
+        else
+          type_constraints = constraints.nil? ? nil : constraints[type]
+          view.append(renderer.render(piece, template, type_constraints))
         end
       end
     end
@@ -83,7 +77,7 @@ end
 
 module Pakyow::Console::Content
   class Default
-    def self.render(data, view, attribute)
+    def self.render(data, view, constraints)
       content = data['content']
 
       # NOTE: this is a workaround for trix, which uses <div> rather than <p>
@@ -96,12 +90,15 @@ module Pakyow::Console::Content
   end
 
   class Image
-    def self.render(data, view, attribute)
+    def self.render(data, view, constraints)
+      puts "rendering #{data.inspect}"
       working = view
 
-      if attribute[:extras] && attribute[:extras][:constraints]
-        constraints = attribute[:extras][:constraints][:image]
-      end
+      # if attribute[:extras] && attribute[:extras][:constraints]
+      #   constraints = attribute[:extras][:constraints][:image]
+      # end
+
+      # constraints = nil
 
       alignment = data['align']
       alignment = 'default' if alignment.nil? || alignment.empty?
@@ -120,8 +117,8 @@ module Pakyow::Console::Content
             constraint_width, constraint_height = constraints_for_alignment.values_at(:width, :height)
             scale_factor = width / constraint_width.to_f
 
-            width = constraint_width
-            height = [height / scale_factor, constraint_height].min
+            width = constraint_width.to_i
+            height = [height / scale_factor, constraint_height.to_i].min
           end
         end
 
@@ -151,13 +148,13 @@ module Pakyow::Console::Content
   end
 
   class Break
-    def self.render(data, view, attribute)
+    def self.render(data, view, constraints)
       view
     end
   end
 
   class Embed
-    def self.render(data, view, attribute)
+    def self.render(data, view, constraints)
       embed_code = data['code']
       alignment = data['align']
       alignment = 'default' if alignment.empty?
