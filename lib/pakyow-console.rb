@@ -1,11 +1,11 @@
-# require 'pakyow-support'
-# require 'pakyow-core'
-# require 'pakyow-presenter'
-# require 'pakyow-realtime'
-# require 'pakyow-ui'
+require 'pakyow-support'
+require 'pakyow-core'
+require 'pakyow-presenter'
+require 'pakyow-realtime'
+require 'pakyow-ui'
 
-# require 'pakyow-assets'
-# require 'pakyow-slim'
+require 'pakyow-assets'
+require 'pakyow-slim'
 
 require 'sequel'
 
