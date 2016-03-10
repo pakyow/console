@@ -178,11 +178,23 @@
   background-repeat: no-repeat;
   background-size: cover;
   text-align: center;
+  overflow: hidden;
 
   i {
     color: $color-white;
     @include rem(font-size, 50);
     margin: 50px 0;
+  }
+
+  .console-content-image-count {
+    position: absolute;
+    right: 40px;
+    top: 10px;
+    background: rgba(255,255,255,0.75);
+    border-radius: 50px;
+    @include rem(font-size, 11);
+    font-weight: bold;
+    padding: 0px 6px;
   }
 }
 

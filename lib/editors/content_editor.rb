@@ -49,7 +49,15 @@ module Pakyow::Console
           Pakyow.logger.debug "No content renderer for #{type}"
         else
           type_constraints = constraints.nil? ? nil : constraints[type]
-          view.append(renderer.render(piece, template, type_constraints))
+
+          rendered = renderer.render(piece, template, type_constraints)
+          if rendered.is_a?(Pakyow::Presenter::ViewCollection)
+            rendered.each do |rendered_view|
+              view.append(rendered_view)
+            end
+          else
+            view.append(rendered)
+          end
         end
       end
     end
@@ -91,20 +99,14 @@ module Pakyow::Console::Content
 
   class Image
     def self.render(data, view, constraints)
-      puts "rendering #{data.inspect}"
-      working = view
-
-      # if attribute[:extras] && attribute[:extras][:constraints]
-      #   constraints = attribute[:extras][:constraints][:image]
-      # end
-
-      # constraints = nil
-
       alignment = data['align']
       alignment = 'default' if alignment.nil? || alignment.empty?
 
       images = data['images'].is_a?(String) ? JSON.parse(data['images']) : data['images']
+      collection = Pakyow::Presenter::ViewCollection.new
+
       images.each do |image|
+        working = view.dup
         src = Pakyow::Router.instance.group(:file).path(:show, file_id: image['id'])
         file = Pakyow::Console::FileStore.instance.find(image['id'])
 
@@ -139,11 +141,10 @@ module Pakyow::Console::Content
         end
 
         working.attrs.class << "align-#{alignment}"
-
-        working = view.dup
+        collection << working
       end
 
-      view
+      collection
     end
   end
 
