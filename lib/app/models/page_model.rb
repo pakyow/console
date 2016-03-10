@@ -94,6 +94,36 @@ module Pakyow
         def fully_editable?
           @values[:template] != '__editable'
         end
+
+        def constraints
+          constraints = {}
+          return constraints if fully_editable?
+
+          Pakyow.app.presenter.store(:default).view(slug).doc.editables.each do |editable|
+            parts = editable[:doc].editable_parts
+            next if parts.empty?
+
+            parts.each do |part|
+              part_constraints = part[:doc].get_attribute(:'data-constraints')
+
+              if part_constraints
+                part_constraints = Hash.strhash(Hash[*part_constraints.split(';').map { |dim|
+                  dim.split(':').map { |d| d.strip }
+                }.flatten])
+
+                part_type = part[:doc].get_attribute(:'data-editable-part').to_sym
+
+                constraints[part_type] = {
+                  default: part_constraints,
+                  right: part_constraints,
+                  left: part_constraints,
+                }
+              end
+            end
+          end
+
+          constraints
+        end
       end
     end
   end

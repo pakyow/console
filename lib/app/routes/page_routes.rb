@@ -33,25 +33,7 @@ Pakyow::App.routes :'console-page' do
               editable[:doc].editable_parts.each_with_index do |part, i|
                 rendered = renderer_view.scope(:content)[0].dup
 
-                constraints = part[:doc].get_attribute(:'data-constraints')
-
-                if constraints
-                  constraints = Hash.strhash(Hash[*constraints.split(';').map { |dim|
-                    dim.split(':').map { |d| d.strip }
-                  }.flatten])
-
-                  part_type = part[:doc].get_attribute(:'data-editable-part').to_sym
-
-                  constraints = {
-                    part_type => {
-                      default: constraints,
-                      right: constraints,
-                      left: constraints,
-                    }
-                  }
-                end
-
-                Pakyow::Console::ContentRenderer.render([content.content[i]], view: rendered, constraints: constraints)
+                Pakyow::Console::ContentRenderer.render([content.content[i]], view: rendered, constraints: page.constraints)
                 part[:doc].replace(rendered.to_html)
               end
             end
