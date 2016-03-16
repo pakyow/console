@@ -1,7 +1,7 @@
 # TODO: this belongs in pakyow/support
 class String
   def self.slugify(string)
-    string.downcase.gsub('  ', ' ').gsub(' ', '-').gsub(/[^a-z0-9-\/_-]/, '')
+    string.downcase.gsub('  ', ' ').gsub(' ', '-').gsub(/[^a-z0-9\/_-]/, '')
   end
 
   def self.presentable(string)
@@ -73,7 +73,7 @@ module Pakyow
 
         def name=(value)
           super
-          self.slug ||= String.slugify(value)
+          @values[:slug] ||= String.normalize_path(String.slugify(value))
         end
 
         def relation_name
@@ -124,7 +124,7 @@ module Pakyow
         end
 
         def parent=(parent)
-          @values[:slug] = File.join(parent.slug, @values[:slug]) unless parent.nil? || @values[:slug].include?(parent.slug)
+          @values[:slug] = String.normalize_path(File.join(parent.slug, @values[:slug])) unless parent.nil? || @values[:slug].include?("#{parent.slug}/")
           super
         end
 
