@@ -1,7 +1,3 @@
-.data-wrapper {
-  border-top: 1px solid $color-lgray;
-}
-
 .data-type-list {
   border-right: 1px solid $color-lgray;
   min-height: 300px;
@@ -45,26 +41,35 @@
     border-bottom: 1px solid $color-xgray;
 
     &:first-child {
-      cursor: default;
-      background: $color-xgray;
+      border-color: $color-lgray;
+      border-top: 1px solid $color-lgray;
+
+      &:hover {
+        border-color: $color-lgray;
+      }
+    }
+
+    &:hover {
+      border-bottom-color: $color-blue;
     }
   }
 
   th {
     font-weight: bold;
     text-align: left;
-    border-right: 1px solid $color-white;
+    text-transform: uppercase;
+    padding: 15px 0;
   }
 
   td {
-    border-right: 1px solid $color-xgray;
-  }
-
-  td, th {
-    padding: 5px 8px;
-
     &:last-child {
       border: 0;
+    }
+
+    > a {
+      display: block;
+      padding: 15px 0;
+      color: $color-black;
     }
   }
 }

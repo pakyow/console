@@ -37,7 +37,10 @@ Pakyow::App.routes :'console-data' do
                 text = value.to_s
               end
 
-              view.text = text
+              view.prop(:value).with do |view|
+                view.text = text
+                view.attrs.href = router.group(:datum).path(:edit, data_id: params[:data_id], datum_id: datum.id)
+              end
             end
           end
         end
@@ -90,6 +93,7 @@ Pakyow::App.routes :'console-data' do
           Pakyow::Console::ServiceHookRegistry.call(:before, :edit, @type.name, nil, self)
 
           @datum ||= @type.model_object[params[:datum_id]]
+          console_handle 404 if @datum.nil?
           setup_datum_form
         end
 
@@ -98,6 +102,7 @@ Pakyow::App.routes :'console-data' do
 
           current = @type.model_object[params[:datum_id]]
           @datum = current.set_all(Pakyow::Console::DatumProcessorRegistry.process(params[:'console-datum'], current, as: @type))
+          console_handle 404 if @datum.nil?
           Pakyow::Console::ServiceHookRegistry.call(:before, :update, @type.name, @datum, self)
 
           if @datum.valid?
@@ -118,6 +123,7 @@ Pakyow::App.routes :'console-data' do
         remove do
           type = Pakyow::Console::DataTypeRegistry.type(params[:data_id])
           datum = type.model_object[params[:datum_id]]
+          console_handle 404 if datum.nil?
 
           Pakyow::Console::ServiceHookRegistry.call(:before, :delete, type.name, datum, self)
           datum.destroy

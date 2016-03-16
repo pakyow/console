@@ -61,7 +61,7 @@ Pakyow::App.routes :'console-session' do
             setup_platform_socket
             redirect router.group(:console).path(:default)
           else
-            handle 403
+            console_handle 403
           end
         else
           @errors = ['Invalid login and/or password']

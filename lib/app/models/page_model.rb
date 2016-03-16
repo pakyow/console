@@ -1,7 +1,11 @@
 # TODO: this belongs in pakyow/support
 class String
   def self.slugify(string)
-    string.downcase.gsub('  ', ' ').gsub(' ', '-').gsub(/[^a-z0-9-]/, '')
+    string.downcase.gsub('  ', ' ').gsub(' ', '-').gsub(/[^a-z0-9-\/_-]/, '')
+  end
+
+  def self.presentable(string)
+    string.gsub('-', ' ').gsub('_', ' ').split(' ').map { |part| part.capitalize }.join(' ')
   end
 end
 
@@ -12,6 +16,8 @@ module Pakyow
         one_to_many :content, as: :owner
         many_to_one :parent, class: self
         alias_method :page, :parent
+
+        add_association_dependencies content: :destroy
 
         set_allowed_columns :name, :parent, :template
 
@@ -49,9 +55,25 @@ module Pakyow
           end
         end
 
+        def before_destroy
+          Pakyow::Console::Models::InvalidPath.create(path: slug)
+          super
+        end
+
+        def find_and_set_parent
+          potential_parent_slug = slug.split('/')[0..-2].join('/')
+          parent = self.class.first(slug: potential_parent_slug)
+          return if parent.nil?
+          self.parent = parent
+        end
+
+        def children
+          self.class.where(parent_id: id, published: true).all
+        end
+
         def name=(value)
           super
-          self.slug = String.slugify(value)
+          self.slug ||= String.slugify(value)
         end
 
         def relation_name
@@ -75,6 +97,16 @@ module Pakyow
           content_dataset.where("metadata ->> 'id' = '#{editable_id}'").first
         end
 
+        def content(editable_id = nil)
+          return @values[:content] if editable_id.nil?
+
+          content = content_for(editable_id)
+          renderer_view = Pakyow.app.presenter.store(:console).view('/console/pages/template')
+          rendered = renderer_view.scope(:content)[0]
+          Pakyow::Console::ContentRenderer.render(content.content, view: rendered)
+          rendered.doc.to_html
+        end
+
         def template
           template = @values[:template]
 
@@ -88,6 +120,11 @@ module Pakyow
 
         def template=(value)
           return unless fully_editable?
+          super
+        end
+
+        def parent=(parent)
+          @values[:slug] = File.join(parent.slug, @values[:slug]) unless parent.nil? || @values[:slug].include?(parent.slug)
           super
         end
 

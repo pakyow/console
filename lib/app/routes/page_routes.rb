@@ -8,14 +8,9 @@ Pakyow::App.routes :'console-page' do
         handle 404 if page.nil? || !page.published?
 
         if page.fully_editable?
-          view = presenter.store(:console).view('/console/pages/template')
-          Pakyow::Console::ContentRenderer.render(page, view: view.scope(:content)[0])
-
-          vpage = Pakyow::Presenter::Page.new(page.name, view.scope(:content)[0].to_html, '/')
-          presenter.compose_at('/', template: page.template.to_sym, page: vpage)
-
-          # TODO: we need a way to configure the title template; e.g. !Magic: {page-title}
-          presenter.view.title = page.name
+          template = presenter.store(:default).template(page.template.to_sym)
+          presenter.view = template.build(page).includes(presenter.store(:default).partials('/'))
+          presenter.view.title = String.presentable(page.name)
         else
           renderer_view = presenter.store(:console).view('/console/pages/template')
           presenter.view = presenter.store(:default).view(page.slug)
@@ -40,7 +35,7 @@ Pakyow::App.routes :'console-page' do
           end
 
           # TODO: we need a way to configure the title template; e.g. !Magic: {page-title}
-          presenter.view.title = page.name
+          presenter.view.title = String.presentable(page.name)
         end
       end
     end

@@ -16,6 +16,7 @@ Sequel::Model.plugin :timestamps, update_on_create: true
 Sequel::Model.plugin :polymorphic
 Sequel::Model.plugin :validation_helpers
 Sequel::Model.plugin :uuid
+Sequel::Model.plugin :association_dependencies
 
 require 'image_size'
 
@@ -216,6 +217,53 @@ Pakyow::App.after :init do
   end
 end
 
+Pakyow::App.hook(:before, :error).unshift(lambda {
+  next unless req.path_parts.first == 'console'
+  console_handle 500
+})
+
+Pakyow::App.after :match do
+  # TODO: this guard is needed because the route hooks are called again when calling a handler :/
+  if !@console_404 && Pakyow::Console::Models::InvalidPath.invalid_for_path?(req.path)
+    @console_404 = true
+    handle 404, false
+  end
+
+  page = Pakyow::Console.pages.find { |p| p.matches?(req.path) }
+  next if page.nil?
+
+  if !@console_404 && !page.published
+    @console_404 = true
+    handle 404, false
+  end
+
+  if page.fully_editable?
+    template = presenter.store(:default).template(page.template.to_sym)
+    presenter.view = template.build(page).includes(presenter.store(:default).partials('/'))
+    presenter.view.title = String.presentable(page.name)
+  else
+    renderer_view = presenter.store(:console).view('/console/pages/template')
+    presenter.view.composed.doc.editables.each do |editable|
+      content = page.content_for(editable[:doc].get_attribute(:'data-editable'))
+      parts = editable[:doc].editable_parts
+
+      if parts.empty?
+        rendered = renderer_view.scope(:content)[0].dup
+        Pakyow::Console::ContentRenderer.render(content.content, view: rendered)
+        editable[:doc].clear
+        editable[:doc].append(rendered.to_html)
+      else
+        editable[:doc].editable_parts.each_with_index do |part, i|
+          rendered = renderer_view.scope(:content)[0].dup
+
+          Pakyow::Console::ContentRenderer.render([content.content[i]], view: rendered, constraints: page.constraints)
+          part[:doc].replace(rendered.to_html)
+        end
+      end
+    end
+  end
+end
+
 Pakyow::App.after :process do
   if req.path_parts[0] != 'console' && @presenter && @presenter.presented? && console_authed? && res.body && res.body.is_a?(Array)
     view = Pakyow::Presenter::ViewContext.new(Pakyow::Presenter::View.new(File.open(File.join(CONSOLE_ROOT, 'views', 'console', '_toolbar.slim')).read, format: :slim), self)
@@ -271,11 +319,11 @@ Pakyow::App.after :load do
       model Pakyow::Config.console.models[:page]
       pluralize
 
-      attribute :name, :string
+      attribute :name, :string, nice: 'Page Name'
 
       attribute :slug, :string, display: -> (datum) {
         !datum.nil? && !datum.id.nil?
-      }
+      }, nice: 'Page Path'
 
       # TODO: (later) add more user-friendly template descriptions (embedded in the top-matter?)
       attribute :page, :relation, class: Pakyow::Config.console.models[:page], nice: 'Parent Page', relationship: :parent
@@ -284,7 +332,7 @@ Pakyow::App.after :load do
       # TODO: (later) we definitely need the concept of content templates (perhaps in _content) or something
       attribute :template, :enum, values: Pakyow.app.presenter.store.templates.keys.map { |k| [k,k] }.unshift(['', '']), display: -> (datum) {
         datum.nil? || datum.fully_editable?
-      }
+      }, nice: 'Layout'
 
       dynamic do |page|
         next unless page.is_a?(Pakyow::Console::Models::Page)
@@ -318,6 +366,12 @@ Pakyow::App.after :load do
 
       # TODO: (later) we need a metadata editor with the ability for the user to add k / v OR for the editor to define keys
 
+      action :delete, label: 'Delete' do |page|
+        page.destroy
+        notify("#{page.name} page deleted", :success)
+        redirect router.group(:data).path(:show, data_id: params[:data_id])
+      end
+
       action :publish,
              label: 'Publish',
              notification: 'page published',
@@ -341,26 +395,31 @@ Pakyow::App.after :load do
   end
 
   presenter.store(:default).views do |view, path|
+    composer = presenter.store(:default).composer(path)
+    next unless composer.page.path.include?(path)
+
     editables = view.doc.editables
     next if editables.empty?
 
+    path = String.slugify(path)
+    next if Pakyow::Console::Models::InvalidPath.invalid_for_path?(path)
     page = Pakyow::Console::Models::Page.where(slug: path).first
-    next unless page.nil?
 
-    # TODO: update certain aspects of the existing page (e.g. the alignment)
-    #  it might be better to add the alignment to the rendering of the content and when rendering the editor; dunno
+    if page.nil?
+      page = Pakyow::Console::Models::Page.new
+      page.slug = path
+      page.name = path.split('/').last || 'home'
+      page.find_and_set_parent
+      page.template = :__editable
+      page.published = true
+      page.save
+    end
 
     composer = presenter.store(:default).composer(path)
 
     config.app.db.transaction do
-      page = Pakyow::Console::Models::Page.new
-      page.slug = path
-      page.name = path.split('/').last
-      page.template = :__editable
-      page.published = true
-      page.save
-
       Pakyow::Console::Models::Page.editables_for_view(view).each do |editable|
+        next if page.content_for(editable[:id])
         parts = editable[:doc].editable_parts
 
         if parts.empty?
@@ -441,12 +500,14 @@ module Pakyow
       private
 
       def editable?(node)
-        return false unless node['data-editable']
+        return false unless node.is_a?(Oga::XML::Element)
+        return false unless node.attribute('data-editable')
         return true
       end
 
       def editable_part?(node)
-        return false unless node['data-editable-part']
+        return false unless node.is_a?(Oga::XML::Element)
+        return false unless node.attribute('data-editable-part')
         return true
       end
     end

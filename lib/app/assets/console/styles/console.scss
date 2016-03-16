@@ -200,12 +200,15 @@ nav {
   margin: 0 !important;
 
   li {
-    // background: #eee;
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-    padding: 10px 0px;
+    border-top: 1px solid $color-xgray;
+    border-bottom: 1px solid $color-xgray;
+    padding: 15px 0px;
     margin-bottom: 15px;
     position: relative;
+
+    &:hover {
+      border-bottom-color: $color-blue;
+    }
   }
 
   a {

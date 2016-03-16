@@ -11,7 +11,7 @@ Pakyow::App.mutators :datum do
         selected = ''
       end
 
-      html << '<option value="' + datum.class.name + ':' + datum.id.to_s + '"' + selected + '>' + datum.relation_name + '</option>'
+      html << '<option value="' + datum.class.name + '__' + datum.id.to_s + '"' + selected + '>' + datum.relation_name + '</option>'
     end
 
     view.html = html
