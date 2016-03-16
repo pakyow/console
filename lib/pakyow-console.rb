@@ -94,7 +94,7 @@ module Pakyow
     end
 
     def self.pages
-      @pages ||= Pakyow::Console::Models::Page.where(published: true).all
+      @pages ||= Pakyow::Console::Models::Page.all
     end
 
     def self.invalidate_pages
