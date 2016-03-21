@@ -2,6 +2,7 @@
 # TODO: need an api for this on Pakyow::App
 Pakyow::App.hook(:after, :configure).unshift(lambda  {
   Pakyow::Console.setup_db
+  config.app.uri = ENV['APP_URI']
 })
 
 Pakyow::App.after :init do
