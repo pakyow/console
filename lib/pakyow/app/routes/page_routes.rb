@@ -14,23 +14,23 @@ Pakyow::App.routes :'console-page' do
         else
           renderer_view = presenter.store(:console).view('/console/pages/template')
           presenter.view = presenter.store(:default).view(page.slug)
+        end
 
-          presenter.view.doc.editables.each do |editable|
-            content = page.content_for(editable[:doc].get_attribute(:'data-editable'))
-            parts = editable[:doc].editable_parts
+        presenter.view.doc.editables.each do |editable|
+          content = page.content_for(editable[:doc].get_attribute(:'data-editable'))
+          parts = editable[:doc].editable_parts
 
-            if parts.empty?
+          if parts.empty?
+            rendered = renderer_view.scope(:content)[0].dup
+            Pakyow::Console::ContentRenderer.render(content.content, view: rendered)
+            editable[:doc].clear
+            editable[:doc].append(rendered.to_html)
+          else
+            editable[:doc].editable_parts.each_with_index do |part, i|
               rendered = renderer_view.scope(:content)[0].dup
-              Pakyow::Console::ContentRenderer.render(content.content, view: rendered)
-              editable[:doc].clear
-              editable[:doc].append(rendered.to_html)
-            else
-              editable[:doc].editable_parts.each_with_index do |part, i|
-                rendered = renderer_view.scope(:content)[0].dup
 
-                Pakyow::Console::ContentRenderer.render([content.content[i]], view: rendered, constraints: page.constraints)
-                part[:doc].replace(rendered.to_html)
-              end
+              Pakyow::Console::ContentRenderer.render([content.content[i]], view: rendered, constraints: page.constraints)
+              part[:doc].replace(rendered.to_html)
             end
           end
 

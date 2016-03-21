@@ -39,24 +39,28 @@ Pakyow::App.after :match do
     template = presenter.store(:default).template(page.template.to_sym)
     presenter.view = template.build(page).includes(presenter.store(:default).partials('/'))
     presenter.view.title = String.presentable(page.name)
+    view = presenter.view
   else
-    renderer_view = presenter.store(:console).view('/console/pages/template')
-    presenter.view.composed.doc.editables.each do |editable|
-      content = page.content_for(editable[:doc].get_attribute(:'data-editable'))
-      parts = editable[:doc].editable_parts
+    view = presenter.view.composed
+  end
 
-      if parts.empty?
+  renderer_view = presenter.store(:console).view('/console/pages/template')
+
+  view.doc.editables.each do |editable|
+    content = page.content_for(editable[:doc].get_attribute(:'data-editable'))
+    parts = editable[:doc].editable_parts
+
+    if parts.empty?
+      rendered = renderer_view.scope(:content)[0].dup
+      Pakyow::Console::ContentRenderer.render(content.content, view: rendered)
+      editable[:doc].clear
+      editable[:doc].append(rendered.to_html)
+    else
+      editable[:doc].editable_parts.each_with_index do |part, i|
         rendered = renderer_view.scope(:content)[0].dup
-        Pakyow::Console::ContentRenderer.render(content.content, view: rendered)
-        editable[:doc].clear
-        editable[:doc].append(rendered.to_html)
-      else
-        editable[:doc].editable_parts.each_with_index do |part, i|
-          rendered = renderer_view.scope(:content)[0].dup
 
-          Pakyow::Console::ContentRenderer.render([content.content[i]], view: rendered, constraints: page.constraints)
-          part[:doc].replace(rendered.to_html)
-        end
+        Pakyow::Console::ContentRenderer.render([content.content[i]], view: rendered, constraints: page.constraints)
+        part[:doc].replace(rendered.to_html)
       end
     end
   end

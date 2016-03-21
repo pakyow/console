@@ -39,6 +39,8 @@ module Pakyow
         def after_create
           super
 
+          find_and_create_editables
+
           return unless fully_editable?
           # TODO: this will go away once we can show containers right after selecting a template
           Pakyow.app.presenter.store(:default).template(template.to_sym).doc.containers.each do |container|
@@ -90,7 +92,63 @@ module Pakyow
         end
 
         def editables
-          self.class.editables_for_view(Pakyow.app.presenter.store(:default).view(slug))
+          if fully_editable?
+            working_slug = self.slug
+            partials = while true
+              begin
+                break Pakyow.app.presenter.store(:default).partials(working_slug)
+              rescue Pakyow::Presenter::MissingView => e
+                break {} if working_slug.empty?
+                working_slug = working_slug.split('/')[0..-2].join('/')
+              end
+            end
+
+            template = Pakyow.app.presenter.store(:default).template(self.template.to_sym)
+            template.includes(partials)
+            self.class.editables_for_view(template)
+          else
+            self.class.editables_for_view(Pakyow.app.presenter.store(:default).view(slug))
+          end
+        end
+
+        def find_and_create_editables
+          editables.each do |editable|
+            next if content_for(editable[:id])
+            parts = editable[:doc].editable_parts
+
+            if parts.empty?
+              content = {
+                id: SecureRandom.uuid,
+                scope: :content,
+                type: :default,
+                content: editable[:doc].html
+              }
+
+              add_content(content: [content], metadata: { id: editable[:id] })
+            else
+              content = []
+              parts.each do |part|
+                part_type = part[:doc].get_attribute(:'data-editable-part').to_sym
+                part_alignment = part[:doc].get_attribute(:'data-align')
+                part_hash = {
+                  id: SecureRandom.uuid,
+                  scope: :content,
+                  type: part_type,
+                  align: part_alignment,
+                }
+
+                if part_type == :default
+                  part_hash[:content] = part[:doc].html
+                elsif part_type == :image
+                  part_hash[:images] = []
+                end
+
+                content << part_hash
+              end
+
+              add_content(content: content, metadata: { id: editable[:id] })
+            end
+          end
         end
 
         def content_for(editable_id)

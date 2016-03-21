@@ -131,7 +131,7 @@ module Pakyow
           }, nice: 'Layout'
 
           dynamic do |page|
-            next unless page.is_a?(Pakyow::Console::Models::Page)
+            next unless page.is_a?(Pakyow::Console::Models::Page) && page.id
 
             if page.fully_editable?
               Pakyow.app.presenter.store(:default).template(page.template.to_sym).doc.containers.each do |container|
@@ -146,17 +146,17 @@ module Pakyow
                   end
                 }
               end
-            else
-              page.editables.each do |editable|
-                attribute :"content-#{editable[:id]}", :content, nice: editable[:id].to_s.capitalize, value: -> (page) {
-                  page.content_for(editable[:id]).content
-                }, setter: -> (page, params) {
-                  page.editables.each do |editable|
-                    content = page.content_for(editable[:id])
-                    content.update(content: params[:"content-#{editable[:id]}"])
-                  end
-                }, restricted: true, constraints: page.constraints
-              end
+            end
+
+            page.editables.each do |editable|
+              attribute :"content-#{editable[:id]}", :content, nice: editable[:id].to_s.capitalize, value: -> (page) {
+                page.content_for(editable[:id]).content
+              }, setter: -> (page, params) {
+                page.editables.each do |editable|
+                  content = page.content_for(editable[:id])
+                  content.update(content: params[:"content-#{editable[:id]}"])
+                end
+              }, restricted: true, constraints: page.constraints
             end
           end
 
@@ -211,47 +211,7 @@ module Pakyow
           page.save
         end
 
-        composer = Pakyow.app.presenter.store(:default).composer(path)
-
-        Pakyow.app.config.app.db.transaction do
-          Pakyow::Console::Models::Page.editables_for_view(view).each do |editable|
-            next if page.content_for(editable[:id])
-            parts = editable[:doc].editable_parts
-
-            if parts.empty?
-              content = {
-                id: SecureRandom.uuid,
-                scope: :content,
-                type: :default,
-                content: editable[:doc].html
-              }
-
-              page.add_content(content: [content], metadata: { id: editable[:id] })
-            else
-              content = []
-              parts.each do |part|
-                part_type = part[:doc].get_attribute(:'data-editable-part').to_sym
-                part_alignment = part[:doc].get_attribute(:'data-align')
-                part_hash = {
-                  id: SecureRandom.uuid,
-                  scope: :content,
-                  type: part_type,
-                  align: part_alignment,
-                }
-
-                if part_type == :default
-                  part_hash[:content] = part[:doc].html
-                elsif part_type == :image
-                  part_hash[:images] = []
-                end
-
-                content << part_hash
-              end
-
-              page.add_content(content: content, metadata: { id: editable[:id] })
-            end
-          end
-        end
+        page.find_and_create_editables
       end
 
       @loaded = true
