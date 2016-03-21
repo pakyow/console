@@ -16,6 +16,7 @@ end
 
 Pakyow::App.hook(:before, :error).unshift(lambda {
   next unless req.path_parts.first == 'console'
+  logger.error "[500] #{req.error.class}: #{req.error}\n" + req.error.backtrace.join("\n") + "\n\n"
   console_handle 500
 })
 
@@ -91,8 +92,6 @@ end
 
 Pakyow::App.after :route do
   if !found? && req.path_parts[0] == 'console'
-    presenter.path = 'console/errors/404'
-    res.body << presenter.view.composed.to_html
-    halt
+    console_handle 404
   end
 end
