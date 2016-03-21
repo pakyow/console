@@ -192,6 +192,8 @@ module Pakyow
 
       Pakyow.app.presenter.store(:default).views do |view, path|
         composer = Pakyow.app.presenter.store(:default).composer(path)
+
+        # handles cases where we use a parent page because the child doesn't define their own
         next unless composer.page.path.include?(path)
 
         editables = view.doc.editables
@@ -212,6 +214,15 @@ module Pakyow
         end
 
         page.find_and_create_editables
+
+        # build navigations + items
+        navigation_and_group = composer.page.info(:navigation)
+        next if navigation_and_group.nil?
+
+        navigation_name, group_name = navigation_and_group.to_s.split('/')
+
+        navigation = Pakyow::Console::Models::Navigation.find_or_create(name: navigation_name)
+        Pakyow::Console::Models::NavigationItem.find_or_create(navigation: navigation, endpoint_id: page.id, endpoint_type: page.class.name, group: group_name)
       end
 
       @loaded = true
