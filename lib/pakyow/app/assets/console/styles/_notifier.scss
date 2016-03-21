@@ -15,7 +15,7 @@
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
   font-weight: 600;
-  z-index: 100;
+  z-index: 1000;
 
   @include transition(top 0.05s ease-in);
 
