@@ -12,7 +12,7 @@ module Pakyow::Helpers
         view.attrs[:'data-prop'] = nil
       end
 
-      view.bind(Pakyow::Console::DatumFormatterRegistry.format(@datum || {}, as: @type))
+      view.bind(Pakyow::Console::DatumFormatterRegistry.format(@datum || @type.model_object.new, as: @type))
     end
 
     object_id = @datum ? @datum.id : nil
