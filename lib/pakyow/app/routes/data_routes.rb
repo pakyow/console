@@ -28,8 +28,10 @@ Pakyow::App.routes :'console-data' do
           view.scope(:'console-data-field').apply(listables)
 
           view.partial(:table).scope(:'console-datum').apply(data) do |view, datum|
+            formatted = Pakyow::Console::DatumFormatterRegistry.format(datum, as: type)
+
             view.scope(:'console-data-value').repeat(listables) do |view, type|
-              value = datum.send(type[:name])
+              value = formatted[type[:name]]
 
               if value.nil? || (value.is_a?(String) && value.empty?)
                 text = '-'
@@ -61,7 +63,7 @@ Pakyow::App.routes :'console-data' do
           @type = Pakyow::Console::DataTypeRegistry.type(params[:data_id])
 
           @datum = @type.model_object.new
-          @datum.set_all(Pakyow::Console::DatumProcessorRegistry.process(params[:'console-datum'], as: @type))
+          @datum.set_all(Pakyow::Console::DatumProcessorRegistry.process(params[:'console-datum'], @datum, as: @type))
 
           Pakyow::Console::ServiceHookRegistry.call(:before, :create, @type.name, @datum, self)
 
