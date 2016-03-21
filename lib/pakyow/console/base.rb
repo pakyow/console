@@ -21,6 +21,10 @@ module Pakyow
       @imports ||= []
     end
 
+    def self.slug_handlers
+      @slug_handler ||= []
+    end
+
     def self.add_load_path(path)
       load_paths << path
     end
@@ -277,7 +281,7 @@ module Pakyow
         end
 
         migration_map = {}
-        console_migration_dir = File.expand_path('../migrations', __FILE__)
+        console_migration_dir = File.expand_path('../../migrations', __FILE__)
         migration_paths = Pakyow::Console.migration_paths.push(console_migration_dir)
         console_migrations = []
 
@@ -313,6 +317,18 @@ module Pakyow
 
       Pakyow.logger.info '[console] migrations are current'
       @db = true
+    end
+
+    def self.slug_handler(&block)
+      slug_handlers << block
+    end
+
+    def self.handle_slug(ctx)
+      ctx.handle 404 if Pakyow::Console::Models::InvalidPath.invalid_for_path?(ctx.req.path)
+
+      slug_handlers.each do |handler|
+        ctx.instance_exec(&handler)
+      end
     end
   end
 end

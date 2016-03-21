@@ -41,3 +41,10 @@ Pakyow::App.routes :'console-page' do
     end
   end
 end
+
+Pakyow::Console.slug_handler do
+  page = Pakyow::Console.pages.find { |p| p.matches?(req.path) }
+  next if page.nil? || !page.published
+
+  reroute router.group(:page).path(:show, page_id: page.id)
+end
