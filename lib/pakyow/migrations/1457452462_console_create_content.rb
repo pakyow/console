@@ -12,7 +12,7 @@ Sequel.migration do
       Time          :created_at
       Time          :updated_at
 
-      index [:owner_id, :owner_type]
+      index [:owner_id, :owner_type, :version_id, :published]
     end
   end
 

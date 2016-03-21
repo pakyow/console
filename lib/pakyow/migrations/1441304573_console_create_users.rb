@@ -10,6 +10,8 @@ Sequel.migration do
       String        :crypted_password
       Time          :created_at
       Time          :updated_at
+
+      index [:email, :username, :role, :active]
     end
   end
 

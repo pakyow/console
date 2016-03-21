@@ -5,6 +5,8 @@ Sequel.migration do
       String        :path
       Time          :created_at
       Time          :updated_at
+
+      index [:path]
     end
   end
 

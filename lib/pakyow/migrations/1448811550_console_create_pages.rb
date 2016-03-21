@@ -11,6 +11,8 @@ Sequel.migration do
       Time          :published_at
       Time          :created_at
       Time          :updated_at
+
+      index [:parent_id, :slug, :template, :published]
     end
   end
 
