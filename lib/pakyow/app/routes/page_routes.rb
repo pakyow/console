@@ -22,15 +22,15 @@ Pakyow::App.routes :'console-page' do
 
           if parts.empty?
             rendered = renderer_view.scope(:content)[0].dup
-            Pakyow::Console::ContentRenderer.render(content.content, view: rendered)
+            html = Pakyow::Console::ContentRenderer.render(content.content, view: rendered).to_html
             editable[:doc].clear
-            editable[:doc].append(rendered.to_html)
+            editable[:doc].append(html)
           else
             editable[:doc].editable_parts.each_with_index do |part, i|
               rendered = renderer_view.scope(:content)[0].dup
 
-              Pakyow::Console::ContentRenderer.render([content.content[i]], view: rendered, constraints: page.constraints)
-              part[:doc].replace(rendered.to_html)
+              html = Pakyow::Console::ContentRenderer.render([content.content[i]], view: rendered, constraints: page.constraints).to_html
+              part[:doc].replace(html)
             end
           end
 

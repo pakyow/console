@@ -161,8 +161,7 @@ module Pakyow
           content = content_for(editable_id)
           renderer_view = Pakyow.app.presenter.store(:console).view('/console/pages/template')
           rendered = renderer_view.scope(:content)[0]
-          Pakyow::Console::ContentRenderer.render(content.content, view: rendered)
-          rendered.doc.to_html
+          Pakyow::Console::ContentRenderer.render(content.content, view: rendered).to_html
         end
 
         def template
@@ -228,16 +227,13 @@ Pakyow::Console::Models::Page.plugin :dirty
 
 # TODO: move to a more logical place
 Pakyow::Console.after :page, :create do
-  puts 'invalidating'
   Pakyow::Console.invalidate_pages
 end
 
 Pakyow::Console.after :page, :update do
-  puts 'invalidating'
   Pakyow::Console.invalidate_pages
 end
 
 Pakyow::Console.after :page, :delete do
-  puts 'invalidating'
   Pakyow::Console.invalidate_pages
 end
