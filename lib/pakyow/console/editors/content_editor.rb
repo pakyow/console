@@ -160,7 +160,11 @@ module Pakyow::Console::Content
       alignment = data['align']
       alignment = 'default' if alignment.empty?
 
-      if embed_code.match('vimeo.com/')
+      if embed_code.match('player.vimeo.com/video/')
+        id = embed_code.split('player.vimeo.com/video/')[1]
+        html = '<div class="console-content-vimeo-wrapper"><iframe src="//player.vimeo.com/video/' + id + '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>'
+        view.html = html
+      elsif embed_code.match('vimeo.com/')
         id = embed_code.split('vimeo.com/')[1]
         html = '<div class="console-content-vimeo-wrapper"><iframe src="//player.vimeo.com/video/' + id + '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>'
         view.html = html
@@ -170,6 +174,10 @@ module Pakyow::Console::Content
         view.html = html
       elsif embed_code.match('youtu.be/')
         id = embed_code.split('youtu.be/')[1]
+        html = '<div class="console-content-youtube-wrapper"><iframe src="//www.youtube.com/embed/' + id + '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>'
+        view.html = html
+      elsif embed_code.match('youtube.com/embed/')
+        id = embed_code.split('youtube.com/embed/')[1]
         html = '<div class="console-content-youtube-wrapper"><iframe src="//www.youtube.com/embed/' + id + '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>'
         view.html = html
       end

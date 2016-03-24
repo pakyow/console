@@ -140,7 +140,27 @@ module Pakyow
                 if part_type == :default
                   part_hash[:content] = part[:doc].html
                 elsif part_type == :image
-                  part_hash[:images] = []
+                  images = []
+                  oga_doc = Oga.parse_html(part[:doc].html)
+                  oga_doc.css('img').each do |img_doc|
+                    img_path = File.join(Pakyow::Config.app.root, 'app', 'assets', img_doc.get('src'))
+                    next unless File.exists?(img_path)
+
+                    img_file = File.open(img_path)
+                    img_name = File.basename(img_path)
+                    img_obj = Pakyow::Console::FileStore.instance.store(img_name, img_file, context: Pakyow::Console::FileStore::CONTEXT_MEDIA)
+
+                    images << {
+                      id: img_obj[:id],
+                      thumb: "/console/files/#{img_obj[:id]}"
+                    }
+                  end
+
+                  part_hash[:images] = images.to_json
+                elsif part_type == :embed
+                  oga_doc = Oga.parse_html(part[:doc].html)
+                  embed_doc = oga_doc.css('iframe').first
+                  part_hash[:code] = embed_doc.get('src')
                 end
 
                 content << part_hash
