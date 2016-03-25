@@ -14,7 +14,7 @@ module Pakyow
 
         # TODO: check for existence of hash before blindly moving
 
-        file_path = File.join(@store_path, metadata[:hash])
+        file_path = File.join(@store_path, metadata[:id])
         metadata[:path] = file_path + metadata[:ext]
         FileUtils.mv(tempfile.path, file_path + metadata[:ext])
         File.write(file_path + '.yml', metadata.to_yaml)
@@ -23,14 +23,14 @@ module Pakyow
       end
 
       def process(file, processed_data, w: nil, h: nil)
-        path = processed_path(file[:hash], w: w, h: h)
-        File.open(processed_path(file[:hash], w: w, h: h), 'wb+') do |f|
+        path = processed_path(file[:id], w: w, h: h)
+        File.open(processed_path(file[:id], w: w, h: h), 'wb+') do |f|
           f.write(processed_data)
         end
       end
 
       def find(hash)
-        files.find { |f| f[:hash] == hash }
+        files.find { |f| f[:id] == hash }
       end
 
       def processed(hash, w: nil, h: nil)
@@ -70,7 +70,7 @@ module Pakyow
         file = find(hash)
 
         ext = file[:ext]
-        path = file[:hash]
+        path = file[:id]
 
         processed_path = File.join(@store_path, 'processed')
         sized_path = File.join(processed_path, path)
