@@ -21,6 +21,7 @@ require 'pakyow/console/config'
 require 'pakyow/console/file_store'
 require 'pakyow/console/hooks'
 require 'pakyow/console/editables'
+require 'pakyow/console/navigations'
 
 require 'pakyow/console/registries/data_type_registry'
 require 'pakyow/console/registries/editor_registry'
@@ -45,8 +46,10 @@ require 'pakyow/console/editors/sensitive_editor'
 require 'pakyow/console/editors/relation_editor'
 require 'pakyow/console/editors/content_editor'
 require 'pakyow/console/editors/date_editor'
+require 'pakyow/console/editors/datetime_editor'
 
 require 'pakyow/console/formatters/percentage_formatter'
+require 'pakyow/console/formatters/datetime_formatter'
 
 require 'pakyow/console/processors/boolean_processor'
 require 'pakyow/console/processors/file_processor'
@@ -80,10 +83,16 @@ Pakyow::Console.add_load_path(File.join(Pakyow::Console::ROOT, 'app'))
 #
 # /misc
 
+# panes
+#
+Pakyow::Console::PanelRegistry.register :plugins, mode: :development, nice_name: 'Plugins', icon_class: 'plug' do; end
+# Pakyow::Console::PanelRegistry.register :routes, mode: :development, nice_name: 'Routes', icon_class: 'map' do; end
+#
+# /panes
+
 # plugin stubs
 #
 # Pakyow::Console::PanelRegistry.register :design, mode: :development, nice_name: 'Design', icon_class: 'eye' do; end
-# Pakyow::Console::PanelRegistry.register :plugins, mode: :development, nice_name: 'Plugins', icon_class: 'plug' do; end
 # Pakyow::Console::PanelRegistry.register :content, mode: :production, nice_name: 'Pages', icon_class: 'newspaper-o' do; end
 # Pakyow::Console::PanelRegistry.register :stats, mode: :production, nice_name: 'Stats', icon_class: 'bar-chart' do; end
 # TODO: move release to a separate plugin

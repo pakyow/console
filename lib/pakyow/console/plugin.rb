@@ -1,6 +1,6 @@
 class Pakyow::Console::Plugin
   attr_reader :id, :name, :functions
-  attr_accessor :version, :mountable
+  attr_accessor :version, :mountable, :routes
 
   def [](var)
     instance_variable_get(:"@#{var}")
@@ -9,7 +9,8 @@ class Pakyow::Console::Plugin
   def initialize(name, &block)
     @id = name
     @name = name
-    @functions = {}
+    @routes = []
+    # @functions = {}
     instance_exec(self, &block)
   end
 
@@ -21,16 +22,16 @@ class Pakyow::Console::Plugin
     end
   end
 
-  def function(name, options = {}, &block)
-    @functions[name] = {
-      block: block,
-      options: options
-    }
-  end
+  # def function(name, options = {}, &block)
+  #   @functions[name] = {
+  #     block: block,
+  #     options: options
+  #   }
+  # end
 
-  def invoke(fn_name, context, options)
-    context.instance_exec(options, &@functions[fn_name.to_sym][:block])
-  end
+  # def invoke(fn_name, context, options)
+  #   context.instance_exec(options, &@functions[fn_name.to_sym][:block])
+  # end
 
   private
 

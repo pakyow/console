@@ -21,7 +21,8 @@ Pakyow::App.hook(:before, :error).unshift(lambda {
 })
 
 Pakyow::App.after :match do
-  # TODO: this guard is needed because the route hooks are called again when calling a handler :/
+  # this guard is needed because the route hooks are called again when calling a handler :/
+  # TODO: think through a fix for the above
   if !@console_404 && Pakyow::Console::Models::InvalidPath.invalid_for_path?(req.path)
     @console_404 = true
     handle 404, false
@@ -29,6 +30,8 @@ Pakyow::App.after :match do
 
   page = Pakyow::Console.pages.find { |p| p.matches?(req.path) }
   next if page.nil?
+
+  # TODO: we can't reroute, but we could fetch and call the show page route
 
   if !@console_404 && !page.published
     @console_404 = true
@@ -105,5 +108,25 @@ end
 Pakyow::App.after :route do
   if !found? && req.path_parts[0] == 'console'
     console_handle 404
+  end
+end
+
+Pakyow::App.after :load do
+  Pakyow::Console::Models::MountedPlugin.where(active: true).all.each do |plugin|
+    routes :"pw-blog=#{plugin.id}" do
+      include Object.const_get("Pakyow::Console::Plugins::#{Inflecto.camelize(plugin.name)}::Routes")
+
+      fn :set_plugin do
+        @mounted_plugin = plugin
+      end
+
+      send plugin.name.to_sym, :"pw-blog-#{plugin.id}", plugin.slug, before: [:set_plugin] do
+        plugin_obj = Pakyow::Console::PluginRegistry.find(plugin.name)
+
+        plugin_obj.routes.each do |route_name|
+          action route_name
+        end
+      end
+    end
   end
 end

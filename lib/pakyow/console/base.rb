@@ -4,6 +4,7 @@ module Pakyow
     PLATFORM_URL = 'https://pakyow.com'
     CLOSING_HEAD_REGEX = /<\/head>/m
     CLOSING_BODY_REGEX = /<\/body>/m
+    RFC882 = "%a, %d %b %Y %H:%M:%S %Z"
 
     def self.loader
       @loader ||= Pakyow::Loader.new
@@ -62,6 +63,10 @@ module Pakyow
 
     def self.script(path)
       ScriptRegistry.register path
+    end
+
+    def self.plugin(type, &block)
+      PluginRegistry.register type, &block
     end
 
     def self.db
