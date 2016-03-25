@@ -158,7 +158,7 @@ module Pakyow::Console::Content
     def self.render(data, view, constraints)
       embed_code = data['code']
       alignment = data['align']
-      alignment = 'default' if alignment.empty?
+      alignment = 'default' if alignment.nil? || alignment.empty?
 
       if embed_code.match('player.vimeo.com/video/')
         id = embed_code.split('player.vimeo.com/video/')[1]
