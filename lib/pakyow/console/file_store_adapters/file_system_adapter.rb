@@ -16,7 +16,7 @@ module Pakyow
 
         file_path = File.join(@store_path, metadata[:id])
         metadata[:path] = file_path + metadata[:ext]
-        FileUtils.mv(tempfile.path, file_path + metadata[:ext])
+        FileUtils.copy(tempfile.path, file_path + metadata[:ext])
         File.write(file_path + '.yml', metadata.to_yaml)
 
         reset
