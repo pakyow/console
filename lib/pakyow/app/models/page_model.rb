@@ -159,7 +159,8 @@ module Pakyow
                   images = []
                   oga_doc = Oga.parse_html(part[:doc].html)
                   oga_doc.css('img').each do |img_doc|
-                    img_path = File.join(Pakyow::Config.app.root, 'app', 'assets', img_doc.get('src'))
+                    img_src = img_doc.get('src').gsub(/__[^\.]*/, '')
+                    img_path = File.join(Pakyow::Config.app.root, 'app', 'assets', img_src)
                     next unless File.exists?(img_path)
 
                     img_file = File.open(img_path)
