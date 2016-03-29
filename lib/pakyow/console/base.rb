@@ -156,7 +156,7 @@ module Pakyow
                   content = page.content_for(editable[:id])
                   content.update(content: params[:"content-#{editable[:id]}"])
                 end
-              }, restricted: editable[:doc].editable_parts.count > 0 && !editable[:doc].has_attribute?(:'data-editable-unrestrict'), constraints: page.constraints
+              }, restricted: editable[:doc].editable_parts.count > 0 && !editable[:doc].has_attribute?(:'data-editable-unrestrict'), constraints: editable[:constraints]
             end
           end
 

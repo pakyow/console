@@ -46,7 +46,7 @@ Pakyow::App.after :match do
 
   renderer_view = presenter.store(:console).view('/console/pages/template')
 
-  view.doc.editables.each do |editable|
+  Pakyow::Console::Models::Page.editables_for_view(view).each do |editable|
     content = page.content_for(editable[:doc].get_attribute(:'data-editable'))
     parts = editable[:doc].editable_parts
 
@@ -59,7 +59,7 @@ Pakyow::App.after :match do
       editable[:doc].editable_parts.each_with_index do |part, i|
         rendered = renderer_view.scope(:content)[0].dup
 
-        html = Pakyow::Console::ContentRenderer.render([content.content[i]], view: rendered, constraints: page.constraints).to_html
+        html = Pakyow::Console::ContentRenderer.render([content.content[i]], view: rendered, constraints: editable[:constraints]).to_html
         part[:doc].replace(html)
       end
     end
