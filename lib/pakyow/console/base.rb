@@ -85,10 +85,6 @@ module Pakyow
     def self.load
       return if @loaded
 
-      Pakyow::Console.load_paths.each do |path|
-        Pakyow::Console.loader.load_from_path(path)
-      end
-
       # make sure the console routes are last (since they have the catch-all)
       Pakyow::App.routes[:console] = Pakyow::App.routes.delete(:console)
 

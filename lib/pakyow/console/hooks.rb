@@ -88,6 +88,14 @@ end
 
 Pakyow::App.before :load do
   Pakyow::Console.boot_plugins
+
+  unless @paths_loaded
+    Pakyow::Console.load_paths.each do |path|
+      Pakyow::Console.loader.load_from_path(path)
+    end
+  end
+
+  @paths_loaded = true
 end
 
 Pakyow::App.after :load do
