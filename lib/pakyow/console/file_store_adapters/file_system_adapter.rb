@@ -22,9 +22,9 @@ module Pakyow
         reset
       end
 
-      def process(file, processed_data, w: nil, h: nil)
-        path = processed_path(file[:id], w: w, h: h)
-        File.open(processed_path(file[:id], w: w, h: h), 'wb+') do |f|
+      def process(file, processed_data, w: nil, h: nil, m: nil)
+        path = processed_path(file[:id], w: w, h: h, m: m)
+        File.open(processed_path(file[:id], w: w, h: h, m: m), 'wb+') do |f|
           f.write(processed_data)
         end
       end
@@ -33,8 +33,8 @@ module Pakyow
         files.find { |f| f[:id] == hash }
       end
 
-      def processed(hash, w: nil, h: nil)
-        path = processed_path(hash, w: w, h: h)
+      def processed(hash, w: nil, h: nil, m: nil)
+        path = processed_path(hash, w: w, h: h, m: m)
         return nil unless File.exists?(path)
         File.read(path)
       end
@@ -66,7 +66,7 @@ module Pakyow
         @files ||= load
       end
 
-      def processed_path(hash, w: nil, h: nil)
+      def processed_path(hash, w: nil, h: nil, m: nil)
         file = find(hash)
 
         ext = file[:ext]
@@ -78,7 +78,7 @@ module Pakyow
         Dir.mkdir(processed_path) unless Dir.exists?(processed_path)
         Dir.mkdir(sized_path)     unless Dir.exists?(sized_path)
 
-        File.join(sized_path, w.to_s + 'x' + h.to_s + ext)
+        File.join(sized_path, w.to_s + 'x' + h.to_s + (m ? "-#{m}" : '') + ext)
       end
     end
   end

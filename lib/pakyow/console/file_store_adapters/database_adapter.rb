@@ -2,7 +2,7 @@ module Pakyow
   module Console
     class DBFileAdapter
       def store(tempfile, metadata)
-        file = find(metadata[:id], w: metadata[:width], h: metadata[:height])
+        file = find(metadata[:id], w: metadata[:width], h: metadata[:height], m: metadata[:mode])
         return unless file.nil?
 
         file = Pakyow::Console::Models::StoredFile.new
@@ -11,15 +11,15 @@ module Pakyow
         file.save
       end
 
-      def find(hash, w: nil, h: nil)
-        file = find_object(hash, w: w, h: h)
+      def find(hash, w: nil, h: nil, m: nil)
+        file = find_object(hash, w: w, h: h, m: m)
         return if file.nil?
 
         Hash.strhash(file.metadata)
       end
 
-      def processed(hash, w: nil, h: nil)
-        file = find_object(hash, w: w, h: h)
+      def processed(hash, w: nil, h: nil, m: nil)
+        file = find_object(hash, w: w, h: h, m: m)
         return if file.nil?
         file.data
       end
@@ -45,10 +45,11 @@ module Pakyow
 
       protected
 
-      def find_object(hash, w: nil, h: nil)
+      def find_object(hash, w: nil, h: nil, m: nil)
         query = Pakyow::Console::Models::StoredFile.where("(metadata ->> 'id') = '#{hash}'").order(:created_at)
         query = query.where("(metadata ->> 'width') = '#{w}'") unless w.nil?
         query = query.where("(metadata ->> 'height') = '#{h}'") unless h.nil?
+        query = query.where("(metadata ->> 'mode') = '#{m}'") unless m.nil?
         query.first
       end
     end

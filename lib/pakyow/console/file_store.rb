@@ -72,10 +72,10 @@ module Pakyow::Console
     end
 
     def processed(hash, w: nil, h: nil, m: nil)
-      file = find(hash)
+      file = find(hash).dup
       return if file[:type] != 'image'
 
-      processed = @adapter.processed(file[:id], w: w, h: h)
+      processed = @adapter.processed(file[:id], w: w, h: h, m: m)
       return processed unless processed.nil?
 
       file[:width] = w
@@ -89,6 +89,8 @@ module Pakyow::Console
       image = MiniMagick::Image.read(@adapter.data(file[:id]))
       m = DEFAULT_MODE if m.nil? || m.empty?
       m = m.to_sym
+
+      file[:mode] = m
 
       if m == :fit
         image.resize "#{w}x#{h}"
@@ -110,7 +112,7 @@ module Pakyow::Console
       end
 
       data = image.to_blob
-      @adapter.process(file, data, w: w, h: h)
+      @adapter.process(file, data, w: w, h: h, m: m)
 
       # always return the processed data
       data
