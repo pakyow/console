@@ -24,9 +24,10 @@ Pakyow::App.routes :'console-file' do
         if file = Pakyow::Console::FileStore.instance.find(params[:file_id])
           w = params[:w]
           h = params[:h]
+          m = params[:m]
 
           if w && h && file[:type] == 'image'
-            data = Pakyow::Console::FileStore.instance.processed(params[:file_id], w: w, h: h)
+            data = Pakyow::Console::FileStore.instance.processed(params[:file_id], w: w, h: h, m: m)
           else
             data = Pakyow::Console::FileStore.instance.data(params[:file_id])
           end

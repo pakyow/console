@@ -12,6 +12,8 @@ module Pakyow::Console
     CONTEXT_THUMB = 'thumb'
     CONTEXT_APP   = 'app'
 
+    DEFAULT_MODE = :fit
+
     def self.type_for_ext(ext)
       case ext.downcase
       when '.png', '.gif', '.jpg', '.jpeg'
@@ -69,7 +71,7 @@ module Pakyow::Console
       @adapter.all
     end
 
-    def processed(hash, w: nil, h: nil)
+    def processed(hash, w: nil, h: nil, m: nil)
       file = find(hash)
       return if file[:type] != 'image'
 
@@ -80,15 +82,31 @@ module Pakyow::Console
       file[:height] = h
       file[:context] = CONTEXT_THUMB
 
-      process(file, w: w, h: h)
+      process(file, w: w, h: h, m: m)
     end
 
-    def process(file, w: nil, h: nil)
+    def process(file, w: nil, h: nil, m: nil)
       image = MiniMagick::Image.read(@adapter.data(file[:id]))
-      image.resize "#{w}x#{h}^"
-      image.combine_options do |i|
-        i.gravity "center"
-        i.extent "#{w}x#{h}"
+      m = DEFAULT_MODE if m.nil? || m.empty?
+      m = m.to_sym
+
+      if m == :fit
+        image.resize "#{w}x#{h}"
+      elsif m == :fill
+        image.resize "#{w}x#{h}^"
+        image.combine_options do |i|
+          i.gravity "center"
+          i.extent "#{w}x#{h}"
+        end
+      elsif m == :pad
+        image.combine_options do |cmd|
+          cmd.thumbnail "#{w}x#{h}>"
+          cmd.background "rgba(255, 255, 255, 0.0)"
+          cmd.gravity "center"
+          cmd.extent "#{w}x#{h}"
+        end
+      elsif m == :limit
+        image.resize "#{w}x#{h}>"
       end
 
       data = image.to_blob

@@ -115,8 +115,9 @@ module Pakyow::Console::Content
         if constraints
           constraints_for_alignment = constraints[alignment.to_sym]
 
+          constraint_mode = Pakyow::Console::FileStore::DEFAULT_MODE
           if constraints_for_alignment
-            constraint_width, constraint_height = constraints_for_alignment.values_at(:width, :height)
+            constraint_width, constraint_height, constraint_mode = constraints_for_alignment.values_at(:width, :height, :mode)
             scale_factor = width.to_i / constraint_width.to_f
 
             width = constraint_width.to_i
@@ -125,19 +126,25 @@ module Pakyow::Console::Content
         end
 
         if width && height
-          src << "?w=#{width}&h=#{height}"
+          src << "?w=#{width}&h=#{height}&m=#{constraint_mode}"
         end
 
         if working.doc.tagname == 'img'
           working.attrs.src = src
         else
-          working.attrs.style = {
+          style = {
             :'background-image' => "url(#{src})",
-            :'background-size' => 'cover',
-
+            :'background-repeat' => 'no-repeat',
+            :'background-position' => 'center',
             width: "#{width}px",
             height: "#{height}px"
           }
+
+          if constraint_mode == :fill
+            style[:'background-size'] = 'cover'
+          end
+
+          working.attrs.style = style
         end
 
         working.attrs.class << "align-#{alignment}"
