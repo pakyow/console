@@ -117,10 +117,10 @@ module Pakyow::Console::Content
 
           if constraints_for_alignment
             constraint_width, constraint_height = constraints_for_alignment.values_at(:width, :height)
-            scale_factor = width / constraint_width.to_f
+            scale_factor = width.to_i / constraint_width.to_f
 
             width = constraint_width.to_i
-            height = [height / scale_factor, constraint_height.to_i].min
+            height = [height.to_i / scale_factor, constraint_height.to_i].min
           end
         end
 
