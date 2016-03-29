@@ -9,5 +9,9 @@ Pakyow::App.bindings :'console-plugin' do
     binding :'show-href' do
       { href: router.group(:'console-plugin').path(:show, :'console-plugin_id' => bindable.name) }
     end
+
+    binding :readme do |value|
+      Pakyow.app.presenter.processor_store[:md].call(value)
+    end
   end
 end

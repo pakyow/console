@@ -1,8 +1,7 @@
 module Pakyow::Console::PluginRegistry
   def self.register(name, &block)
-    plugins[name] = Pakyow::Console::Plugin.new(name, &block)
-
     path = File.dirname(String.parse_path_from_caller(caller[1]))
+    plugins[name] = Pakyow::Console::Plugin.new(name, path, &block)
     Pakyow::Console.add_migration_path File.join(path, 'migrations')
     Pakyow::App.config.presenter.view_stores[:blog] = File.join(path, 'views')
   end

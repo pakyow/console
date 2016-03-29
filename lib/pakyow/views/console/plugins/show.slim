@@ -1,8 +1,13 @@
-h1@@console-plugin
-  | plugins/
-  span@name blog
-  a.button href="/console/plugins"
-    i.fa.fa-caret-left
-    | Back to plugins
+.console-plugin@@console-plugin
+  h1
+    | plugins/
+    span@name blog
+    a.button href="/console/plugins" data-ui="fastlink"
+      i.fa.fa-caret-left
+      | Back to plugins
 
-.todo.margin-t plugin readme goes here
+  h4.margin-t
+    | README&nbsp;
+    span@version
+
+  .plugin-readme@readme plugin readme goes here

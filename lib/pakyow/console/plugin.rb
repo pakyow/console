@@ -1,16 +1,20 @@
 class Pakyow::Console::Plugin
-  attr_reader :id, :name, :functions
+  attr_reader :id, :name, :functions, :readme
   attr_accessor :version, :mountable, :routes
 
   def [](var)
     instance_variable_get(:"@#{var}")
   end
 
-  def initialize(name, &block)
+  def initialize(name, path, &block)
     @id = name
     @name = name
+    @path = path
     @routes = []
     # @functions = {}
+
+    @readme = File.read(File.join( path, '../../', 'README.md'))
+
     instance_exec(self, &block)
   end
 
