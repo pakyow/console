@@ -50,9 +50,9 @@ Pakyow::App.after :match do
     content = page.content_for(editable[:doc].get_attribute(:'data-editable'))
     parts = editable[:doc].editable_parts
 
-    if parts.empty?
+    if parts.empty? || editable[:doc].has_attribute?(:'data-editable-unrestrict')
       rendered = renderer_view.scope(:content)[0].dup
-      html = Pakyow::Console::ContentRenderer.render(content.content, view: rendered).to_html
+      html = Pakyow::Console::ContentRenderer.render(content.content, view: rendered, constraints: editable[:constraints]).to_html
       editable[:doc].clear
       editable[:doc].append(html)
     else
