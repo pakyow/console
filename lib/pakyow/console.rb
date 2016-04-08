@@ -85,7 +85,7 @@ Pakyow::Console.add_load_path(File.join(Pakyow::Console::ROOT, 'app'))
 
 # panes
 #
-Pakyow::Console::PanelRegistry.register :plugins, mode: :development, nice_name: 'Plugins', icon_class: 'plug' do; end
+Pakyow::Console::PanelRegistry.register :plugins, mode: :production, nice_name: 'Plugins', icon_class: 'plug' do; end
 # Pakyow::Console::PanelRegistry.register :routes, mode: :development, nice_name: 'Routes', icon_class: 'map' do; end
 #
 # /panes

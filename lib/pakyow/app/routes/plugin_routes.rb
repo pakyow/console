@@ -11,11 +11,8 @@ Pakyow::App.routes :'console-plugin' do
         plugin = Pakyow::Console::PluginRegistry.find(params[:'console-plugin_id'])
 
         view.scope(:'console-plugin')[0].bind(plugin)
-        # view.scope(:'console-plugin')[1].bind(plugin)
 
-        # if !plugin.mountable
-        #   view.partial(:mountable).remove
-        # end
+        view.scope(:'pw-mounted-plugin').apply(Pakyow::Console::Models::MountedPlugin.where(name: plugin.name.to_s).order(Sequel.asc(:slug)).all)
       end
 
       update do
@@ -32,6 +29,16 @@ Pakyow::App.routes :'console-plugin' do
         #TODO find and update the plugin, writing to plugins.yaml
         #NEXT make it work programatically, then hookup ze ui (possibly do data / pages first)
         #THEN write a simple blog plugin and tie the two together
+      end
+
+      restful :'console-mounted-plugin', '/mounts' do
+        new do
+          reroute router.group(:datum).path(:new, data_id: 'mount')
+        end
+
+        show do
+          reroute router.group(:datum).path(:edit, data_id: 'mount', datum_id: params[:'console-mounted-plugin_id'])
+        end
       end
     end
   end

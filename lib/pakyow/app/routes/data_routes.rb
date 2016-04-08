@@ -54,9 +54,12 @@ Pakyow::App.routes :'console-data' do
           presenter.path = 'console/data/datum/new'
 
           @type = Pakyow::Console::DataTypeRegistry.type(params[:data_id])
+          Pakyow::Console::ServiceHookRegistry.call(:before, :new, @type.name, nil, self)
           view.container(:default).scope(:'console-data-type').bind(@type)
 
           setup_datum_form
+
+          Pakyow::Console::ServiceHookRegistry.call(:after, :new, @type.name, nil, self)
         end
 
         create do
@@ -97,6 +100,8 @@ Pakyow::App.routes :'console-data' do
           @datum ||= @type.model_object[params[:datum_id]]
           console_handle 404 if @datum.nil?
           setup_datum_form
+
+          Pakyow::Console::ServiceHookRegistry.call(:after, :edit, @type.name, nil, self)
         end
 
         update do

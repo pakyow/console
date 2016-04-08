@@ -112,21 +112,9 @@ Pakyow::App.after :route do
 end
 
 Pakyow::App.after :load do
-  Pakyow::Console::Models::MountedPlugin.where(active: true).all.each do |plugin|
-    routes :"pw-blog=#{plugin.id}" do
-      include Object.const_get("Pakyow::Console::Plugins::#{Inflecto.camelize(plugin.name)}::Routes")
-
-      fn :set_plugin do
-        @mounted_plugin = plugin
-      end
-
-      send plugin.name.to_sym, :"pw-blog-#{plugin.id}", plugin.slug, before: [:set_plugin] do
-        plugin_obj = Pakyow::Console::PluginRegistry.find(plugin.name)
-
-        plugin_obj.routes.each do |route_name|
-          action route_name
-        end
-      end
-    end
+  unless @plugins_mounted
+    Pakyow::Console.mount_plugins(self)
   end
+
+  @plugins_mounted = true
 end

@@ -191,6 +191,23 @@ module Pakyow
         end
       end
 
+      unless Pakyow::Console::DataTypeRegistry.names.include?(:mount)
+        Pakyow::Console::DataTypeRegistry.register :mount, icon_class: 'cubes' do
+          model 'Pakyow::Console::Models::MountedPlugin'
+          pluralize
+
+          attribute :slug, :string
+          attribute :active, :boolean
+
+          # FIXME: rename `name` to `type` in model
+          attribute :name, :enum, nice: 'Plugin', values: Pakyow::Console::PluginRegistry.all.map { |p| [p.id, p.name] }.unshift(['', ''])
+
+          action :remove, label: 'Delete', notification: 'mount point deleted' do
+            # TODO: hook this up
+          end
+        end
+      end
+
       Pakyow.app.presenter.store(:default).views do |view, path|
         composer = Pakyow.app.presenter.store(:default).composer(path)
 
@@ -300,6 +317,28 @@ module Pakyow
 
       slug_handlers.each do |handler|
         ctx.instance_exec(&handler)
+      end
+
+      ctx.handle 404
+    end
+
+    def self.mount_plugins(ctx)
+      Pakyow::Console::Models::MountedPlugin.where(active: true).order(Sequel.desc(:slug)).all.each do |plugin|
+        ctx.routes :"pw-blog=#{plugin.id}" do
+          include Object.const_get("Pakyow::Console::Plugins::#{Inflecto.camelize(plugin.name)}::Routes")
+
+          fn :set_plugin do
+            @mounted_plugin = plugin
+          end
+
+          send plugin.name.to_sym, :"pw-blog-#{plugin.id}", plugin.slug, before: [:set_plugin] do
+            plugin_obj = Pakyow::Console::PluginRegistry.find(plugin.name)
+
+            plugin_obj.routes.each do |route_name|
+              action route_name
+            end
+          end
+        end
       end
     end
   end

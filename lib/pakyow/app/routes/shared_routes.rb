@@ -7,9 +7,9 @@ module Pakyow::Console::SharedRoutes
 
   fn :setup do
     view.partial(:'dev-nav').with do |view|
-      if env == :development
+      if false && env == :development
         view.scope(:'console-panel-item').apply(Pakyow::Console::PanelRegistry.nav(:development)) do |view, item|
-          if req.path.include?("/console/#{item[:namespace]}")
+          if req.first_path.include?("/console/#{item[:namespace]}")
             view.attrs.class.ensure(:active)
           end
         end
@@ -32,7 +32,7 @@ module Pakyow::Console::SharedRoutes
     prd_items.sort! { |a, b| a[:nice_name] <=> b[:nice_name] }
 
     view.partial(:'prd-nav').scope(:'console-panel-item').apply(prd_items) do |view, item|
-      if req.path.include?("/console/#{item[:namespace]}")
+      if req.first_path.include?("/console/#{item[:namespace]}")
         view.attrs.class.ensure(:active)
       end
     end

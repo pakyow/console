@@ -1,5 +1,5 @@
 @mixin rem($style, $px) {
-  #{$style}: #{$px}px; 
+  #{$style}: #{$px}px;
   #{$style}: #{$px / 10}rem;
 }
 
@@ -11,6 +11,7 @@ $color-mgray: #777;
 $color-dgray: #555;
 $color-red: #e74c3c;
 $color-blue: #4986e8;
+$color-green: #22af4b;
 
 $font-main: "Open Sans", "Helvetica Neue", Helvetica, sans-serif;
 $font-code: "Source Code Pro", Menlo, fixed;
