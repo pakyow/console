@@ -8,7 +8,13 @@ module Pakyow::Helpers
   end
 
   def console_setup?
-    platform_setup? || Pakyow::Console.model(:user).count > 0
+    if using_platform?
+      return platform_setup?
+    else
+      return Pakyow::Console.model(:user).count > 0
+    end
+
+    false
   end
 
   def platform_setup?
@@ -16,7 +22,7 @@ module Pakyow::Helpers
   end
 
   def console_authed?
-    !session[CONSOLE_SESSION_KEY].nil? || platform_authed?
+    !session[CONSOLE_SESSION_KEY].nil?
   end
 
   def platform_authed?

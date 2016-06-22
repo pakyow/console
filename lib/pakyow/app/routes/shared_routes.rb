@@ -2,6 +2,7 @@ module Pakyow::Console::SharedRoutes
   include Pakyow::Routes
 
   fn :auth do
+    redirect router.group(:console).path(:setup) unless console_setup?
     redirect router.group(:console).path(:login) unless console_authed?
   end
 

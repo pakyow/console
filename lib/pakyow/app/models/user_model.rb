@@ -30,8 +30,10 @@ module Pakyow
           validates_unique    :email
           validates_unique    :username
 
-          validates_presence :password unless crypted_password
-          errors.add(:password, "and confirmation must match") if password && password != password_confirmation
+          unless platform_user_id
+            validates_presence :password unless crypted_password
+            errors.add(:password, "and confirmation must match") if password && password != password_confirmation
+          end
 
           validates_presence  :name
 

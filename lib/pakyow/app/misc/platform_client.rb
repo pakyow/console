@@ -1,13 +1,13 @@
 class PlatformClient
   class << self
     def auth(email, password)
-      response = HTTParty.post(File.join(Pakyow::Console::PLATFORM_URL, 'auth/token'), body: {
+      response = HTTParty.post(File.join(Pakyow::Config.console.platform_url, 'auth/token'), body: {
         login: email,
         password: password,
       })
 
       if response.code == 200
-        Hash.strhash(JSON.parse(response.body))[:access_token]
+        Hash.strhash(JSON.parse(response.body))
       end
     end
   end
@@ -19,7 +19,7 @@ class PlatformClient
   end
 
   def valid?
-    response = HTTParty.get(File.join(Pakyow::Console::PLATFORM_URL, 'api/projects'), basic_auth: {
+    response = HTTParty.get(File.join(Pakyow::Config.console.platform_url, 'api/projects'), basic_auth: {
       username: @email,
       password: @token,
     })
@@ -29,7 +29,7 @@ class PlatformClient
 
   def socket
     if app = @info[:app]
-      response = HTTParty.post(File.join(Pakyow::Console::PLATFORM_URL, 'api/projects', app[:id].to_s, 'socket'), basic_auth: {
+      response = HTTParty.post(File.join(Pakyow::Config.console.platform_url, 'api/projects', app[:id].to_s, 'socket'), basic_auth: {
         username: @email,
         password: @token,
       })
@@ -42,19 +42,20 @@ class PlatformClient
 
   # TODO: refactor to `projects`
   def apps
-    response = HTTParty.get(File.join(Pakyow::Console::PLATFORM_URL, 'api/projects'), basic_auth: {
+    response = HTTParty.get(File.join(Pakyow::Config.console.platform_url, 'api/projects'), basic_auth: {
       username: @email,
       password: @token,
     })
 
     JSON.parse(response.body).map { |app|
+      # TODO: this blows up when we get a non-hash response back (e.g. in the event of a 401)
       Hash.strhash(app)
     }
   end
 
   # TODO: refactor to `project`
   def app(id)
-    response = HTTParty.get(File.join(Pakyow::Console::PLATFORM_URL, 'api/projects', id.to_s), basic_auth: {
+    response = HTTParty.get(File.join(Pakyow::Config.console.platform_url, 'api/projects', id.to_s), basic_auth: {
       username: @email,
       password: @token,
     })
@@ -64,7 +65,7 @@ class PlatformClient
 
   def events
     if app = @info[:app]
-      response = HTTParty.get(File.join(Pakyow::Console::PLATFORM_URL, "api/projects/#{app[:id]}", 'events'), basic_auth: {
+      response = HTTParty.get(File.join(Pakyow::Config.console.platform_url, "api/projects/#{app[:id]}", 'events'), basic_auth: {
         username: @email,
         password: @token,
       })
@@ -81,7 +82,7 @@ class PlatformClient
 
   def collaborators
     if app = @info[:app]
-      response = HTTParty.get(File.join(Pakyow::Console::PLATFORM_URL, "api/projects/#{app[:id]}", 'collaborators'), basic_auth: {
+      response = HTTParty.get(File.join(Pakyow::Config.console.platform_url, "api/projects/#{app[:id]}", 'collaborators'), basic_auth: {
         username: @email,
         password: @token,
       })
@@ -96,7 +97,7 @@ class PlatformClient
 
   def releases
     if app = @info[:app]
-      response = HTTParty.get(File.join(Pakyow::Console::PLATFORM_URL, "api/projects/#{app[:id]}", 'releases'), basic_auth: {
+      response = HTTParty.get(File.join(Pakyow::Config.console.platform_url, "api/projects/#{app[:id]}", 'releases'), basic_auth: {
         username: @email,
         password: @token,
       })
@@ -110,7 +111,7 @@ class PlatformClient
   end
 
   def create_release
-    response = HTTParty.post(File.join(Pakyow::Console::PLATFORM_URL, 'api/projects', @info[:app][:id].to_s, 'releases'), basic_auth: {
+    response = HTTParty.post(File.join(Pakyow::Config.console.platform_url, 'api/projects', @info[:app][:id].to_s, 'releases'), basic_auth: {
       username: @email,
       password: @token,
     })
@@ -119,7 +120,7 @@ class PlatformClient
   end
 
   def update_release(id, body)
-    response = HTTParty.patch(File.join(Pakyow::Console::PLATFORM_URL, 'api/projects', @info[:app][:id].to_s, 'releases', id.to_s), basic_auth: {
+    response = HTTParty.patch(File.join(Pakyow::Config.console.platform_url, 'api/projects', @info[:app][:id].to_s, 'releases', id.to_s), basic_auth: {
       username: @email,
       password: @token,
     }, body: { release: body })

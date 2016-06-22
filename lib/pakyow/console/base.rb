@@ -1,7 +1,6 @@
 module Pakyow
   module Console
     ROOT = File.expand_path('../../', __FILE__)
-    PLATFORM_URL = 'https://pakyow.com'
     CLOSING_HEAD_REGEX = /<\/head>/m
     CLOSING_BODY_REGEX = /<\/body>/m
     RFC882 = "%a, %d %b %Y %H:%M:%S %Z"

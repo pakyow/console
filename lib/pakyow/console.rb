@@ -9,6 +9,7 @@ require 'pakyow-slim'
 
 require 'image_size'
 require 'sequel'
+require 'oauth'
 
 require 'pakyow/console/base'
 require 'pakyow/console/version'

@@ -4,6 +4,10 @@ Pakyow::Config.register(:console) { |config|
 
   config.opt :use_pakyow_platform, true
 
+  config.opt :platform_url, 'https://www.pakyow.com'
+  config.opt :platform_key, -> { ENV['PLATFORM_OAUTH_KEY'] }
+  config.opt :platform_secret, -> { ENV['PLATFORM_OAUTH_SECRET'] }
+
   config.opt :models, {
     user: 'Pakyow::Console::Models::User',
     page: 'Pakyow::Console::Models::Page'
