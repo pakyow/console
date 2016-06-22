@@ -1,12 +1,12 @@
 Sequel.migration do
   up do
     create_table :'pw-navigation-items' do
-      primary_key   :id
-      foreign_key   :navigation_id, :'pw-navigations'
+      column        :id, :uuid, default: Sequel.function(:uuid_generate_v4), primary_key: true
+      foreign_key   :navigation_id, :'pw-navigations', type: :uuid
       Integer       :order
       String        :group
 
-      Integer       :endpoint_id
+      column        :endpoint_id, :uuid
       String        :endpoint_type
 
       String        :name
