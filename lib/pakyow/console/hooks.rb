@@ -112,9 +112,9 @@ Pakyow::App.after :route do
 end
 
 Pakyow::App.after :load do
-  unless @plugins_mounted
-    Pakyow::Console.mount_plugins(self)
-  end
+  Pakyow::Console.mount_plugins(self, loading: true)
+end
 
-  @plugins_mounted = true
+Pakyow::App.after :reload do
+  Pakyow::Console.mount_plugins(self, loading: true)
 end

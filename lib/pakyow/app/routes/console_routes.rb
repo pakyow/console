@@ -32,7 +32,18 @@ Pakyow::App.routes :console do
 end
 
 Pakyow::App.after :load do
-  routes :'console-catchall' do
+  Pakyow::Router.instance.set :'console-catchall' do
+    # This is the catch-all route for mapping to configured endpoints (plugins, pages, etc).
+    # Registered in an after hook so it's at the end.
+    #
+    get /.*/ do
+      Pakyow::Console.handle_slug(self)
+    end
+  end
+end
+
+Pakyow::App.after :reload do
+  Pakyow::Router.instance.set :'console-catchall' do
     # This is the catch-all route for mapping to configured endpoints (plugins, pages, etc).
     # Registered in an after hook so it's at the end.
     #
