@@ -76,7 +76,7 @@ Pakyow::App.after :process do
 
     console_css = '<link href="/console/styles/console-toolbar.css" rel="stylesheet" type="text/css">'
 
-    if config.assets.compile_on_startup
+    if config.env == :production
       console_css = Pakyow::Assets.mixin_fingerprints(console_css)
     end
 
