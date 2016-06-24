@@ -7,19 +7,7 @@ module Pakyow::Console::SharedRoutes
   end
 
   fn :setup do
-    view.partial(:'dev-nav').with do |view|
-      if false && env == :development
-        view.scope(:'console-panel-item').apply(Pakyow::Console::PanelRegistry.nav(:development)) do |view, item|
-          if req.first_path.include?("/console/#{item[:namespace]}")
-            view.attrs.class.ensure(:active)
-          end
-        end
-      else
-        view.remove
-      end
-    end
-
-    prd_items = Pakyow::Console::PanelRegistry.nav(:production)
+    prd_items = Pakyow::Console::PanelRegistry.nav
 
     # add custom data types
     Pakyow::Console::DataTypeRegistry.types.select(&:display?).each do |type|
@@ -32,7 +20,7 @@ module Pakyow::Console::SharedRoutes
 
     prd_items.sort! { |a, b| a[:nice_name] <=> b[:nice_name] }
 
-    view.partial(:'prd-nav').scope(:'console-panel-item').apply(prd_items) do |view, item|
+    view.partial(:'side-nav').scope(:'console-panel-item').apply(prd_items) do |view, item|
       if req.first_path.include?("/console/#{item[:namespace]}")
         view.attrs.class.ensure(:active)
       end
