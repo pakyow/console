@@ -1,0 +1,25 @@
+.notifier {
+  position: fixed;
+  top:0;
+  left: 50%;
+  width: $container-width;
+  margin-left: -(($container-width - 250) / 2);
+  height: 30px;
+  background:$color-black;
+  cursor: pointer;
+  @include rem(line-height, 30);
+  padding-left: 15px;
+  box-sizing: border-box;
+  color: $color-white;
+  text-align: center;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+  font-weight: 600;
+  z-index: 1000;
+
+  @include transition(top 0.05s ease-in);
+
+  &.hide {
+    top: -30px;
+  }
+}
