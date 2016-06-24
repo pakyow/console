@@ -3,14 +3,13 @@ module Pakyow
     ROOT = File.expand_path('../../', __FILE__)
     CLOSING_HEAD_REGEX = /<\/head>/m
     CLOSING_BODY_REGEX = /<\/body>/m
-    RFC882 = "%a, %d %b %Y %H:%M:%S %Z"
 
     def self.loader
       @loader ||= Pakyow::Loader.new
     end
 
     def self.load_paths
-      @load_paths ||= []
+      @load_paths ||= [File.join(Pakyow::Console::ROOT, 'app')]
     end
 
     def self.migration_paths
