@@ -191,20 +191,20 @@ module Pakyow
       end
 
       unless Pakyow::Console::DataTypeRegistry.names.include?(:mount)
-        Pakyow::Console::DataTypeRegistry.register :mount, icon_class: 'cubes' do
-          model 'Pakyow::Console::Models::MountedPlugin'
-          pluralize
+        # Pakyow::Console::DataTypeRegistry.register :mount, icon_class: 'cubes' do
+        #   model 'Pakyow::Console::Models::MountedPlugin'
+        #   pluralize
 
-          attribute :slug, :string
-          attribute :active, :boolean
+        #   attribute :slug, :string
+        #   attribute :active, :boolean
 
-          # FIXME: rename `name` to `type` in model
-          attribute :name, :enum, nice: 'Plugin', values: Pakyow::Console::PluginRegistry.all.map { |p| [p.id, p.name] }.unshift(['', ''])
+        #   # FIXME: rename `name` to `type` in model
+        #   attribute :name, :enum, nice: 'Plugin', values: Pakyow::Console::PluginRegistry.all.map { |p| [p.id, p.name] }.unshift(['', ''])
 
-          action :remove, label: 'Delete', notification: 'mount point deleted' do
-            # TODO: hook this up
-          end
-        end
+        #   action :remove, label: 'Delete', notification: 'mount point deleted' do
+        #     # TODO: hook this up
+        #   end
+        # end
       end
 
       Pakyow.app.presenter.store(:default).views do |view, path|
