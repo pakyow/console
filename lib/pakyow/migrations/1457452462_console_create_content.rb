@@ -1,9 +1,8 @@
 Sequel.migration do
   up do
     create_table :'pw-content' do
-      primary_key   :id
-      Integer       :version_id
-      Integer       :owner_id
+      column        :id, :uuid, default: Sequel.function(:uuid_generate_v4), primary_key: true
+      column        :owner_id, :uuid
       String        :owner_type
       json          :content
       json          :metadata
@@ -12,7 +11,7 @@ Sequel.migration do
       Time          :created_at
       Time          :updated_at
 
-      index [:owner_id, :owner_type, :version_id, :published]
+      index [:owner_id, :owner_type, :published]
     end
   end
 

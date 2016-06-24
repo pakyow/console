@@ -1,7 +1,7 @@
 Sequel.migration do
   up do
     create_table :'pw-mounted-plugins' do
-      primary_key   :id
+      column        :id, :uuid, default: Sequel.function(:uuid_generate_v4), primary_key: true
       String        :name
       String        :slug
       json          :config

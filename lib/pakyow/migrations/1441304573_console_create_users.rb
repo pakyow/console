@@ -1,13 +1,17 @@
 Sequel.migration do
   up do
     create_table :'pw-users' do
-      primary_key   :id
+      column        :id, :uuid, default: Sequel.function(:uuid_generate_v4), primary_key: true
       String        :email
       String        :username
       String        :name
       String        :role
       TrueClass     :active, default: true
       String        :crypted_password
+      String        :timezone
+      column        :platform_user_id, :uuid, default: Sequel.function(:uuid_generate_v4), unique: true
+      column        :platform_token, :uuid, default: Sequel.function(:uuid_generate_v4), unique: true
+      column        :platform_token_secret, :uuid, default: Sequel.function(:uuid_generate_v4), unique: true
       Time          :created_at
       Time          :updated_at
 

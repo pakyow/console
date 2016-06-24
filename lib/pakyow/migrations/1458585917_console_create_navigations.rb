@@ -1,7 +1,7 @@
 Sequel.migration do
   up do
     create_table :'pw-navigations' do
-      primary_key   :id
+      column        :id, :uuid, default: Sequel.function(:uuid_generate_v4), primary_key: true
       String        :name
       Time          :created_at
       Time          :updated_at

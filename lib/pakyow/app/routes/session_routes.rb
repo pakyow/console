@@ -6,34 +6,6 @@ Pakyow::App.routes :'console-session' do
       reroute router.group(:'console-session').path(:new)
     end
 
-    get :platform_login, '/login/platform' do
-      if Pakyow::Config.env == :development && !platform_creds.empty?
-        session[:platform_email] = platform_creds[:email]
-        session[:platform_token] = platform_creds[:token]
-
-        ensure_user_record_for_platform
-        setup_platform_socket
-        redirect router.group(:console).path(:default)
-      else
-        presenter.path = 'console/sessions/platform'
-        handle_errors(view)
-      end
-    end
-
-    post '/sessions/platform' do
-      if token = PlatformClient.auth(params[:email], params[:password])
-        session[:platform_email] = params[:email]
-        session[:platform_token] = token
-
-        ensure_user_record_for_platform
-        setup_platform_socket
-        redirect router.group(:console).path(:default)
-      else
-        #TODO handle errors
-        redirect router.group(:console).path(:platform_login)
-      end
-    end
-
     get :logout, '/logout' do
       console_unauth
       redirect router.group(:console).path(:default)
@@ -42,10 +14,31 @@ Pakyow::App.routes :'console-session' do
     restful :'console-session', '/sessions' do
       new do
         redirect router.group(:console).path(:default) if console_authed?
-        redirect router.group(:console).path(:setup) unless console_setup?
+
+        if console_setup? && platform_token?
+          user = Pakyow::Console.model(:user).first(platform_user_id: platform_creds['user_id'])
+          # TODO: handle user not found
+          console_auth(user)
+          redirect router.group(:console).path(:default)
+        elsif !console_setup?
+          redirect router.group(:console).path(:setup) unless console_setup?
+        end
 
         if using_platform?
-          presenter.path = 'console/sessions/new-platform'
+          if config.env == :production
+            callback_url = File.join(req.base_url, '/console/platform_callback')
+            consumer = OAuth::Consumer.new(config.console.platform_key, config.console.platform_secret, site: config.console.platform_url)
+
+            request_token = consumer.get_request_token(oauth_callback: callback_url)
+
+            # TODO: handle OAuth::Unauthorized, Net::HTTPFatalError
+
+            session[:token] = request_token.token
+            session[:token_secret] = request_token.secret
+            redirect request_token.authorize_url(oauth_callback: callback_url)
+          else
+            redirect router.group(:console).path(:setup) if using_platform?
+          end
         else
           presenter.path = 'console/sessions/new'
         end

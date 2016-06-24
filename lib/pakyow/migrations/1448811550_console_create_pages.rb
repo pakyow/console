@@ -1,8 +1,8 @@
 Sequel.migration do
   up do
     create_table :'pw-pages' do
-      primary_key   :id
-      Integer       :parent_id
+      column        :id, :uuid, default: Sequel.function(:uuid_generate_v4), primary_key: true
+      foreign_key   :parent_id, :'pw-pages', type: :uuid
       String        :slug
       String        :name
       String        :template

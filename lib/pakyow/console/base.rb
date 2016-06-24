@@ -1,7 +1,6 @@
 module Pakyow
   module Console
     ROOT = File.expand_path('../../', __FILE__)
-    PLATFORM_URL = 'https://pakyow.com'
     CLOSING_HEAD_REGEX = /<\/head>/m
     CLOSING_BODY_REGEX = /<\/body>/m
     RFC882 = "%a, %d %b %Y %H:%M:%S %Z"
@@ -192,20 +191,20 @@ module Pakyow
       end
 
       unless Pakyow::Console::DataTypeRegistry.names.include?(:mount)
-        Pakyow::Console::DataTypeRegistry.register :mount, icon_class: 'cubes' do
-          model 'Pakyow::Console::Models::MountedPlugin'
-          pluralize
+        # Pakyow::Console::DataTypeRegistry.register :mount, icon_class: 'cubes' do
+        #   model 'Pakyow::Console::Models::MountedPlugin'
+        #   pluralize
 
-          attribute :slug, :string
-          attribute :active, :boolean
+        #   attribute :slug, :string
+        #   attribute :active, :boolean
 
-          # FIXME: rename `name` to `type` in model
-          attribute :name, :enum, nice: 'Plugin', values: Pakyow::Console::PluginRegistry.all.map { |p| [p.id, p.name] }.unshift(['', ''])
+        #   # FIXME: rename `name` to `type` in model
+        #   attribute :name, :enum, nice: 'Plugin', values: Pakyow::Console::PluginRegistry.all.map { |p| [p.id, p.name] }.unshift(['', ''])
 
-          action :remove, label: 'Delete', notification: 'mount point deleted' do
-            # TODO: hook this up
-          end
-        end
+        #   action :remove, label: 'Delete', notification: 'mount point deleted' do
+        #     # TODO: hook this up
+        #   end
+        # end
       end
 
       Pakyow.app.presenter.store(:default).views do |view, path|
@@ -322,9 +321,19 @@ module Pakyow
       ctx.handle 404
     end
 
-    def self.mount_plugins(ctx)
+    def self.mount_plugins(ctx, loading: false)
+      deleteable = []
+      Pakyow::Router.instance.sets.each_pair do |key, value|
+        next unless key.to_s.start_with?('pw-')
+        deleteable << key
+      end
+
+      deleteable.each do |key|
+        Pakyow::Router.instance.sets.delete(key)
+      end
+
       Pakyow::Console::Models::MountedPlugin.where(active: true).order(Sequel.desc(:slug)).all.each do |plugin|
-        ctx.routes :"pw-blog=#{plugin.id}" do
+        Pakyow::Router.instance.set :"pw-blog=#{plugin.id}" do
           include Object.const_get("Pakyow::Console::Plugins::#{Inflecto.camelize(plugin.name)}::Routes")
 
           fn :set_plugin do
@@ -340,6 +349,8 @@ module Pakyow
           end
         end
       end
+
+      Pakyow::Router.instance.sets[:'console-catchall'] = Pakyow::Router.instance.sets.delete(:'console-catchall')
     end
   end
 end

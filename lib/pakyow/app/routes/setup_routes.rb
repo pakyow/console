@@ -2,45 +2,90 @@ Pakyow::App.routes :'console-setup' do
   include Pakyow::Console::SharedRoutes
 
   namespace :console, '/console' do
-    get :setup, '/setup' do
-      redirect router.group(:console).path(:login) if console_setup?
+    get '/platform_callback' do
+      consumer = OAuth::Consumer.new(config.console.platform_key, config.console.platform_secret, site: config.console.platform_url)
 
-      if using_platform?
-        presenter.path = 'console/setup/index-platform'
-      else
-        presenter.path = 'console/setup/index'
+      hash = { oauth_token: session[:token], oauth_token_secret: session[:token_secret]}
+      request_token  = OAuth::RequestToken.from_hash(consumer, hash)
+      access_token = request_token.get_access_token
+
+      params = access_token.params
+
+      user = Pakyow::Console.model(:user).first(platform_user_id: params[:platform_id])
+
+      if user.nil?
+        user = Pakyow::Console.model(:user).new
+        user.platform_user_id = params[:platform_id]
+        user.consolify
       end
 
-      # setup the form
-      view.scope(:'pw-user').bind(@user || {})
-      handle_errors(view)
+      user.name = params[:platform_name]
+      user.email = params[:platform_email]
+      user.username = params[:platform_username]
+      user.platform_token = params[:oauth_token]
+      user.platform_token_secret = params[:oauth_token_secret]
+      user.save
+
+      console_auth(user)
+      setup_platform_socket
+      redirect router.group(:console).path(:default)
+    end
+
+    get :setup, '/setup' do
+      redirect router.group(:console).path(:login) if console_setup? && platform_token?
+
+      if using_platform?
+        if config.env == :development
+          redirect router.group(:console).path(:setup_platform) if platform_token?
+          presenter.path = 'console/setup/token'
+        else
+          presenter.path = 'console/setup/error'
+        end
+      else
+        presenter.path = 'console/setup/index'
+        view.scope(:'pw-user').bind(@user || {})
+        handle_errors(view)
+      end
     end
 
     get :setup_platform, '/setup/platform' do
+      # TODO: reject access unless in dev mode
       redirect router.group(:console).path(:login) if console_setup?
-      redirect router.group(:console).path(:setup_token) unless platform_token?
+      redirect router.group(:console).path(:setup_platform) unless platform_token?
 
       view.scope(:app).apply(platform_client.apps)
     end
 
-    get :setup_token, '/setup/token' do
-      redirect router.group(:console).path(:login) if console_setup?
-      redirect router.group(:console).path(:setup_platform) if platform_token?
-    end
-
     post '/setup/token' do
-      redirect router.group(:console).path(:login) if console_setup?
-      redirect router.group(:console).path(:setup_platform) if platform_token?
+      # TODO: reject access unless in dev mode
+      redirect router.group(:console).path(:login) if console_setup? && platform_token?
 
       email = params[:email]
       password = params[:password]
 
-      if token = PlatformClient.auth(params[:email], params[:password])
-        auth = { email: email, token: token }
+      if auth = PlatformClient.auth(params[:email], params[:password])
+        user = { email: auth[:user][:email], user_id: auth[:user][:id], token: auth[:access_token][:value] }
+
         file = File.expand_path('~/.pakyow')
         f = File.open(file, 'w')
-        f.write(auth.to_json)
+        f.write(user.to_json)
         f.close
+
+        # FIXME: move this into a service and use it here and in platform_callback
+        user = Pakyow::Console.model(:user).first(platform_user_id: auth[:user][:id])
+
+        if user.nil?
+          user = Pakyow::Console.model(:user).new
+          user.platform_user_id = auth[:user][:id]
+          user.consolify
+        end
+
+        user.name = auth[:user][:name]
+        user.email = auth[:user][:email]
+        user.username = auth[:user][:username]
+        user.save
+
+        console_auth(user)
 
         redirect router.group(:console).path(:setup_platform)
       else
@@ -49,12 +94,13 @@ Pakyow::App.routes :'console-setup' do
     end
 
     get :setup_app, '/setup/app/:app_id' do
+      # TODO: reject access unless in dev mode
       redirect router.group(:console).path(:login) if console_setup?
       redirect router.group(:console).path(:setup_token) unless platform_token?
 
       if app = platform_client.app(params[:app_id])
         opts = {
-          app: {
+          project: {
             id: app[:id]
           }
         }
