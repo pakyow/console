@@ -1,4 +1,8 @@
 module Pakyow::Helpers
+  def current_plugin
+    @mounted_plugin
+  end
+
   def setup_datum_form
     view.partial(:form).scope(:'console-datum').with do |view|
       attributes = @type.attributes(@datum).select { |attribute|

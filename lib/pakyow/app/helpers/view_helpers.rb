@@ -46,12 +46,26 @@ module Pakyow::Helpers
     view.scope(:'pw-user').bind(current_console_user)
 
     # collaborator presence
-    view.scope(:collaborator).mutate(:list, with: data(:collaborator).all).subscribe
+    if Pakyow::Config.env == :development
+      # TODO: revisit this b/c performance implications
+      # view.scope(:collaborator).mutate(:list, with: data(:collaborator).all).subscribe
+    end
   end
 
   def mixin_scripts(view)
     Pakyow::Console::ScriptRegistry.scripts.each do |path|
       view.scope(:head).append(Pakyow::Presenter::View.new('<script src="' + path + '"></script>'))
+    end
+  end
+
+  def mixin_view(path, store_name)
+    if store(:default).at?(path)
+      includes = store(store_name).partials(path).merge(store(:default).partials(path))
+      presenter.view = store(:default).composer(path, includes: includes)
+    else
+      includes = store(store_name).partials(path).merge(store(:default).partials('/'))
+      template = store(:default).template(:default)
+      presenter.view = Pakyow::Presenter::ViewComposer.new(store(store_name), path, { template: template, includes: includes })
     end
   end
 end

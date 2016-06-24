@@ -21,7 +21,8 @@ Pakyow::App.hook(:before, :error).unshift(lambda {
 })
 
 Pakyow::App.after :match do
-  # TODO: this guard is needed because the route hooks are called again when calling a handler :/
+  # this guard is needed because the route hooks are called again when calling a handler :/
+  # TODO: think through a fix for the above
   if !@console_404 && Pakyow::Console::Models::InvalidPath.invalid_for_path?(req.path)
     @console_404 = true
     handle 404, false
@@ -29,6 +30,8 @@ Pakyow::App.after :match do
 
   page = Pakyow::Console.pages.find { |p| p.matches?(req.path) }
   next if page.nil?
+
+  # TODO: we can't reroute, but we could fetch and call the show page route
 
   if !@console_404 && !page.published
     @console_404 = true
@@ -106,4 +109,12 @@ Pakyow::App.after :route do
   if !found? && req.path_parts[0] == 'console'
     console_handle 404
   end
+end
+
+Pakyow::App.after :load do
+  unless @plugins_mounted
+    Pakyow::Console.mount_plugins(self)
+  end
+
+  @plugins_mounted = true
 end

@@ -29,7 +29,7 @@ module Pakyow::Console::RouteRegistry
     set = Pakyow::Router.instance.sets[:main]
     set.routes.flat_map { |route_data|
       method, routes = route_data
-      routes.map { |route|
+      routes.reject { |route| !route[4].is_a?(String) }.map { |route|
         group = nil
         set.lookup[:grouped].each_pair {|name,routes|
           if routes.values.include?(route)

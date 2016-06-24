@@ -1,8 +1,32 @@
-h1@@console-plugin
-  | plugins/
-  span@name blog
-  a.button href="/console/plugins"
-    i.fa.fa-caret-left
-    | Back to plugins
+.console-plugin@@console-plugin
+  h1
+    | plugins/
+    span@name blog
+    a.button href="/console/plugins" data-ui="fastlink"
+      i.fa.fa-caret-left
+      | Back to plugins
 
-.todo.margin-t plugin readme goes here
+  h2.margin-t
+    a.float-r@new-mount-link data-ui="fastlink" New Mount
+    | Mount Points
+
+  .container@@pw-mounted-plugin data-version="empty"
+    p This plugin isn't mounted yet.
+
+  .container
+    .col
+      ul.styled-list.mounted-plugins.plain
+        li@@pw-mounted-plugin
+          a@edit-href href="#" data-ui="fastlink"
+          span.mount-point@full-slug
+            | /
+
+          span.is-active@active
+            | active
+
+
+  h4.margin-t
+    | README&nbsp;
+    span@version
+
+  .plugin-readme@readme plugin readme goes here

@@ -36,17 +36,21 @@ module Pakyow::Helpers
   end
 
   def current_console_user
-    if platform?
-      { email: session[:platform_email], id: session[:platform_email] }
+    user = if platform?
+      Pakyow::Console.model(:user).first(email: session[:platform_email])
     else
-      user = Pakyow::Console.model(:user)[session[CONSOLE_SESSION_KEY]]
-      return user if user && user.console?
+      Pakyow::Console.model(:user)[session[CONSOLE_SESSION_KEY]]
     end
+
+    return user if user && user.console?
+    nil
   end
 
   def platform?
     return unless console_authed?
-    (platform_setup? && platform_client.valid?)
+    platform_setup?
+    # TODO: removed this valid check because performance
+    # (platform_setup? && platform_client.valid?)
   end
 
   def platform_token?
@@ -79,5 +83,18 @@ module Pakyow::Helpers
     end
 
     setup_platform_socket(auth_info)
+  end
+
+  def ensure_user_record_for_platform
+    return if current_console_user
+
+    user = Pakyow::Console.model(:user).new
+
+    # TODO: fetch and set other user values (e.g. name, timezone, username)
+    #   first need to create an api endpoint for fetching user information for the token
+
+    user.email = session[:platform_email]
+    user.role = Pakyow::Console.model(:user)::ROLES[:admin]
+    user.save(validate: false)
   end
 end

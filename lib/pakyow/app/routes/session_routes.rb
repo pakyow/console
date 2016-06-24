@@ -11,6 +11,7 @@ Pakyow::App.routes :'console-session' do
         session[:platform_email] = platform_creds[:email]
         session[:platform_token] = platform_creds[:token]
 
+        ensure_user_record_for_platform
         setup_platform_socket
         redirect router.group(:console).path(:default)
       else
@@ -24,6 +25,7 @@ Pakyow::App.routes :'console-session' do
         session[:platform_email] = params[:email]
         session[:platform_token] = token
 
+        ensure_user_record_for_platform
         setup_platform_socket
         redirect router.group(:console).path(:default)
       else

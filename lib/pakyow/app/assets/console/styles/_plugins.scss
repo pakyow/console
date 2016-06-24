@@ -1,3 +1,5 @@
+@import "defs";
+
 .plugins {
   .avatar {
     height: 25px;
@@ -32,5 +34,50 @@
     @include rem(font-size, 12);
     color: $color-mgray;
     margin-right: 30px;
+  }
+}
+
+.console-plugin {
+  .plugin-readme {
+    border: 1px solid $color-xgray;
+    border-radius: 3px;
+    padding: 8px 12px;
+    margin: 0 -12px;
+    padding-bottom: 0;
+
+    h1 {
+      border: none;
+      margin-top: 0;
+      @include rem(font-size, 24);
+    }
+
+    h2 {
+      @include rem(font-size, 20);
+    }
+
+    h3 {
+      @include rem(font-size, 18);
+    }
+  }
+
+  .mounted-plugins {
+    .mount-point {}
+
+    .is-active {
+      float: right;
+
+      background: $color-lgray;
+      color: darken($color-lgray, 40%);
+      font-size: 11px;
+      text-transform: uppercase;
+      padding: 3px 5px;
+      border-radius: 3px;
+      margin-top: -3px;
+
+      &.active {
+        background: $color-green;
+        color: darken($color-green, 20%);
+      }
+    }
   }
 }
