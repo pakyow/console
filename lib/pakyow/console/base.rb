@@ -260,9 +260,9 @@ module Pakyow
         Pakyow::Config.app.db = Pakyow::Console.db
       end
 
-      app_migration_dir = File.join(Pakyow::Config.app.root, 'migrations')
-
       if Pakyow::Config.env == :development
+        app_migration_dir = File.join(Pakyow::Config.app.root, 'migrations')
+
         unless File.exists?(app_migration_dir)
           FileUtils.mkdir(app_migration_dir)
           app_migrations = []
@@ -289,21 +289,22 @@ module Pakyow
           Pakyow.logger.info "[console] copying migration #{migration}"
           FileUtils.cp(migration_map[migration], app_migration_dir)
         end
+
+        begin
+          Pakyow.logger.info '[console] checking for missing migrations'
+          Sequel.extension :migration
+          Sequel::Migrator.check_current(Pakyow::Config.app.db, app_migration_dir)
+        rescue Sequel::DatabaseConnectionError
+          Pakyow.logger.warn '[console] could not connect to database'
+          return
+        rescue Sequel::Migrator::NotCurrentError
+          Pakyow.logger.info '[console] not current; running migrations now'
+          Sequel::Migrator.run(Pakyow::Config.app.db, app_migration_dir)
+        end
+
+        Pakyow.logger.info '[console] migrations are current'
       end
 
-      begin
-        Pakyow.logger.info '[console] checking for missing migrations'
-        Sequel.extension :migration
-        Sequel::Migrator.check_current(Pakyow::Config.app.db, app_migration_dir)
-      rescue Sequel::DatabaseConnectionError
-        Pakyow.logger.warn '[console] could not connect to database'
-        return
-      rescue Sequel::Migrator::NotCurrentError
-        Pakyow.logger.info '[console] not current; running migrations now'
-        Sequel::Migrator.run(Pakyow::Config.app.db, app_migration_dir)
-      end
-
-      Pakyow.logger.info '[console] migrations are current'
       @db = true
     end
 
