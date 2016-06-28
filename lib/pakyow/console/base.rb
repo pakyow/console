@@ -340,7 +340,22 @@ module Pakyow
             @mounted_plugin = plugin
           end
 
-          send plugin.name.to_sym, :"pw-blog-#{plugin.id}", plugin.slug, before: [:set_plugin] do
+          fn :mixin_view do
+            begin
+              mixin_view(File.join("pw-#{current_plugin.name}", req.path), current_plugin.name.to_sym)
+            rescue Pakyow::Presenter::MissingView
+              mixin_view(File.join("pw-#{current_plugin.name}", "show"), current_plugin.name.to_sym)
+            end
+          end
+
+          fn :prepare_project do
+            begin
+              view.scope(:'pw-project').bind({ name: config.app.name })
+            rescue Pakyow::Presenter::MissingView
+            end
+          end
+
+          send plugin.name.to_sym, :"pw-blog-#{plugin.id}", plugin.slug, before: [:set_plugin, :mixin_view, :prepare_project] do
             plugin_obj = Pakyow::Console::PluginRegistry.find(plugin.name)
 
             plugin_obj.routes.each do |route_name|
