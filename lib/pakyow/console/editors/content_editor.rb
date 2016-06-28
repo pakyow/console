@@ -40,7 +40,7 @@ module Pakyow::Console
     def self.render(content, view: nil, constraints: nil)
       templates = find_templates(view)
 
-      view.apply(content) do |view, piece|
+      view.apply(content) do |_, piece|
         type = piece['type'].to_sym
         template = templates[type].dup
         renderer = ContentTypeRegistry.type(type)
