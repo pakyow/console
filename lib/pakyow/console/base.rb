@@ -74,8 +74,6 @@ module Pakyow
       Pakyow.logger.info '[console] establishing database connection'
 
       @db = Sequel.connect(ENV.fetch('DATABASE_URL'))
-      @db.extension :pg_json
-      @db
     end
 
     def self.pages

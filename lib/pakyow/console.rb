@@ -60,6 +60,7 @@ require 'pakyow/console/processors/relation_processor'
 
 # sequel config
 #
+Sequel.extension :pg_json
 Sequel.extension :pg_json_ops
 Sequel.default_timezone = :utc
 
