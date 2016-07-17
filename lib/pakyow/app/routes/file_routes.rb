@@ -17,7 +17,6 @@ Pakyow::App.routes :'console-file' do
           file = tmp
         end
 
-        # TODO: this isn't auto-updating for some reason (at least locally)
         data(:file).create(name, file)
       end
 
