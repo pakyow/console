@@ -157,9 +157,15 @@ class PlatformClient
 
     req = Net::HTTP::Post::Multipart.new url.path, "file" => UploadIO.new(data, 'image/jpeg', 'image.jpg'), "file_id" => id
     req.basic_auth @email, @token
-    res = Net::HTTP.start(url.host, url.port) do |http|
-      http.request(req)
+
+    http = Net::HTTP.new(url.host, url.port)
+
+    if uri.is_a?(URI::HTTPS)
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     end
+
+    http.request(req)
   end
 
   def remove_file(id)
