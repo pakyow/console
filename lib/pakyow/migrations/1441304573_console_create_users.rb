@@ -9,9 +9,9 @@ Sequel.migration do
       TrueClass     :active, default: true
       String        :crypted_password
       String        :timezone
-      column        :platform_user_id, :uuid, default: Sequel.function(:uuid_generate_v4), unique: true
-      column        :platform_token, :uuid, default: Sequel.function(:uuid_generate_v4), unique: true
-      column        :platform_token_secret, :uuid, default: Sequel.function(:uuid_generate_v4), unique: true
+      column        :platform_user_id
+      column        :platform_token, :uuid
+      column        :platform_token_secret
       Time          :created_at
       Time          :updated_at
 
