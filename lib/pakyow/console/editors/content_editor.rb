@@ -121,7 +121,7 @@ module Pakyow::Console::Content
             scale_factor = width.to_i / constraint_width.to_f
 
             width = constraint_width.to_i
-            height = [height.to_i / scale_factor, constraint_height.to_i].min
+            height = [height.to_i / scale_factor, constraint_height.to_i].reject { |n| n == 0 }.min
           end
         end
 
