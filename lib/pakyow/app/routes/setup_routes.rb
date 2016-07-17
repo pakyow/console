@@ -109,6 +109,7 @@ Pakyow::App.routes :'console-setup' do
         f.close
 
         reconnect_platform_socket(platform_creds)
+        
         session[:platform_email] = platform_creds[:email]
         session[:platform_token] = platform_creds[:token]
 

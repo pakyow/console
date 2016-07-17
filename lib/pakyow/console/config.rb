@@ -1,4 +1,4 @@
-require_relative 'file_store_adapters/database_adapter'
+require_relative 'file_store_adapters/platform_adapter'
 
 Pakyow::Config.register(:console) { |config|
 
@@ -13,7 +13,7 @@ Pakyow::Config.register(:console) { |config|
     page: 'Pakyow::Console::Models::Page'
   }
 
-  config.opt :file_store_adapter, Pakyow::Console::DBFileAdapter
+  config.opt :file_store_adapter, Pakyow::Console::PlatformFileAdapter
   config.opt :file_storage_path
 
 }.env(:development) { |opts|
