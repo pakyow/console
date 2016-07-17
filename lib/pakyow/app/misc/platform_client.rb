@@ -160,7 +160,7 @@ class PlatformClient
 
     http = Net::HTTP.new(url.host, url.port)
 
-    if uri.is_a?(URI::HTTPS)
+    if url.is_a?(URI::HTTPS)
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     end
