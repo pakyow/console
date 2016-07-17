@@ -7,6 +7,9 @@ Pakyow::App.mutable :file do
   end
 
   action :create do |name, file|
-    Pakyow::Console::FileStore.instance.store(name, file, context: Pakyow::Console::FileStore::CONTEXT_MEDIA)
+    Pakyow::Console::FileStore.instance.store(name, file,
+      store_context: Pakyow::Console::FileStore::CONTEXT_MEDIA,
+      request_context: context
+    )
   end
 end

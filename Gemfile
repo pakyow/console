@@ -1,3 +1,5 @@
+source 'https://rubygems.org'
+
 gem 'pakyow', '> 0.9'
 gem 'pakyow-slim', '~> 1.0'
 gem 'pakyow-markdown', '~> 1.0'
@@ -7,6 +9,7 @@ gem 'sequel', '~> 4.25'
 gem 'sequel_polymorphic', '~> 0.2'
 gem 'pg', '~> 0.18'
 gem 'httparty', '~> 0.13'
+gem 'multipart-post', '~> 2.0'
 gem 'websocket-client-simple', '~> 0.2'
 gem 'inflecto', '~> 0.0'
 gem 'platform-api', '~> 0.3'

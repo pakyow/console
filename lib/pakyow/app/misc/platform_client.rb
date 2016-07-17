@@ -1,3 +1,5 @@
+require 'net/http/post/multipart'
+
 class PlatformClient
   class << self
     def auth(email, password)
@@ -64,7 +66,7 @@ class PlatformClient
   end
 
   def events
-    if app = @info[:app]
+    if app = @info[:project]
       response = HTTParty.get(File.join(Pakyow::Config.console.platform_url, "api/projects/#{app[:id]}", 'events'), basic_auth: {
         username: @email,
         password: @token,
@@ -81,7 +83,7 @@ class PlatformClient
   end
 
   def collaborators
-    if app = @info[:app]
+    if app = @info[:project]
       response = HTTParty.get(File.join(Pakyow::Config.console.platform_url, "api/projects/#{app[:id]}", 'collaborators'), basic_auth: {
         username: @email,
         password: @token,
@@ -96,7 +98,7 @@ class PlatformClient
   end
 
   def releases
-    if app = @info[:app]
+    if app = @info[:project]
       response = HTTParty.get(File.join(Pakyow::Config.console.platform_url, "api/projects/#{app[:id]}", 'releases'), basic_auth: {
         username: @email,
         password: @token,
@@ -111,7 +113,7 @@ class PlatformClient
   end
 
   def create_release
-    response = HTTParty.post(File.join(Pakyow::Config.console.platform_url, 'api/projects', @info[:app][:id].to_s, 'releases'), basic_auth: {
+    response = HTTParty.post(File.join(Pakyow::Config.console.platform_url, 'api/projects', @info[:project][:id].to_s, 'releases'), basic_auth: {
       username: @email,
       password: @token,
     })
@@ -120,11 +122,50 @@ class PlatformClient
   end
 
   def update_release(id, body)
-    response = HTTParty.patch(File.join(Pakyow::Config.console.platform_url, 'api/projects', @info[:app][:id].to_s, 'releases', id.to_s), basic_auth: {
+    response = HTTParty.patch(File.join(Pakyow::Config.console.platform_url, 'api/projects', @info[:project][:id].to_s, 'releases', id.to_s), basic_auth: {
       username: @email,
       password: @token,
     }, body: { release: body })
 
     Hash.strhash(JSON.parse(response.body))
+  end
+
+  def file(id)
+    response = HTTParty.get(File.join(Pakyow::Config.console.platform_url, 'api/projects', @info[:project][:id].to_s, 'files', id), basic_auth: {
+      username: @email,
+      password: @token,
+    })
+
+    response.body
+  end
+
+  def processed_file(id, params)
+    response = HTTParty.get(File.join(Pakyow::Config.console.platform_url, 'api/projects', @info[:project][:id].to_s, 'files', id, 'processed'), body: params)
+    response.body
+  end
+
+  def create_file(data, id: nil)
+    uri = File.join(Pakyow::Config.console.platform_url, 'api/projects', @info[:project][:id].to_s, 'files')
+    url = URI.parse(uri)
+
+    data = if data.is_a?(String)
+      StringIO.new(data)
+    else
+      data.open
+      data
+    end
+
+    req = Net::HTTP::Post::Multipart.new url.path, "file" => UploadIO.new(data, 'image/jpeg', 'image.jpg'), "file_id" => id
+    req.basic_auth @email, @token
+    res = Net::HTTP.start(url.host, url.port) do |http|
+      http.request(req)
+    end
+  end
+
+  def remove_file(id)
+    response = HTTParty.delete(File.join(Pakyow::Config.console.platform_url, 'api/projects', @info[:project][:id].to_s, 'files', id), basic_auth: {
+      username: @email,
+      password: @token,
+    })
   end
 end

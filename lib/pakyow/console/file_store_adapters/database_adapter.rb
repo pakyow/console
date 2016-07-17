@@ -1,7 +1,7 @@
 module Pakyow
   module Console
     class DBFileAdapter
-      def store(tempfile, metadata)
+      def store(tempfile, metadata, **args)
         file = find(metadata[:id], w: metadata[:width], h: metadata[:height], m: metadata[:mode])
         return unless file.nil?
 
@@ -11,27 +11,27 @@ module Pakyow
         file.save
       end
 
-      def find(hash, w: nil, h: nil, m: nil)
+      def find(hash, w: nil, h: nil, m: nil, **args)
         file = find_object(hash, w: w, h: h, m: m)
         return if file.nil?
 
         Hash.strhash(file.metadata)
       end
 
-      def processed(hash, w: nil, h: nil, m: nil)
+      def processed(hash, w: nil, h: nil, m: nil, **args)
         file = find_object(hash, w: w, h: h, m: m)
         return if file.nil?
         file.data
       end
 
-      def process(metadata, data, w: nil, h: nil)
+      def process(metadata, data, w: nil, h: nil, m: nil, **args)
         file = Pakyow::Console::Models::StoredFile.new
         file.data = data
         file.metadata = metadata
         file.save
       end
 
-      def data(hash)
+      def data(hash, **args)
         file = find_object(hash)
         return if file.nil?
         file.data

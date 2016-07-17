@@ -3,6 +3,7 @@ require 'fileutils'
 
 require_relative 'file_store_adapters/database_adapter'
 require_relative 'file_store_adapters/file_system_adapter'
+require_relative 'file_store_adapters/platform_adapter'
 
 module Pakyow::Console
   class FileStore
@@ -12,7 +13,7 @@ module Pakyow::Console
     CONTEXT_THUMB = 'thumb'
     CONTEXT_APP   = 'app'
 
-    DEFAULT_MODE = :fit
+    DEFAULT_MODE = :fill
 
     def self.type_for_ext(ext)
       case ext.downcase
@@ -31,7 +32,7 @@ module Pakyow::Console
       @adapter = Pakyow::Config.console.file_store_adapter.new
     end
 
-    def store(filename, tempfile, context: CONTEXT_APP)
+    def store(filename, tempfile, store_context: CONTEXT_APP, request_context: nil)
       #TODO raise exception rather than return
       return if filename.nil? || tempfile.nil?
 
@@ -51,13 +52,13 @@ module Pakyow::Console
         size: File.size(tempfile),
         ext: ext,
         type: type,
-        context: context,
+        context: store_context,
       }
 
       metadata[:width] = width unless width.nil?
       metadata[:height] = height unless height.nil?
 
-      @adapter.store(tempfile, metadata)
+      @adapter.store(tempfile, metadata, request_context: request_context)
 
       # always return the metadata
       metadata
@@ -71,26 +72,27 @@ module Pakyow::Console
       @adapter.all
     end
 
-    def processed(hash, w: nil, h: nil, m: nil)
+    def processed(hash, w: nil, h: nil, m: nil, request_context: nil)
       file = find(hash).dup
       return if file[:type] != 'image'
 
-      processed = @adapter.processed(file[:id], w: w, h: h, m: m)
+      processed = @adapter.processed(file[:id], w: w, h: h, m: m, request_context: request_context)
       return processed unless processed.nil?
 
       file[:width] = w
       file[:height] = h
       file[:context] = CONTEXT_THUMB
 
-      process(file, w: w, h: h, m: m)
+      process(file, w: w, h: h, m: m, request_context: request_context)
     end
 
-    def process(file, w: nil, h: nil, m: nil)
-      image = MiniMagick::Image.read(@adapter.data(file[:id]))
+    def process(file, w: nil, h: nil, m: nil, request_context: nil)
+      # TODO: this is the same image processor as in platform; abstract into a gem
+      image = MiniMagick::Image.read(@adapter.data(file[:id], request_context: request_context))
       m = DEFAULT_MODE if m.nil? || m.empty?
       m = m.to_sym
 
-      file[:mode] = m
+      file['mode'] = m
 
       if m == :fit
         image.resize "#{w}x#{h}"
@@ -112,14 +114,14 @@ module Pakyow::Console
       end
 
       data = image.to_blob
-      @adapter.process(file, data, w: w, h: h, m: m)
+      @adapter.process(file, data, w: w, h: h, request_context: request_context)
 
       # always return the processed data
       data
     end
 
-    def data(hash)
-      @adapter.data(hash)
+    def data(hash, request_context: nil)
+      @adapter.data(hash, request_context: request_context)
     end
   end
 end

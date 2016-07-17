@@ -21,6 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency('sequel_polymorphic', '~> 0.2')
   spec.add_dependency('pg', '~> 0.18')
   spec.add_dependency('httparty', '~> 0.13')
+  spec.add_dependency('multipart-post', '~> 2.0')
   spec.add_dependency('websocket-client-simple', '~> 0.2')
   spec.add_dependency('inflecto', '~> 0.0')
   spec.add_dependency('platform-api', '~> 0.3')
