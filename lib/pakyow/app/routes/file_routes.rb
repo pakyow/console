@@ -9,11 +9,11 @@ Pakyow::App.routes :'console-file' do
 
         # this works around a presumable bug in rack where a file
         # upload via ajax is sometimes a Tempfile object and
-        # sometimes a StringIO object
-        if file.is_a?(StringIO)
+        # sometimes an io object
+        if file.respond_to?(:read)
           tmp = Tempfile.new(name)
           tmp.binmode
-          tmp.write(file.string)
+          tmp.write(file.read)
           file = tmp
         end
 
