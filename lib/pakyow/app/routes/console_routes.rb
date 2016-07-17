@@ -9,7 +9,8 @@ Pakyow::App.routes :console do
     get :dashboard, '/dashboard', before: [:auth], after: [:setup] do
       if using_platform?
         presenter.path = 'console/dashboard-platform'
-        view.scope(:app_event).mutate(:list, with: data(:app_event).all).subscribe
+        # view.scope(:app_event).mutate(:list, with: data(:app_event).all).subscribe
+        view.scope(:app_event).mutate(:list, with: []).subscribe
       end
     end
   end
