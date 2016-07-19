@@ -92,8 +92,7 @@ module Pakyow::Console::Content
       content.gsub!('<div>', '<p>')
       content.gsub!('</div>', '</p>')
 
-      processor = Pakyow.app.presenter.processor_store[:md]
-      view.html = processor.call(content)
+      view.html = content
       view
     end
   end
