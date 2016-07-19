@@ -87,13 +87,7 @@ module Pakyow::Console::Content
   class Default
     def self.render(data, view, constraints)
       content = data['content']
-
-      # NOTE: this is a workaround for trix, which uses <div> rather than <p>
-      content.gsub!('<div>', '<p>')
-      content.gsub!('</div>', '</p>')
-
-      processor = Pakyow.app.presenter.processor_store[:md]
-      view.html = processor.call(content)
+      view.html = content
       view
     end
   end

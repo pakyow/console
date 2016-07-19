@@ -57,6 +57,7 @@ require 'pakyow/console/processors/file_processor'
 require 'pakyow/console/processors/float_processor'
 require 'pakyow/console/processors/percentage_processor'
 require 'pakyow/console/processors/relation_processor'
+require 'pakyow/console/processors/content_processor'
 
 # sequel config
 #

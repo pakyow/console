@@ -10,13 +10,13 @@
       /! @include actions
 
       / plaintext editor (e.g. markdown)
-      / textarea rows="1" placeholder="text goes here" data-ui="content-editor-plaintext" data-prop="content"
+      textarea rows="1" placeholder="text goes here" data-ui="content-editor-plaintext" data-prop="content" data-version="markdown"
 
       / trix editor
       / div data-ui="trix"
       /   input type="hidden" data-prop="content"
 
-      textarea data-prop="content" data-ui="redactor"
+      textarea data-prop="content" data-ui="redactor" data-version="wysiwyg"
 
   / image editor
   .console-content-editor-wrapper.console-content-image data-scope="content" data-template="" data-version="image"
