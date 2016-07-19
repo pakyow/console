@@ -1,6 +1,18 @@
 require 'uri'
+require 'reverse_markdown'
 
-Pakyow::Console.editor :content do |attribute, value|
+module ReverseMarkdown
+  module Converters
+    class Pre < Base
+      # TODO: consider PRing this
+      def language_from_highlight_class(node)
+        node['class'].to_s[/highlight ([a-zA-Z0-9]+)/, 1]
+      end
+    end
+  end
+end
+
+Pakyow::Console.editor :content do |attribute, value|  
   extras = attribute[:extras]
   partial = presenter.store(:console).partial('console/editors', :content).dup
 
@@ -11,11 +23,23 @@ Pakyow::Console.editor :content do |attribute, value|
   })
 
   view = Pakyow::Presenter::ViewContext.new(partial, self)
+  view.scope(:content).prop(:content).use(current_console_user.preferred_editor.to_sym)
 
   if value
-    value = value.to_json
-    value = URI.escape(value)
-    view.scope(:editor).attrs.value = value
+    content = value.content
+    
+    if current_console_user.preferred_editor == 'markdown'
+      # convert html back to markdown
+      content = content.map { |content|
+        if content['type'] == 'default'
+          content['content'] = ReverseMarkdown.convert(content['content'], github_flavored: true)
+        end
+      
+        content
+      }
+    end
+
+    view.scope(:editor).attrs.value = URI.escape(content.to_json)
   end
 
   view.scope(:constraints)[0].with do
@@ -86,8 +110,8 @@ end
 module Pakyow::Console::Content
   class Default
     def self.render(data, view, constraints)
-      content = data['content']
-      view.html = content
+      processor = Pakyow.app.presenter.processor_store[:md]
+      view.html = processor.call(data['content'])
       view
     end
   end
