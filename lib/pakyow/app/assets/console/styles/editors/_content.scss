@@ -164,7 +164,7 @@
 }
 
 .console-content-plaintext textarea, .console-content-embed textarea, .console-content-plaintext-mock {
-  font-family: $font-main;
+  font-family: $font-code;
   @include rem(line-height, 18);
   @include rem(font-size, 13);
 
