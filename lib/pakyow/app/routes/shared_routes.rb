@@ -40,4 +40,11 @@ module Pakyow::Console::SharedRoutes
       end
     end
   end
+  
+  fn :prepare_project do
+    begin
+      view.scope(:'pw-project').bind({ name: config.app.name })
+    rescue Pakyow::Presenter::MissingView
+    end
+  end
 end

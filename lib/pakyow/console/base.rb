@@ -337,6 +337,7 @@ module Pakyow
       Pakyow::Console::Models::MountedPlugin.where(active: true).order(Sequel.desc(:slug)).all.each do |plugin|
         Pakyow::Router.instance.set :"pw-blog=#{plugin.id}" do
           include Object.const_get("Pakyow::Console::Plugins::#{Inflecto.camelize(plugin.name)}::Routes")
+          include Pakyow::Console::SharedRoutes
 
           fn :set_plugin do
             @mounted_plugin = plugin
@@ -347,13 +348,6 @@ module Pakyow
               mixin_view(File.join("pw-#{current_plugin.name}", req.path), current_plugin.name.to_sym)
             rescue Pakyow::Presenter::MissingView
               mixin_view(File.join("pw-#{current_plugin.name}", "show"), current_plugin.name.to_sym)
-            end
-          end
-
-          fn :prepare_project do
-            begin
-              view.scope(:'pw-project').bind({ name: config.app.name })
-            rescue Pakyow::Presenter::MissingView
             end
           end
 

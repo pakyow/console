@@ -3,7 +3,7 @@ Pakyow::App.routes :'console-page' do
 
   namespace :console, '/console' do
     restful :page, '/pages' do
-      show do
+      show after: [:prepare_project] do
         page = Pakyow::Console::Models::Page[params[:page_id]]
         handle 404 if page.nil? || !page.published?
 
