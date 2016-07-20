@@ -150,10 +150,12 @@ module Pakyow
             page.editables.each do |editable|
               attribute :"content-#{editable[:id]}", :content, nice: editable[:id].to_s.capitalize, value: -> (page) {
                 page.content_for(editable[:id]).content
-              }, setter: -> (page, params) {
+              }, setter: -> (page, params, processor) {
                 page.editables.each do |editable|
                   content = page.content_for(editable[:id])
-                  content.update(content: params[:"content-#{editable[:id]}"])
+                  value = params[:"content-#{editable[:id]}"]
+                  value = processor.call(value) if processor
+                  content.update(content: value)
                 end
               }, restricted: editable[:doc].editable_parts.count > 0 && !editable[:doc].has_attribute?(:'data-editable-unrestrict'), constraints: editable[:constraints]
             end
