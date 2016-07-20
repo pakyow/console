@@ -12,7 +12,7 @@ module ReverseMarkdown
   end
 end
 
-Pakyow::Console.editor :content do |attribute, value|  
+Pakyow::Console.editor :content do |attribute, value|
   extras = attribute[:extras]
   partial = presenter.store(:console).partial('console/editors', :content).dup
 
@@ -27,14 +27,14 @@ Pakyow::Console.editor :content do |attribute, value|
 
   if value
     content = value.is_a?(Sequel::Postgres::JSONArray) ? value : value.content
-    
+
     if current_console_user.preferred_editor == 'markdown'
       # convert html back to markdown
       content = content.map { |content|
         if content['type'] == 'default'
           content['content'] = ReverseMarkdown.convert(content['content'], github_flavored: true)
         end
-      
+
         content
       }
     end
@@ -61,7 +61,7 @@ module Pakyow::Console
   class ContentRenderer
     TYPES = [:default, :image, :embed, :break]
 
-    def self.render(content, view: nil, constraints: nil)
+    def self.render(content, view: nil, constraints: Pakyow::Config.console.constraints)
       templates = find_templates(view)
 
       view.apply(content) do |_, piece|
