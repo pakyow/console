@@ -70,22 +70,8 @@ Pakyow::App.after :match do
 end
 
 Pakyow::App.after :process do
-  if req.path_parts[0] != 'console' && @presenter && @presenter.presented? && console_authed? && res.body && res.body.is_a?(Array)
-    view = Pakyow::Presenter::ViewContext.new(Pakyow::Presenter::View.new(File.open(File.join(Pakyow::Console::ROOT, 'views', 'console', '_toolbar.slim')).read, format: :slim), self)
-    setup_toolbar(view)
-
-    console_css = '<link href="/console/styles/console-toolbar.css" rel="stylesheet" type="text/css">'
-
-    if config.env == :production
-      console_css = Pakyow::Assets.mixin_fingerprints(console_css)
-    end
-
-    font_css = '<link href="//fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,600,700" rel="stylesheet" type="text/css">'
-    fa_css = '<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">'
-
-    body = res.body[0]
-    body.gsub!(Pakyow::Console::CLOSING_HEAD_REGEX, console_css + font_css + fa_css + '</head>')
-    body.gsub!(Pakyow::Console::CLOSING_BODY_REGEX, view.to_html + '</body>')
+  if @presenter && @presenter.presented? && res.body && res.body.is_a?(Array)
+    render_toolbar
   end
 end
 

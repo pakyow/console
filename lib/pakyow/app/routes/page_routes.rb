@@ -36,6 +36,7 @@ Pakyow::App.routes :'console-page' do
 
           # TODO: we need a way to configure the title template; e.g. !Magic: {page-title}
           presenter.view.title = String.presentable(page.name)
+          render_toolbar
         end
       end
     end
