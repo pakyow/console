@@ -26,7 +26,7 @@ Pakyow::Console.editor :content do |attribute, value|
   view.scope(:content).prop(:content).use(current_console_user.preferred_editor.to_sym)
 
   if value
-    content = value.content
+    content = value.is_a?(Sequel::Postgres::JSONArray) ? value : value.content
     
     if current_console_user.preferred_editor == 'markdown'
       # convert html back to markdown
