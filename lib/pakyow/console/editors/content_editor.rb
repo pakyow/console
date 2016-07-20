@@ -110,8 +110,7 @@ end
 module Pakyow::Console::Content
   class Default
     def self.render(data, view, constraints)
-      processor = Pakyow.app.presenter.processor_store[:md]
-      view.html = processor.call(data['content'])
+      view.html = data['content']
       view
     end
   end
