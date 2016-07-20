@@ -48,7 +48,7 @@ Pakyow::App.after :reload do
     # This is the catch-all route for mapping to configured endpoints (plugins, pages, etc).
     # Registered in an after hook so it's at the end.
     #
-    get /.*/ do
+    get /.*/, after: [:prepare_project] do
       Pakyow::Console.handle_slug(self)
     end
   end
