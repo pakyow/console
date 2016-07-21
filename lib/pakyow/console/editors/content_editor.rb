@@ -68,6 +68,7 @@ module Pakyow::Console
         type = piece['type'].to_sym
         template = templates[type].dup
         renderer = ContentTypeRegistry.type(type)
+        view.attrs.class << "content-#{type}"
 
         if renderer.nil?
           Pakyow.logger.debug "No content renderer for #{type}"
