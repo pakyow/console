@@ -147,8 +147,10 @@ module Pakyow::Console::Content
           src << "?w=#{width}&h=#{height}&m=#{constraint_mode}"
         end
 
+        src = File.join(Pakyow::Config.app.uri, src)
+
         if working.doc.tagname == 'img'
-          working.attrs.src = File.join(Pakyow::Config.app.uri, src)
+          working.attrs.src = src
         else
           style = {
             :'background-image' => "url(#{src})",
