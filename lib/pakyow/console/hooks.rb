@@ -70,7 +70,8 @@ Pakyow::App.after :match do
 end
 
 Pakyow::App.after :process do
-  if @presenter && @presenter.presented? && res.body && res.body.is_a?(Array)
+  first_path_parts = req.first_path.split('/').reject(&:empty?)
+  if first_path_parts[0] != 'console' && @presenter && @presenter.presented? && res.body && res.body.is_a?(Array)
     render_toolbar
   end
 end
