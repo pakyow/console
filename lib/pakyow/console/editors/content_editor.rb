@@ -151,6 +151,8 @@ module Pakyow::Console::Content
 
         if working.doc.tagname == 'img'
           working.attrs.src = src
+          working.attrs.width = width
+          working.attrs.height = height
         else
           style = {
             :'background-image' => "url(#{src})",
