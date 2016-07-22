@@ -60,6 +60,7 @@ require 'pakyow/console/processors/relation_processor'
 require 'pakyow/console/processors/content_processor'
 
 require 'pakyow/console/robots'
+require 'pakyow/console/sitemap'
 
 # sequel config
 #

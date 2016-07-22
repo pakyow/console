@@ -5,6 +5,11 @@ Pakyow::App.routes :console do
     handle 404 unless req.format == :txt
     send Pakyow::Console.robots.to_s
   end
+  
+  get 'sitemap' do
+    handle 404 unless req.format == :xml
+    send Pakyow::Console.sitemap.to_s
+  end
 
   namespace :console, '/console' do
     get :default, '/' do

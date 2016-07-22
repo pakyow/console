@@ -48,3 +48,15 @@ Pakyow::Console.slug_handler do
 
   reroute router.group(:page).path(:show, page_id: page.id)
 end
+
+Pakyow::App.after :load do
+  Pakyow::Console.pages.select { |p| p.published }.each do |page|
+    Pakyow::Console.sitemap.url(
+      location: File.join(Pakyow::Config.app.uri, page.slug),
+      modified: page.updated_at.httpdate,
+      # FIXME: would be cool for platform to keep up with how often
+      # content is updated so that this is dynamic
+      frequency: 'weekly'
+    )
+  end
+end

@@ -81,6 +81,10 @@ module Pakyow
       
       @robots
     end
+    
+    def self.sitemap
+      @sitemap ||= SitemapXML.new
+    end
 
     def self.db
       return @db unless @db.nil?
