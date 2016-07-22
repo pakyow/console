@@ -67,6 +67,20 @@ module Pakyow
     def self.plugin(type, &block)
       PluginRegistry.register type, &block
     end
+    
+    def self.robots
+      return @robots unless @robots.nil?
+      
+      @robots = RobotsTxt.new
+      
+      # create the console defaults
+      @robots.agent '*' do |agent|
+        agent.allow '/'
+        agent.disallow '/console'
+      end
+      
+      @robots
+    end
 
     def self.db
       return @db unless @db.nil?

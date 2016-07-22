@@ -59,6 +59,8 @@ require 'pakyow/console/processors/percentage_processor'
 require 'pakyow/console/processors/relation_processor'
 require 'pakyow/console/processors/content_processor'
 
+require 'pakyow/console/robots'
+
 # sequel config
 #
 Sequel.extension :pg_json
