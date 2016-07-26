@@ -184,6 +184,11 @@ module Pakyow
           action :delete, label: 'Delete' do |page|
             page.destroy
             notify("#{page.name} page deleted", :success)
+
+            Pakyow::Console.sitemap.delete_location(
+              File.join(Pakyow::Config.app.uri, page.slug)
+            )
+
             redirect router.group(:data).path(:show, data_id: params[:data_id])
           end
 
@@ -193,6 +198,11 @@ module Pakyow
                  display: ->(page) { !page.published? } do |page|
             page.published = true
             page.save
+
+            Pakyow::Console.sitemap.url(
+              location: File.join(Pakyow::Config.app.uri, page.slug),
+              modified: page.updated_at.httpdate
+            )
 
             Pakyow::Console.invalidate_pages
           end
@@ -204,7 +214,33 @@ module Pakyow
             page.published = false
             page.save
 
+            Pakyow::Console.sitemap.delete_location(
+              File.join(Pakyow::Config.app.uri, page.slug)
+            )
+
             Pakyow::Console.invalidate_pages
+          end
+        end
+
+        Pakyow::Console.after :page, :create do |page|
+          if page.published?
+            Pakyow::Console.sitemap.url(
+              location: File.join(Pakyow::Config.app.uri, page.slug),
+              modified: page.updated_at.httpdate
+            )
+          end
+        end
+
+        Pakyow::Console.after :page, :update do |page|
+          if page.published?
+            Pakyow::Console.sitemap.delete_location(
+              File.join(Pakyow::Config.app.uri, page.initial_value(:slug))
+            )
+    
+            Pakyow::Console.sitemap.url(
+              location: File.join(Pakyow::Config.app.uri, page.slug),
+              modified: page.updated_at.httpdate
+            )
           end
         end
       end
