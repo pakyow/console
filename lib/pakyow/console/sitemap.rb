@@ -13,6 +13,10 @@ module Pakyow
         }
       end
       
+      def delete_location(location)
+        @urls.delete_if { |u| u[:location] == location }
+      end
+      
       def to_s
         doc = Oga::XML::Document.new(type: :xml)
         
