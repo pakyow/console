@@ -2,8 +2,12 @@ module Pakyow::Console::PluginRegistry
   def self.register(name, &block)
     path = File.dirname(String.parse_path_from_caller(caller[1]))
     plugins[name] = Pakyow::Console::Plugin.new(name, path, &block)
-    Pakyow::Console.add_migration_path File.join(path, 'migrations')
-    Pakyow::App.config.presenter.view_stores[:blog] = File.join(path, 'views')
+
+    migrations_path = File.join(path, 'migrations')
+    Pakyow::Console.add_migration_path(migrations_path) if File.exists?(migrations_path)
+    
+    views_path = File.join(path, 'views')
+    Pakyow::App.config.presenter.view_stores[name] = views_path if File.exists?(views_path)
   end
 
   def self.boot
