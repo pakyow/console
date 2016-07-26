@@ -73,6 +73,7 @@ Sequel::Model.plugin :polymorphic
 Sequel::Model.plugin :validation_helpers
 Sequel::Model.plugin :uuid
 Sequel::Model.plugin :association_dependencies
+Sequel::Model.plugin :dirty
 #
 # /sequel
 

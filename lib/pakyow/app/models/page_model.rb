@@ -230,8 +230,6 @@ module Pakyow
   end
 end
 
-Pakyow::Console::Models::Page.plugin :dirty
-
 # TODO: move to a more logical place
 Pakyow::Console.after :page, :create do
   Pakyow::Console.invalidate_pages
