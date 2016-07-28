@@ -1,7 +1,7 @@
 # TODO: this belongs in pakyow/support
 class String
   def self.slugify(string)
-    string.downcase.gsub('  ', ' ').gsub(' ', '-').gsub(/[^a-z0-9\/_-]/, '')
+    string.downcase.gsub('  ', ' ').gsub(' ', '-').gsub(/[^a-z0-9_-]/, '').gsub('--', '-')
   end
 
   def self.presentable(string)
