@@ -77,6 +77,7 @@ module Pakyow
       @robots.agent '*' do |agent|
         agent.allow '/'
         agent.disallow '/console'
+        agent.allow '/console/files'
       end
 
       @robots
