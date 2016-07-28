@@ -106,3 +106,156 @@ Pakyow::Console.add_load_path(File.join(Pakyow::Console::ROOT, 'app'))
 # Pakyow::Console::PanelRegistry.register :release, mode: :development, nice_name: 'Release', icon_class: 'paper-plane' do; end
 #
 # /plugins
+
+unless Pakyow::Console::DataTypeRegistry.names.include?(:user)
+  Pakyow::Console::DataTypeRegistry.register :user, icon_class: 'users' do
+    model Pakyow::Config.console.models[:user]
+    pluralize
+
+    attribute :name, :string, nice: 'Full Name'
+    attribute :username, :string
+    attribute :email, :string
+    attribute :password, :sensitive
+    attribute :password_confirmation, :sensitive
+    attribute :active, :boolean
+
+    action :remove, label: 'Delete', notification: 'user deleted' do
+      reroute router.group(:datum).path(:remove, data_id: params[:data_id], datum_id: params[:datum_id])
+    end
+  end
+end
+
+unless Pakyow::Console::DataTypeRegistry.names.include?(:page)
+  Pakyow::Console::DataTypeRegistry.register :page, icon_class: 'columns' do
+    model Pakyow::Config.console.models[:page]
+    pluralize
+
+    attribute :name, :string, nice: 'Page Name'
+
+    attribute :slug, :string, display: -> (datum) {
+      !datum.nil? && !datum.id.nil?
+    }, nice: 'Page Path'
+
+    # TODO: (later) add more user-friendly template descriptions (embedded in the top-matter?)
+    attribute :page, :relation, class: Pakyow::Config.console.models[:page], nice: 'Parent Page', relationship: :parent
+
+    # TODO: (later) add configuration to containers so that content can be an image or whatever (look at GIRT)
+    # TODO: (later) we definitely need the concept of content templates (perhaps in _content) or something
+    attribute :template, :enum, values: -> { Pakyow.app.presenter.store.templates.keys.map { |k| [k,k] }.unshift(['', '']) }, display: -> (datum) {
+      datum.nil? || datum.fully_editable?
+    }, nice: 'Layout'
+
+    dynamic do |page|
+      next unless page.is_a?(Pakyow::Console::Models::Page) && page.id
+
+      if page.fully_editable?
+        Pakyow.app.presenter.store(:default).template(page.template.to_sym).doc.containers.each do |container|
+          attribute :"content-#{container[0]}", :content, nice: container[0].capitalize, value: -> (page) {
+            content = page.content_for(container[0])
+            content.content unless content.nil?
+          }, setter: -> (page, params) {
+            Pakyow.app.presenter.store(:default).template(page.template.to_sym).doc.containers.each do |container|
+              container_name = container[0]
+              content = page.content_for(container_name)
+              content.update(content: params[:"content-#{container_name}"])
+            end
+          }
+        end
+      end
+
+      page.editables.each do |editable|
+        attribute :"content-#{editable[:id]}", :content, nice: editable[:id].to_s.capitalize, value: -> (page) {
+          page.content_for(editable[:id]).content
+        }, setter: -> (page, params, processor) {
+          page.editables.each do |editable|
+            content = page.content_for(editable[:id])
+            value = params[:"content-#{editable[:id]}"]
+            value = processor.call(value) if processor
+            content.update(content: value)
+          end
+        }, restricted: editable[:doc].editable_parts.count > 0 && !editable[:doc].has_attribute?(:'data-editable-unrestrict'), constraints: editable[:constraints]
+      end
+    end
+
+    # TODO: (later) we need a metadata editor with the ability for the user to add k / v OR for the editor to define keys
+
+    action :delete, label: 'Delete' do |page|
+      page.destroy
+      notify("#{page.name} page deleted", :success)
+
+      Pakyow::Console.sitemap.delete_location(
+        File.join(Pakyow::Config.app.uri, page.slug)
+      )
+
+      redirect router.group(:data).path(:show, data_id: params[:data_id])
+    end
+
+    action :publish,
+           label: 'Publish',
+           notification: 'page published',
+           display: ->(page) { !page.published? } do |page|
+      page.published = true
+      page.save
+
+      Pakyow::Console.sitemap.url(
+        location: File.join(Pakyow::Config.app.uri, page.slug),
+        modified: page.updated_at.httpdate
+      )
+
+      Pakyow::Console.invalidate_pages
+    end
+
+    action :unpublish,
+           label: 'Unpublish',
+           notification: 'page unpublished',
+           display: ->(page) { page.published? } do |page|
+      page.published = false
+      page.save
+
+      Pakyow::Console.sitemap.delete_location(
+        File.join(Pakyow::Config.app.uri, page.slug)
+      )
+
+      Pakyow::Console.invalidate_pages
+    end
+  end
+
+  Pakyow::Console.after :page, :create do |page|
+    if page.published?
+      Pakyow::Console.sitemap.url(
+        location: File.join(Pakyow::Config.app.uri, page.slug),
+        modified: page.updated_at.httpdate
+      )
+    end
+  end
+
+  Pakyow::Console.after :page, :update do |page|
+    if page.published?
+      Pakyow::Console.sitemap.delete_location(
+        File.join(Pakyow::Config.app.uri, page.initial_value(:slug))
+      )
+
+      Pakyow::Console.sitemap.url(
+        location: File.join(Pakyow::Config.app.uri, page.slug),
+        modified: page.updated_at.httpdate
+      )
+    end
+  end
+end
+
+unless Pakyow::Console::DataTypeRegistry.names.include?(:mount)
+  # Pakyow::Console::DataTypeRegistry.register :mount, icon_class: 'cubes' do
+  #   model 'Pakyow::Console::Models::MountedPlugin'
+  #   pluralize
+
+  #   attribute :slug, :string
+  #   attribute :active, :boolean
+
+  #   # FIXME: rename `name` to `type` in model
+  #   attribute :name, :enum, nice: 'Plugin', values: Pakyow::Console::PluginRegistry.all.map { |p| [p.id, p.name] }.unshift(['', ''])
+
+  #   action :remove, label: 'Delete', notification: 'mount point deleted' do
+  #     # TODO: hook this up
+  #   end
+  # end
+end
