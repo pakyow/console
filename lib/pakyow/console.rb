@@ -187,7 +187,7 @@ unless Pakyow::Console::DataTypeRegistry.names.include?(:page)
         File.join(Pakyow::Config.app.uri, page.slug)
       )
 
-      redirect router.group(:data).path(:show, data_id: params[:data_id])
+      redirect router.group(:data).path(:show, data_id: 'page')
     end
 
     action :publish,
