@@ -22,7 +22,7 @@ Pakyow::App.routes :'console-data' do
         else
           # find the fields we want to display
           listables = type.attributes.reject { |a|
-            Pakyow::Console::DataTypeRegistry::UNLISTABLE_TYPES.include?(a[:type])
+            Pakyow::Console::DataTypeRegistry::UNLISTABLE_TYPES.include?(a[:type]) || a[:extras][:unlisted]
           }
 
           view.scope(:'console-data-field').apply(listables)
