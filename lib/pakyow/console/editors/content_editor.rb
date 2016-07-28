@@ -145,6 +145,7 @@ module Pakyow::Console::Content
         end
 
         if width && height
+          retina_src = "#{src}?w=#{width*2}&h=#{height*2}&m=#{constraint_mode}"
           src << "?w=#{width}&h=#{height}&m=#{constraint_mode}"
         end
 
@@ -152,8 +153,12 @@ module Pakyow::Console::Content
 
         if working.doc.tagname == 'img'
           working.attrs.src = src
-          working.attrs.width = width
-          working.attrs.height = height
+
+          if width && height
+            working.attrs.width = width
+            working.attrs.height = height
+            working.attrs.srcset = "#{src} 1x, #{retina_src} 2x"
+          end
         else
           style = {
             :'background-image' => "url(#{src})",
