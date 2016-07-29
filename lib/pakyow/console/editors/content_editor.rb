@@ -121,7 +121,18 @@ module Pakyow::Console::Content
       alignment = data['align']
       alignment = 'default' if alignment.nil? || alignment.empty?
 
-      images = data['images'].is_a?(String) ? JSON.parse(data['images']) : data['images']
+      image_data = data['images']
+
+      images = if image_data.is_a?(String)
+        begin
+          JSON.parse(image_data)
+        rescue JSON::ParserError
+          []
+        end
+      else
+        image_data
+      end
+
       collection = Pakyow::Presenter::ViewCollection.new
 
       images.each do |image|
