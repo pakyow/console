@@ -12,12 +12,12 @@ module Pakyow::Console::DatumProcessorRegistry
 
       field = attribute[:extras][:relationship] || name
       setter = attribute[:extras][:setter]
-      
+
       processor = datum_processors[type]
 
       if setter
         setter.call(datum, params, processor)
-      else
+      elsif params.key?(name.to_s)
         if processor
           acc[field] = processor.call(params[name], datum[name])
         else
