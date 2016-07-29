@@ -51,10 +51,6 @@ module Pakyow::Helpers
       font_css = '<link href="//fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,600,700" rel="stylesheet" type="text/css">'
       fa_css = '<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">'
 
-      unless !res.body || !res.body.is_a?(Array)
-        res.body = [@presenter.content]
-      end
-
       body = res.body[0]
       body.gsub!(Pakyow::Console::CLOSING_HEAD_REGEX, console_css + font_css + fa_css + '</head>')
       body.gsub!(Pakyow::Console::CLOSING_BODY_REGEX, view.to_html + '</body>')
