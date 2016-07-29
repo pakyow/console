@@ -3,6 +3,6 @@ Pakyow::Console::DatumProcessorRegistry.register :relation do |value|
     nil
   else
     klass, id = value.split('__')
-    Object.const_get(klass)[id.to_i]
+    Object.const_get(klass)[id]
   end
 end
