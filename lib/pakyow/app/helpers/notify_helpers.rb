@@ -17,7 +17,7 @@ module Pakyow::Helpers
         message: message,
       }
 
-      redirect redirect unless redirect.nil?
+      redirect redirect if redirect.is_a?(String)
     end
   end
 end
