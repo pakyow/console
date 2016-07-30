@@ -17,6 +17,7 @@ module Pakyow
         attr_accessor :password, :password_confirmation
 
         def before_validation
+          self.role = ROLES[:admin]
           self.email = self.email.to_s.downcase
           super
         end
