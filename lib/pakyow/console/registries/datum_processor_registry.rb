@@ -16,7 +16,11 @@ module Pakyow::Console::DatumProcessorRegistry
       processor = datum_processors[type]
 
       if setter
-        setter.call(datum, params, processor)
+        if setter.arity == 3
+          setter.call(datum, params, processor)
+        else
+          setter.call(datum, params)
+        end
       elsif params.key?(name.to_s)
         if processor
           acc[field] = processor.call(params[name], datum[name])
