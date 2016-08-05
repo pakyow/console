@@ -153,11 +153,13 @@ unless Pakyow::Console::DataTypeRegistry.names.include?(:page)
           attribute :"content-#{container[0]}", :content, nice: container[0].capitalize, value: -> (page) {
             content = page.content_for(container[0])
             content.content unless content.nil?
-          }, setter: -> (page, params) {
+          }, setter: -> (page, params, processor) {
             Pakyow.app.presenter.store(:default).template(page.template.to_sym).doc.containers.each do |container|
               container_name = container[0]
               content = page.content_for(container_name)
-              content.update(content: params[:"content-#{container_name}"])
+              value = params[:"content-#{container_name}"]
+              value = processor.call(value) if processor
+              content.update(content: value)
             end
           }
         end
