@@ -1,4 +1,3 @@
-require 'uri'
 require 'reverse_markdown'
 
 module ReverseMarkdown
@@ -39,11 +38,11 @@ Pakyow::Console.editor :content do |attribute, value|
       }
     end
 
-    view.scope(:editor).attrs.value = URI.escape(content.to_json)
+    view.scope(:editor).attrs.value = Base64.encode64(content.to_json)
   end
 
   view.scope(:constraints)[0].with do
-    attrs.value = URI.escape(extras[:constraints].to_json)
+    attrs.value = Base64.encode64(extras[:constraints].to_json)
     attrs[:'data-scope'] = nil
   end
 
