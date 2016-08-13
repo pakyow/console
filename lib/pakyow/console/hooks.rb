@@ -1,9 +1,8 @@
 # make sure this after configure block executes first
-# TODO: need an api for this on Pakyow::App
-Pakyow::App.hook(:after, :configure).unshift(lambda  {
+Pakyow::App.after :configure, priority: :high do
   Pakyow::Console.setup_db
   config.app.uri = ENV['APP_URI']
-})
+end
 
 Pakyow::App.after :init do
   if Pakyow::Config.env == :development
@@ -14,13 +13,13 @@ Pakyow::App.after :init do
   end
 end
 
-Pakyow::App.hook(:before, :error).unshift(lambda {
+Pakyow::CallContext.before :error, priority: :high do
   next unless req.path_parts.first == 'console'
   logger.error "[500] #{req.error.class}: #{req.error}\n" + req.error.backtrace.join("\n") + "\n\n"
   console_handle 500
-})
+end
 
-Pakyow::App.after :match do
+Pakyow::CallContext.after :match do
   # this guard is needed because the route hooks are called again when calling a handler :/
   # TODO: think through a fix for the above
   if !@console_404 && Pakyow::Console::Models::InvalidPath.invalid_for_path?(req.path)
@@ -69,7 +68,7 @@ Pakyow::App.after :match do
   end
 end
 
-Pakyow::App.after :process do
+Pakyow::CallContext.after :process do
   first_path_parts = req.first_path.split('/').reject(&:empty?)
   if first_path_parts[0] != 'console' && @presenter && @presenter.presented? && res.body && res.body.is_a?(Array)
     render_toolbar
@@ -92,7 +91,7 @@ Pakyow::App.after :load do
   Pakyow::Console.load
 end
 
-Pakyow::App.after :route do
+Pakyow::CallContext.after :route do
   if !found? && req.path_parts[0] == 'console'
     console_handle 404
   end
