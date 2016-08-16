@@ -5,7 +5,7 @@ Pakyow::App.mutators :file do
 
       config = {
         id: id,
-        thumb: router.group(:file).path(:show, file_id: id)
+        thumb: Pakyow::Router.instance.group(:file).path(:show, file_id: id)
       }
 
       attrs.send(:'data-config=', config.map { |c| c.join(':') }.join(';'))
