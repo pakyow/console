@@ -208,6 +208,9 @@ Pakyow::App.after :process do
     body = res.body[0]
     body.gsub!(CLOSING_HEAD_REGEX, console_css + font_css + fa_css + '</head>')
     body.gsub!(CLOSING_BODY_REGEX, view.to_html + '</body>')
+
+    mixin = '<body class="console-toolbar-visible"'
+    body.gsub!(/<body/, mixin)
   end
 end
 
