@@ -47,16 +47,20 @@ body
   .loader-wrapper data-ui="loader"
     .spinner
 
-  .page-wrapper
-    /! @include notifier
+  /! @include notifier
 
-    .nav-wrapper
-      nav.side
-        .nav-links
-            /! @include side-nav
+  .container-2.margin-t
+    main.col.r-4-3
+      /! @container
 
-    .main-wrapper
-      .container
-        /! @container
+    aside.col.r-4-1
+      nav.margin-b
+        ul.plain
+          li@@console-panel-item
+            i.fa@icon
+            a@link href="/console" data-ui="fastlink"
+              | Link
+
+      /! @include sidebar
 
   /! @include toolbar

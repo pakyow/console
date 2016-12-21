@@ -7,8 +7,8 @@ module Pakyow::Console::PanelRegistry
     panels.values
   end
 
-  def self.nav(mode)
-    all.select { |panel| panel.mode == mode }.map { |panel|
+  def self.nav
+    all.map { |panel|
       {
         namespace:  panel.namespace,
         nice_name:  panel.nice_name,

@@ -126,7 +126,7 @@ unless Pakyow::Console::DataTypeRegistry.names.include?(:user)
 end
 
 unless Pakyow::Console::DataTypeRegistry.names.include?(:page)
-  Pakyow::Console::DataTypeRegistry.register :page, icon_class: 'columns' do
+  Pakyow::Console::DataTypeRegistry.register :page, icon_class: 'file-text-o' do
     model Pakyow::Config.console.models[:page]
     pluralize
 
@@ -261,3 +261,6 @@ unless Pakyow::Console::DataTypeRegistry.names.include?(:mount)
   #   end
   # end
 end
+
+Pakyow::Console::PanelRegistry.register :discover, nice_name: "Discover", icon_class: "compass"
+Pakyow::Console::PanelRegistry.register :settings, nice_name: "Settings", icon_class: "cog"

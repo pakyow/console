@@ -58,6 +58,7 @@ Pakyow::App.routes :'console-data' do
           view.container(:default).scope(:'console-data-type').bind(@type)
 
           setup_datum_form
+          setup_datum_actions
 
           Pakyow::Console::ServiceHookRegistry.call(:after, :new, @type.name, nil, self)
         end
@@ -100,6 +101,7 @@ Pakyow::App.routes :'console-data' do
           @datum ||= @type.model_object[params[:datum_id]]
           console_handle 404 if @datum.nil?
           setup_datum_form
+          setup_datum_actions
 
           Pakyow::Console::ServiceHookRegistry.call(:after, :edit, @type.name, nil, self)
         end

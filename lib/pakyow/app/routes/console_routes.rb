@@ -15,12 +15,26 @@ Pakyow::App.routes :console do
     get :default, '/' do
       reroute router.group(:console).path(:dashboard)
     end
+    
+    get "/discover" do
+      reroute router.group(:console).path(:dashboard)
+    end
 
     get :dashboard, '/dashboard', before: [:auth], after: [:setup] do
       if using_platform?
-        presenter.path = 'console/dashboard-platform'
+        presenter.path = 'console/dashboard/platform'
         # view.scope(:app_event).mutate(:list, with: data(:app_event).all).subscribe
         view.scope(:app_event).mutate(:list, with: []).subscribe
+        
+        view.container(:default).scope(:"pw-post").apply(
+          Pakyow::Console::Models::Post.where(published: true).all
+        ) do |view, post|
+          view.prop(:body)[0].replace(post.summary_html)
+        end
+
+        view.partial(:sidebar).scope(:"pw-post").apply(
+          Pakyow::Console::Models::Post.where(published: false).all
+        )
       end
     end
   end

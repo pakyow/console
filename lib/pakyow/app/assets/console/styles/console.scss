@@ -8,157 +8,41 @@
 
 $header-h: 40;
 
-// header {
-//   background: $color-black;
-//   @include rem(height, $header-h);
-//   padding: 0 30px;
-
-//   .brand {
-//     float: left;
-//     @include rem(font-size, 14);
-//     @include rem(line-height, $header-h);
-
-//     &.pakyow {
-//       &:after {
-//         content: '/';
-//       }
-
-//       color: $color-mgray;
-//     }
-
-//     &.console {
-//       color: $color-lgray;
-//     }
-//   }
-// }
-
-// nav {
-//   float:right;
-//   @include rem(height, $header-h);
-
-//   li {
-//     margin-left: 30px;
-//     @include rem(line-height, $header-h);
-
-//     i {
-//       color: $color-dgray;
-//       margin-right: 10px;
-//     }
-
-//     a {
-//       color: $color-lgray;
-//     }
-
-//     &:hover {
-//       a {
-//         color: $color-white;
-//         border-bottom: 1px solid $color-mgray;
-//       }
-//     }
-
-//     &.avatar {
-//       &:hover {
-//         a {
-//           border: 0;
-//         }
-
-//         img {
-//           opacity: 0.8;
-//         }
-//       }
-
-//       img {
-//         $avatar-size: 20;
-//         @include rem(height, $avatar-size);
-//         @include rem(width, $avatar-size);
-//         display: inline;
-//         vertical-align: middle;
-//         border-radius: 20px;
-//       }
-//     }
-//   }
-// }
-
 body {
   padding-bottom: 60px;
+  background: $color-background;
 }
-
-$nav-width: 200px;
 
 nav {
-  background: $color-black;
-  position:fixed;
-  top:0;
-  bottom:0;
-  left:0;
-  width: $nav-width;
-  box-sizing: border-box;
-  padding: 5px 15px 0;
-
-  .nav-links {
-    margin-top: 10px;
-
-    h4 {
-      color: $color-white;
-      margin-bottom: 15px;
-    }
-
-    li {
-      margin-bottom: 15px;
-      @include rem(font-size, 13);
-
-      &.active {
-        @include retina-image(/console/images/nav-active, 4px 7px);
-        background-repeat: no-repeat;
-        background-position: right;
-
-        a {
-          font-weight: bold;
-          color: $color-white;
-        }
-
-        i {
-          color: $color-white;
-        }
-      }
-
-      i {
-        @include rem(font-size, 15);
-        color: $color-dgray;
-        margin-right: 10px;
-        width: 20px;
-      }
-
-      a {
-        color: $color-lgray;
-      }
-
-      &:hover {
-        a {
-          color: $color-white;
-          border-bottom: 1px solid $color-mgray;
-        }
+  li {
+    margin-bottom: $container-margin / 3;
+    
+    &.active {
+      a, i {
+        color: $color-blue;
+        font-weight: 700;
       }
     }
   }
 
-  hr {
-    background: $color-dgray;
+  a {
+    @include rem(font-size, 13);
+    color: $color-mgray;
+    
+    &:hover {
+      color: $color-black;
+    }
+  }
+  
+  i {
+    width: 20px;
   }
 }
 
-.page-wrapper:after {
-  clear: both;
-}
-
-.nav-wrapper {
-  width: $nav-width;
-  float: left;
-}
-
-.main-wrapper {
-  margin-top: 60px;
-  margin-left: 250px;
+main {
+  h1:first-child {
+    margin-top: 0;
+  }
 }
 
 .slim {
@@ -337,6 +221,104 @@ h1 .button {
 
     select {
       width: 200px;
+    }
+  }
+}
+
+.content-creation-start {
+  background: $color-white;
+  color: $color-dgray;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  padding: $container-margin / 3;
+  position: relative;
+  @include rem(font-size, 15);
+  
+  &:hover {
+    opacity: 0.8;
+  }
+  
+  a {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    cursor: text;
+  }
+}
+
+.discover-item {
+  background: $color-white;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  padding: $container-margin / 3;
+  position: relative;
+  
+  &:hover {
+    opacity: 0.8;
+  }
+  
+  > a {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+  }
+  
+  > img {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border-radius: 35px;
+    margin-left: -50px;
+    margin-top: 5px;
+  }
+  
+  > h2 {
+    margin-top: 0;
+  }
+  
+  .console-content {
+    margin: 0;
+  }
+}
+
+.discover-item-metadata {
+  border-top: 1px solid $color-background;
+  display: block !important;
+  padding-top: $container-margin / 4;
+  
+  li {
+    @include rem(font-size, 11);
+    text-transform: uppercase;
+    color: $color-lgray;
+    font-weight: 600;
+  }
+}
+
+aside {
+  position: fixed;
+  left: 50%;
+  margin-left: 280px !important;
+  margin-top: 5px;
+
+  h5 {
+    color: darken($color-background, 25%);
+    margin-top: 0;
+  }
+}
+
+.content-draft {
+  a {
+    @include rem(line-height, 18);
+    color: $color-mgray;
+    font-weight: 500;
+    
+    &:hover {
+      color: $color-black;
     }
   }
 }

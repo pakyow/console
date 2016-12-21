@@ -21,7 +21,9 @@ module Pakyow::Helpers
 
     object_id = @datum ? @datum.id : nil
     handle_errors(view.partial(:errors), object_type: @type.name, object_id: object_id)
-
+  end
+  
+  def setup_datum_actions
     view.partial(:actions).with do |view|
       if @datum && @datum.id
         actions = @type.actions.select { |action|
