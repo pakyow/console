@@ -1,43 +1,9 @@
-.slim
-  h1
-    | User Settings
-    a.dim.float-right href="/console/logout" Sign Out
+h1
+  | Site Settings
 
-  p.margin-t
-    em
-      | Manage your avatar via&nbsp;
-      a href="http://gravatar.com" target="_blank" Gravatar
-      |.
-
-  form.margin-t@@pw-user method="post" action="/console/settings"
-    /! @include errors
-
-    fieldset
-      ul
-        li
-          .container
-            .col
-              label Full Name:
-              input@name type="text"
-        li.margin-t
-          .container-2
-            .col
-              label Username:
-              input@username type="text"
-            .col
-              label Email:
-              input@email type="text"
-        li.margin-t
-          .container-2
-            .col
-              label Password:
-              input@password type="password"
-            .col
-              label Confirm Password:
-              input@password_confirmation type="password"
-
-    hr
-
-    fieldset
-      input type="submit" value="Save Settings"
-
+.container-3.margin-t
+  .col.setting-panel@@console-setting-item
+    a@href href="#" data-ui="fastlink"
+    i.fa.fa-cog@icon
+    h2@nice_name
+      | Some Settings

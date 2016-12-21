@@ -111,6 +111,7 @@ unless Pakyow::Console::DataTypeRegistry.names.include?(:user)
   Pakyow::Console::DataTypeRegistry.register :user, icon_class: 'users' do
     model Pakyow::Config.console.models[:user]
     pluralize
+    settings
 
     attribute :name, :string, nice: 'Full Name'
     attribute :username, :string

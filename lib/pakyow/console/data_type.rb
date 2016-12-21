@@ -100,6 +100,14 @@ class Pakyow::Console::DataType
   def dynamic(&block)
     @dynamic << block
   end
+  
+  def settings
+    @settings = true
+  end
+  
+  def settings?
+    @settings == true
+  end
 
   private
 

@@ -323,6 +323,41 @@ aside {
   }
 }
 
+.setting-panel {
+  position: relative;
+  text-align: center;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  padding: 30px 0;
+  color: $color-dgray;
+  
+  &:hover {
+    opacity: 0.8;
+  }
+  
+  a {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+  }
+  
+  i {
+    width: 20px;
+    display: inline-block;
+    text-align: left;
+  }
+  
+  h2 {
+    display: inline;
+    @include rem(font-size, 13);
+    font-weight: 500;
+    margin: 0;
+  }
+}
+
 @import "plugins";
 @import "data";
 @import "notifier";

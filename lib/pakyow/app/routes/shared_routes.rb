@@ -10,7 +10,7 @@ module Pakyow::Console::SharedRoutes
     items = Pakyow::Console::PanelRegistry.nav
 
     # add custom data types
-    Pakyow::Console::DataTypeRegistry.types.select(&:display?).each do |type|
+    Pakyow::Console::DataTypeRegistry.types.select(&:display?).reject(&:settings?).each do |type|
       items << {
         namespace: "data/#{type.name}",
         nice_name: type.display_name,
