@@ -50,7 +50,6 @@ require 'pakyow/console/editors/date_editor'
 require 'pakyow/console/editors/datetime_editor'
 
 require 'pakyow/console/formatters/percentage_formatter'
-require 'pakyow/console/formatters/datetime_formatter'
 
 require 'pakyow/console/processors/boolean_processor'
 require 'pakyow/console/processors/file_processor'
@@ -118,10 +117,25 @@ unless Pakyow::Console::DataTypeRegistry.names.include?(:user)
     attribute :email, :string
     attribute :password, :sensitive
     attribute :password_confirmation, :sensitive
-    attribute :active, :boolean
 
     action :remove, label: 'Delete', notification: 'user deleted' do
       reroute router.group(:datum).path(:remove, data_id: params[:data_id], datum_id: params[:datum_id])
+    end
+    
+    action :activate,
+           label: 'Activate',
+           notification: 'user activated',
+           display: ->(user) { !user.active } do |user|
+      user.active = true
+      user.save
+    end
+
+    action :deactivate,
+           label: 'Deactivate',
+           notification: 'user deactivated',
+           display: ->(user) { user.active } do |user|
+      user.active = false
+      user.save
     end
   end
 end
