@@ -3,14 +3,14 @@
   input type="hidden" data-scope="constraints" data-c="constraints"
 
   / default editor
-  .console-content-editor-wrapper.console-content-plaintext data-scope="content" data-template="" data-version="default"
+  .console-content-editor-wrapper.console-content-plaintext data-scope="content" data-template="" data-version="default" draggable="true"
     /! @include shared
 
     .console-content-editor data-c="editor"
       /! @include actions
 
       / plaintext editor (e.g. markdown)
-      textarea rows="1" placeholder="text goes here" data-ui="content-editor-plaintext" data-prop="content" data-version="markdown"
+      textarea rows="1" data-ui="content-editor-plaintext" data-prop="content" data-version="markdown"
 
       / trix editor
       / div data-ui="trix"
@@ -19,7 +19,7 @@
       textarea data-prop="content" data-ui="redactor" data-version="wysiwyg"
 
   / image editor
-  .console-content-editor-wrapper.console-content-image data-scope="content" data-template="" data-version="image"
+  .console-content-editor-wrapper.console-content-image data-scope="content" data-template="" data-version="image" draggable="true"
     /! @include shared
     /! @include alignment
 
@@ -32,7 +32,7 @@
         .console-content-image-count
 
   / embed editor
-  .console-content-editor-wrapper.console-content-embed data-scope="content" data-template="" data-version="embed"
+  .console-content-editor-wrapper.console-content-embed data-scope="content" data-template="" data-version="embed" draggable="true"
     /! @include shared
     /! @include alignment
 
@@ -42,7 +42,7 @@
       textarea rows="5" placeholder="paste embed code here, press enter" data-ui="content-editor-embed" data-prop="code"
 
   / break editor
-  .console-content-editor-wrapper.console-content-break data-scope="content" data-template="" data-version="break"
+  .console-content-editor-wrapper.console-content-break data-scope="content" data-template="" data-version="break" draggable="true"
     /! @include shared
 
     .console-content-editor data-c="editor"
@@ -52,7 +52,7 @@
 
   .clear
 
-  a.console-content-add href="#" data-ui="content-add"
-    i.fa.fa-plus
-
-    | Add Content
+  / a.console-content-add href="#" data-ui="content-add"
+  /   i.fa.fa-plus
+  /
+  /   | Add Content

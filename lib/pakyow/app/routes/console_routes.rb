@@ -28,9 +28,7 @@ Pakyow::App.routes :console do
         
         view.container(:default).scope(:"pw-post").apply(
           Pakyow::Console::Models::Post.where(published: true).all
-        ) do |view, post|
-          view.prop(:body)[0].replace(post.summary_html)
-        end
+        )
 
         view.partial(:sidebar).scope(:"pw-post").apply(
           Pakyow::Console::Models::Post.where(published: false).all

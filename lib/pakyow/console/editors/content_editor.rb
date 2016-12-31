@@ -31,7 +31,7 @@ Pakyow::Console.editor :content do |attribute, value|
       # convert html back to markdown
       content = content.map { |content|
         if content['type'] == 'default'
-          content['content'] = ReverseMarkdown.convert(content['content'], github_flavored: true)
+          content['content'] = ReverseMarkdown.convert(content['content'], github_flavored: true).strip
         end
 
         content

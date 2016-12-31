@@ -1,0 +1,10 @@
+.content-title-field {
+  border: 0 !important;
+  border-left: 3px solid $color-border !important;
+  background: none;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  @include rem(font-size, 24);
+  font-weight: 600;
+  width: 100%;
+}

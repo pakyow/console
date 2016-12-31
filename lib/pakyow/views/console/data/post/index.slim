@@ -1,9 +1,15 @@
-.content-creation-start
-  a href="/console/data/post/datum/new" data-ui="fastlink"
-  span Share your voice&hellip;
+h1.data-type-header@@console-data-type
+  | console/
+  span@display_name data
+  a.button@new-href href="#" data-ui="fastlink"
+    i.fa.fa-plus-circle
+    span Write
+
+.container.margin-t@@pw-post data-version="empty"
+  p No content yet.
 
 .discover-item.margin-t@@pw-post
-  a href="#" target="_blank"
+  a@edit-href href="#" data-ui="fastlink"
   img@avatar src="/images/avatar.png"
   h2@title This is a title
   

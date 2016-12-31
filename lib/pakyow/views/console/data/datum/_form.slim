@@ -1,13 +1,19 @@
-form@@console-datum enctype="multipart/form-data" data-ui="mutable" data-config="revert: false"
+form@@console-datum enctype="multipart/form-data" data-ui="mutable" data-config="revert: false" id="datum-form"
   /! @include errors
 
   fieldset@@console-data-field
     ul
       li
-        label@nice_name
+        label@nice
         div@editor
 
-  hr
+  input.hidden type="checkbox" id="datum-settings-trigger"
+  fieldset.hidden.datum-settings
+    label.float-r.datum-settings-trigger for="datum-settings-trigger"
+      i.fa.fa-chevron-left
 
-  fieldset
-    input type="submit" value="Save"
+    fieldset@@console-data-setting
+      ul
+        li
+          label@nice
+          div@editor

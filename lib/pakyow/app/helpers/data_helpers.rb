@@ -6,12 +6,47 @@ module Pakyow::Helpers
   def setup_datum_form
     view.partial(:form).scope(:'console-datum').with do |view|
       attributes = @type.attributes(@datum).select { |attribute|
-        !attribute[:extras].key?(:display) || attribute[:extras][:display].call(@datum)
+        (!attribute[:extras].key?(:display) || attribute[:extras][:display].call(@datum)) && !attribute[:extras][:setting]
       }
 
       view.scope(:'console-data-field').apply(attributes) do |view, attribute|
         editor = Pakyow::Console::EditorRegistry.editor_for_attribute(attribute, @datum || {}, @type, self)
         view.prop(:editor)[0].replace(editor)
+
+        if attribute[:extras][:label] === false
+          view.prop(:nice).remove
+          view.prop(attribute[:name]).attrs.placeholder = attribute[:nice]
+        end
+
+        if attribute[:extras][:autofocus] && @datum.nil?
+          view.prop(attribute[:name]).attrs.autofocus = true
+        end
+
+        if klass = attribute[:extras][:class]
+          view.prop(attribute[:name]).attrs.class << klass
+        end
+
+        view.attrs[:'data-scope'] = nil
+        view.attrs[:'data-prop'] = nil
+      end
+
+      settings = @type.attributes(@datum).select { |attribute|
+        (!attribute[:extras].key?(:display) || attribute[:extras][:display].call(@datum)) && attribute[:extras][:setting]
+      }
+
+      view.scope(:'console-data-setting').apply(settings) do |view, attribute|
+        editor = Pakyow::Console::EditorRegistry.editor_for_attribute(attribute, @datum || {}, @type, self)
+        view.prop(:editor)[0].replace(editor)
+
+        if attribute[:extras][:label] === false
+          view.prop(:nice).remove
+          view.prop(attribute[:name]).attrs.placeholder = attribute[:nice]
+        end
+
+        if klass = attribute[:extras][:class]
+          view.prop(attribute[:name]).attrs.class << klass
+        end
+
         view.attrs[:'data-scope'] = nil
         view.attrs[:'data-prop'] = nil
       end
@@ -22,7 +57,7 @@ module Pakyow::Helpers
     object_id = @datum ? @datum.id : nil
     handle_errors(view.partial(:errors), object_type: @type.name, object_id: object_id)
   end
-  
+
   def setup_datum_actions
     view.partial(:actions).with do |view|
       if @datum && @datum.id

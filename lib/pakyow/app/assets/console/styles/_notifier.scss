@@ -3,7 +3,7 @@
   top:0;
   left: 50%;
   width: $container-width;
-  margin-left: -(($container-width - 250) / 2);
+  margin-left: -($container-width / 2);
   height: 30px;
   background:$color-black;
   cursor: pointer;

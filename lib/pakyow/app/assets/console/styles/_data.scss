@@ -81,19 +81,109 @@
 }
 
 .data-actions {
+  input[type="checkbox"]:checked{
+    ~ ul {
+      display: block;
+    }
+    
+    ~ label {
+      opacity: 0.8;
+    }
+  }
+  
+  ul {
+    position: absolute;
+    width: 140px;
+    background: $color-white;
+    border: 1px solid $color-border;
+    border-top: 0;
+    box-sizing: border-box;
+    border-bottom-right-radius: $radius;
+    border-bottom-left-radius: $radius;
+    margin-top: -3px;
+  }
+  
+  label {
+    background: $color-blue;
+    position: absolute;
+    color: $color-white;
+    margin-top: -40px;
+    margin-left: 100px;
+    border-top-right-radius: $radius;
+    border-bottom-right-radius: $radius;
+    @include rem(font-size, 14);
+    padding: 12px;
+    border-left: 1px solid darken($color-blue, 10%);
+    cursor: pointer;
+    
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
   button {
     display:block;
     background: none;
     border: none;
-    border-top: 1px solid $color-lgray;
-    padding: 10px 0 !important;
+    border-bottom: 1px solid $color-border;
+    padding: 8px 5px !important;
     width: 100%;
     text-align: left;
   }
 
   li:last-child {
     button {
-      border-bottom: 1px solid $color-lgray;
+      border-bottom: 0;
     }
+  }
+}
+
+.datum-submit {
+  background: $color-blue !important;
+  border: none !important;
+  color: $color-white !important;
+  width: 100px;
+  border-top-right-radius:0 !important;
+  border-bottom-right-radius:0 !important;
+  
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+#datum-settings-trigger {
+  &:checked ~ .datum-settings {
+    display: block;
+  }
+}
+
+.datum-settings {
+  background: rgba(255, 255, 255, 0.97);
+  position: fixed;
+  left: 50%;
+  width: 250px;
+  top: 40px;
+  bottom: 80px;
+  margin-left: 260px;
+  z-index: 200;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  padding: 10px;
+  box-sizing: border-box;
+  
+  .datum-settings-trigger {
+    @include rem(line-height, 20);
+    @include rem(font-size, 15);
+  }
+}
+
+.datum-settings-trigger {
+  @include rem(font-size, 20);
+  @include rem(line-height, 38);
+  cursor: pointer;
+  color: $color-dgray;
+  
+  &:hover {
+    opacity: 0.8;
   }
 }

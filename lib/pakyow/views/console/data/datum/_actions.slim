@@ -1,6 +1,14 @@
+label.float-r.datum-settings-trigger for="datum-settings-trigger"
+  i.fa.fa-info-circle
+
+input.datum-submit type="submit" value="Save" form="datum-form"
+
 div.data-actions
-  h5 Actions
-  ul.plain
+  input.hidden type="checkbox" id="actions-trigger"
+  label for="actions-trigger"
+    i.fa.fa-chevron-down
+
+  ul.plain.hidden
     li@@console-datum-action
       form@action method="post"
         input@method type="hidden" name="_method"
