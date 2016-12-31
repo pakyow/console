@@ -19,6 +19,9 @@ module Pakyow::Console::SharedRoutes
     end
 
     items.sort! { |a, b| a[:nice_name] <=> b[:nice_name] }
+    discover = items.find { |item| item[:nice_name] == "Discover" }
+    items.delete(discover)
+    items.unshift(discover)
 
     view.scope(:'console-panel-item').apply(items) do |view, item|
       if req.first_path.include?("/console/#{item[:namespace]}")
@@ -40,7 +43,7 @@ module Pakyow::Console::SharedRoutes
       end
     end
   end
-  
+
   fn :prepare_project do
     begin
       view.scope(:'pw-project').bind({ name: config.app.name })
