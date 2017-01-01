@@ -53,8 +53,10 @@ Pakyow::App.routes :'console-data' do
           #FIXME why do I have to do this on a reroute?
           presenter.path = 'console/data/datum/new'
 
-          @type = Pakyow::Console::DataTypeRegistry.type(params[:data_id])
+          @type ||= Pakyow::Console::DataTypeRegistry.type(params[:data_id])
+          @datum ||= @type.model_object.new
           Pakyow::Console::ServiceHookRegistry.call(:before, :new, @type.name, nil, self)
+          handle_errors(view) if @errors
           view.container(:default).scope(:'console-data-type').bind(@type)
 
           setup_datum_form

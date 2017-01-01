@@ -8,7 +8,7 @@ module Pakyow::Helpers
       attributes = @type.attributes(@datum).select { |attribute|
         (!attribute[:extras].key?(:display) || attribute[:extras][:display].call(@datum)) && !attribute[:extras][:setting]
       }
-
+      
       view.scope(:'console-data-field').apply(attributes) do |view, attribute|
         editor = Pakyow::Console::EditorRegistry.editor_for_attribute(attribute, @datum || {}, @type, self)
         view.prop(:editor)[0].replace(editor)
@@ -18,7 +18,7 @@ module Pakyow::Helpers
           view.prop(attribute[:name]).attrs.placeholder = attribute[:nice]
         end
 
-        if attribute[:extras][:autofocus] && @datum.nil?
+        if attribute[:extras][:autofocus] && (@datum.nil? || @datum.id.nil?)
           view.prop(attribute[:name]).attrs.autofocus = true
         end
 
