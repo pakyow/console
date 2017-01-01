@@ -85,12 +85,12 @@
     ~ ul {
       display: block;
     }
-    
+
     ~ label {
       opacity: 0.8;
     }
   }
-  
+
   ul {
     position: absolute;
     width: 140px;
@@ -102,7 +102,7 @@
     border-bottom-left-radius: $radius;
     margin-top: -3px;
   }
-  
+
   label {
     background: $color-blue;
     position: absolute;
@@ -115,7 +115,7 @@
     padding: 12px;
     border-left: 1px solid darken($color-blue, 10%);
     cursor: pointer;
-    
+
     &:hover {
       opacity: 0.8;
     }
@@ -145,7 +145,7 @@
   width: 100px;
   border-top-right-radius:0 !important;
   border-bottom-right-radius:0 !important;
-  
+
   &:hover {
     opacity: 0.8;
   }
@@ -170,19 +170,15 @@
   border-radius: $radius;
   padding: 10px;
   box-sizing: border-box;
-  
-  .datum-settings-trigger {
-    @include rem(line-height, 20);
-    @include rem(font-size, 15);
-  }
 }
 
 .datum-settings-trigger {
-  @include rem(font-size, 20);
+  @include rem(font-size, 15);
   @include rem(line-height, 38);
+
   cursor: pointer;
   color: $color-dgray;
-  
+
   &:hover {
     opacity: 0.8;
   }

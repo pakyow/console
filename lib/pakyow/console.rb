@@ -145,27 +145,27 @@ unless Pakyow::Console::DataTypeRegistry.names.include?(:page)
     model Pakyow::Config.console.models[:page]
     pluralize
 
-    attribute :name, :string, nice: 'Page Name'
+    attribute :name, :string, label: false, class: "content-title-field", autofocus: true, nice: "Page Name"
 
     attribute :slug, :string, display: -> (datum) {
       !datum.nil? && !datum.id.nil?
-    }, nice: 'Page Path'
+    }, nice: 'URL Slug', setting: true
 
     # TODO: (later) add more user-friendly template descriptions (embedded in the top-matter?)
-    attribute :page, :relation, class: Pakyow::Config.console.models[:page], nice: 'Parent Page', relationship: :parent
+    attribute :page, :relation, class: Pakyow::Config.console.models[:page], nice: 'Parent Page', relationship: :parent, setting: true
 
     # TODO: (later) add configuration to containers so that content can be an image or whatever (look at GIRT)
     # TODO: (later) we definitely need the concept of content templates (perhaps in _content) or something
     attribute :template, :enum, values: -> { Pakyow.app.presenter.store.templates.keys.map { |k| [k,k] }.unshift(['', '']) }, display: -> (datum) {
       datum.nil? || datum.fully_editable?
-    }, nice: 'Layout'
+    }, nice: 'Layout', setting: true
 
     dynamic do |page|
       next unless page.is_a?(Pakyow::Console::Models::Page) && page.id
 
       if page.fully_editable?
         Pakyow.app.presenter.store(:default).template(page.template.to_sym).doc.containers.each do |container|
-          attribute :"content-#{container[0]}", :content, nice: container[0].capitalize, value: -> (page) {
+          attribute :"content-#{container[0]}", :content, nice: container[0].capitalize, label: false, value: -> (page) {
             content = page.content_for(container[0])
             content.content unless content.nil?
           }, setter: -> (page, params, processor) {

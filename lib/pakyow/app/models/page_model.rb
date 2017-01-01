@@ -1,7 +1,7 @@
 # TODO: this belongs in pakyow/support
 class String
   def self.slugify(string)
-    string.downcase.gsub('  ', ' ').gsub(' ', '-').gsub(/[^a-z0-9_-]/, '').gsub('--', '-')
+    string.downcase.gsub('  ', ' ').gsub(' ', '-').gsub(/[^a-z0-9\/_-]/, '')
   end
 
   def self.presentable(string)
@@ -47,9 +47,13 @@ module Pakyow
 
         def validate
           validates_presence :name
-          validates_presence :template# unless initial_value(:template).to_s == '__editable'
-
           # TODO: require unique slug (find a unique one automatically)
+        end
+
+        def before_create
+          super
+
+          self.template = :default
         end
 
         def after_create
@@ -229,6 +233,8 @@ module Pakyow
     end
   end
 end
+
+Pakyow::Console::Models::Page.plugin :dirty
 
 # TODO: move to a more logical place
 Pakyow::Console.after :page, :create do
