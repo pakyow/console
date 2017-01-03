@@ -64,12 +64,7 @@ module Pakyow::Helpers
     end
 
     view.scope(:'pw-user').bind(current_console_user)
-
-    # collaborator presence
-    if Pakyow::Config.env == :development
-      # TODO: revisit this b/c performance implications
-      # view.scope(:collaborator).mutate(:list, with: data(:collaborator).all).subscribe
-    end
+    view.scope(:collaborator).mutate(:list, with: data(:collaborator).all).subscribe
   end
 
   def mixin_scripts(view)
