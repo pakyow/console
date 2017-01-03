@@ -96,12 +96,17 @@ module Pakyow
       @db.extension :pg_json
     end
 
-    def self.pages
-      @pages ||= Pakyow::Console::Models::Page.all
+    def self.endpoints
+      return @endpoints if @endpoints
+
+      @endpoints = []
+      @endpoints.concat Pakyow::Console::Models::Page.all
+      @endpoints.concat Pakyow::Console::Models::Collection.all
+      @endpoints
     end
 
-    def self.invalidate_pages
-      @pages = nil
+    def self.invalidate_endpoints
+      @endpoints = nil
     end
 
     def self.load
@@ -109,7 +114,6 @@ module Pakyow
 
       # make sure the console routes are last (since they have the catch-all)
       Pakyow::App.routes[:console] = Pakyow::App.routes.delete(:console)
-
 
       Pakyow.app.presenter.store(:default).views do |view, path|
         composer = Pakyow.app.presenter.store(:default).composer(path)

@@ -121,7 +121,7 @@ unless Pakyow::Console::DataTypeRegistry.names.include?(:user)
     action :remove, label: 'Delete', notification: 'user deleted' do
       reroute router.group(:datum).path(:remove, data_id: params[:data_id], datum_id: params[:datum_id])
     end
-    
+
     action :activate,
            label: 'Activate',
            notification: 'user activated',
@@ -219,7 +219,7 @@ unless Pakyow::Console::DataTypeRegistry.names.include?(:page)
         modified: page.updated_at.httpdate
       )
 
-      Pakyow::Console.invalidate_pages
+      Pakyow::Console.invalidate_endpoints
     end
 
     action :unpublish,
@@ -233,7 +233,7 @@ unless Pakyow::Console::DataTypeRegistry.names.include?(:page)
         File.join(Pakyow::Config.app.uri, page.slug)
       )
 
-      Pakyow::Console.invalidate_pages
+      Pakyow::Console.invalidate_endpoints
     end
   end
 
@@ -260,21 +260,101 @@ unless Pakyow::Console::DataTypeRegistry.names.include?(:page)
   end
 end
 
-unless Pakyow::Console::DataTypeRegistry.names.include?(:mount)
-  # Pakyow::Console::DataTypeRegistry.register :mount, icon_class: 'cubes' do
-  #   model 'Pakyow::Console::Models::MountedPlugin'
-  #   pluralize
+# unless Pakyow::Console::DataTypeRegistry.names.include?(:mount)
+#   Pakyow::Console::DataTypeRegistry.register :mount, icon_class: 'cubes' do
+#     model 'Pakyow::Console::Models::MountedPlugin'
+#     pluralize
+#
+#     attribute :slug, :string
+#     attribute :active, :boolean
+#
+#     # FIXME: rename `name` to `type` in model
+#     attribute :name, :enum, nice: 'Plugin', values: Pakyow::Console::PluginRegistry.all.map { |p| [p.id, p.name] }.unshift(['', ''])
+#
+#     action :remove, label: 'Delete', notification: 'mount point deleted' do
+#       # TODO: hook this up
+#     end
+#   end
+# end
 
-  #   attribute :slug, :string
-  #   attribute :active, :boolean
+unless Pakyow::Console::DataTypeRegistry.names.include?(:post)
+  Pakyow::Console.data :post, icon: 'align-left' do
+    model 'Pakyow::Console::Models::Post'
+    nice_name "Content"
 
-  #   # FIXME: rename `name` to `type` in model
-  #   attribute :name, :enum, nice: 'Plugin', values: Pakyow::Console::PluginRegistry.all.map { |p| [p.id, p.name] }.unshift(['', ''])
+    attribute :title, :string, label: false, class: "content-title-field", autofocus: true
+    attribute :slug, :string, nice: 'URL Slug', display: -> (post) {
+      !post.nil? && !post.id.nil?
+    }, unlisted: true, setting: true
+    attribute :published_at, :datetime, nice: 'Publish Date', display: -> (post) {
+      !post.nil? && !post.id.nil?
+    }, unlisted: true, setting: true
+    attribute :published, :boolean, display: -> (post) { false }
+    attribute :body, :content, label: false
 
-  #   action :remove, label: 'Delete', notification: 'mount point deleted' do
-  #     # TODO: hook this up
-  #   end
-  # end
+    action :publish,
+           label: 'Publish',
+           notification: 'content published',
+           display: ->(post) { !post.published? } do |post|
+      post.published = true
+      post.published_at = Time.now unless post.published_at
+      post.save
+
+      Pakyow::Console.sitemap.url(
+        location: File.join(Pakyow::Config.app.uri, post.slug),
+        modified: post.updated_at.httpdate
+      )
+    end
+
+    action :unpublish,
+           label: 'Unpublish',
+           notification: 'content unpublished',
+           display: ->(post) { post.published? } do |post|
+      post.published = false
+      post.save
+
+      Pakyow::Console.sitemap.delete_location(
+        File.join(Pakyow::Config.app.uri, post.slug)
+      )
+    end
+
+    action :delete, label: 'Delete' do |post|
+      post.destroy
+      notify("content deleted", :success)
+
+      Pakyow::Console.sitemap.delete_location(
+        File.join(Pakyow::Config.app.uri, post.slug)
+      )
+
+      redirect router.group(:data).path(:show, data_id: 'post')
+    end
+  end
+
+  Pakyow::Console.before :post, :create do |post|
+    post.user = current_console_user
+  end
+
+  Pakyow::Console.after :post, :create do |post|
+    if post.published?
+      Pakyow::Console.sitemap.url(
+        location: File.join(Pakyow::Config.app.uri, post.slug),
+        modified: post.updated_at.httpdate
+      )
+    end
+  end
+
+  Pakyow::Console.after :post, :update do |post|
+    if post.published?
+      Pakyow::Console.sitemap.delete_location(
+        File.join(Pakyow::Config.app.uri, post.initial_value(:slug))
+      )
+
+      Pakyow::Console.sitemap.url(
+        location: File.join(Pakyow::Config.app.uri, post.slug),
+        modified: post.updated_at.httpdate
+      )
+    end
+  end
 end
 
 Pakyow::Console::PanelRegistry.register :discover, nice_name: "Discover", icon_class: "compass"

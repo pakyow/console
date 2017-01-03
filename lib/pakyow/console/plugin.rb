@@ -1,3 +1,5 @@
+module Pakyow::Console::Plugins; end
+
 class Pakyow::Console::Plugin
   attr_reader :id, :name, :functions, :readme
   attr_accessor :version, :mountable, :routes

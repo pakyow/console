@@ -10,7 +10,8 @@ Pakyow::Config.register(:console) { |config|
 
   config.opt :models, {
     user: 'Pakyow::Console::Models::User',
-    page: 'Pakyow::Console::Models::Page'
+    page: 'Pakyow::Console::Models::Page',
+    collection: 'Pakyow::Console::Models::Collection',
   }
 
   config.opt :file_store_adapter, Pakyow::Console::PlatformFileAdapter

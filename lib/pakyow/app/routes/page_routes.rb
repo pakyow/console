@@ -43,14 +43,14 @@ Pakyow::App.routes :'console-page' do
 end
 
 Pakyow::Console.slug_handler do
-  page = Pakyow::Console.pages.find { |p| p.matches?(req.path) }
-  next if page.nil? || !page.published
+  endpoint = Pakyow::Console.endpoints.find { |e| e.matches?(req.path) }
+  next if endpoint.nil? || !endpoint.published || !endpoint.is_a?(Pakyow::Console::Models::Page)
 
-  reroute router.group(:page).path(:show, page_id: page.id)
+  reroute router.group(:page).path(:show, page_id: endpoint.id)
 end
 
 Pakyow::App.after :load do
-  Pakyow::Console.pages.select { |p| p.published }.each do |page|
+  Pakyow::Console.endpoints.select { |e| e.published }.each do |page|
     Pakyow::Console.sitemap.url(
       location: File.join(Pakyow::Config.app.uri, page.slug),
       modified: page.updated_at.httpdate,

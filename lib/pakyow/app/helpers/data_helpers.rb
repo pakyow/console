@@ -2,6 +2,10 @@ module Pakyow::Helpers
   def current_plugin
     @mounted_plugin
   end
+  
+  def current_collection
+    @current_collection
+  end
 
   def setup_datum_form
     view.partial(:form).scope(:'console-datum').with do |view|

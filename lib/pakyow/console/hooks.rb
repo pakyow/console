@@ -19,6 +19,7 @@ Pakyow::CallContext.before :error, priority: :high do
   console_handle 500
 end
 
+# TODO: why is this even needed since we have the slug handler?
 Pakyow::CallContext.after :match do
   # this guard is needed because the route hooks are called again when calling a handler :/
   # TODO: think through a fix for the above
@@ -27,42 +28,45 @@ Pakyow::CallContext.after :match do
     handle 404, false
   end
 
-  page = Pakyow::Console.pages.find { |p| p.matches?(req.path) }
-  next if page.nil?
+  endpoint = Pakyow::Console.endpoints.find { |e| e.matches?(req.path) }
+  next if endpoint.nil?
 
   # TODO: we can't reroute, but we could fetch and call the show page route
 
-  if !@console_404 && !page.published
+  if !@console_404 && !endpoint.published
     @console_404 = true
     handle 404, false
   end
 
-  if page.fully_editable?
-    template = presenter.store(:default).template(page.template.to_sym)
-    presenter.view = template.build(page).includes(presenter.store(:default).partials('/'))
-    presenter.view.title = String.presentable(page.name)
-    view = presenter.view
-  else
-    view = presenter.view.composed
-  end
-
-  renderer_view = presenter.store(:console).view('/console/pages/template')
-
-  Pakyow::Console::Models::Page.editables_for_view(view).each do |editable|
-    content = page.content_for(editable[:doc].get_attribute(:'data-editable'))
-    parts = editable[:doc].editable_parts
-
-    if parts.empty? || editable[:doc].has_attribute?(:'data-editable-unrestrict')
-      rendered = renderer_view.scope(:content)[0].dup
-      html = Pakyow::Console::ContentRenderer.render(content.content, view: rendered, constraints: editable[:constraints]).to_html
-      editable[:doc].clear
-      editable[:doc].append(html)
+  if endpoint.is_a?(Pakyow::Console::Models::Page)
+    page = endpoint
+    if page.fully_editable?
+      template = presenter.store(:default).template(page.template.to_sym)
+      presenter.view = template.build(page).includes(presenter.store(:default).partials('/'))
+      presenter.view.title = String.presentable(page.name)
+      view = presenter.view
     else
-      editable[:doc].editable_parts.each_with_index do |part, i|
-        rendered = renderer_view.scope(:content)[0].dup
+      view = presenter.view.composed
+    end
 
-        html = Pakyow::Console::ContentRenderer.render([content.content[i]], view: rendered, constraints: editable[:constraints]).to_html
-        part[:doc].replace(html)
+    renderer_view = presenter.store(:console).view('/console/pages/template')
+
+    Pakyow::Console::Models::Page.editables_for_view(view).each do |editable|
+      content = page.content_for(editable[:doc].get_attribute(:'data-editable'))
+      parts = editable[:doc].editable_parts
+
+      if parts.empty? || editable[:doc].has_attribute?(:'data-editable-unrestrict')
+        rendered = renderer_view.scope(:content)[0].dup
+        html = Pakyow::Console::ContentRenderer.render(content.content, view: rendered, constraints: editable[:constraints]).to_html
+        editable[:doc].clear
+        editable[:doc].append(html)
+      else
+        editable[:doc].editable_parts.each_with_index do |part, i|
+          rendered = renderer_view.scope(:content)[0].dup
+
+          html = Pakyow::Console::ContentRenderer.render([content.content[i]], view: rendered, constraints: editable[:constraints]).to_html
+          part[:doc].replace(html)
+        end
       end
     end
   end
@@ -87,18 +91,16 @@ Pakyow::App.before :load do
   @paths_loaded = true
 end
 
-Pakyow::App.after :load do
+Pakyow::App.after :load, priority: :low do
   Pakyow::Console.load
+  
+  Pakyow::Console.mount_plugins(self, loading: true)
 end
 
 Pakyow::CallContext.after :route do
   if !found? && req.path_parts[0] == 'console'
     console_handle 404
   end
-end
-
-Pakyow::App.after :load do
-  Pakyow::Console.mount_plugins(self, loading: true)
 end
 
 Pakyow::App.after :reload do

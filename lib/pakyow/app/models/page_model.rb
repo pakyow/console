@@ -238,13 +238,13 @@ Pakyow::Console::Models::Page.plugin :dirty
 
 # TODO: move to a more logical place
 Pakyow::Console.after :page, :create do
-  Pakyow::Console.invalidate_pages
+  Pakyow::Console.invalidate_endpoints
 end
 
 Pakyow::Console.after :page, :update do
-  Pakyow::Console.invalidate_pages
+  Pakyow::Console.invalidate_endpoints
 end
 
 Pakyow::Console.after :page, :delete do
-  Pakyow::Console.invalidate_pages
+  Pakyow::Console.invalidate_endpoints
 end
