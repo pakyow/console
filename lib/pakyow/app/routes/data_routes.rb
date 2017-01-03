@@ -14,6 +14,8 @@ Pakyow::App.routes :'console-data' do
         type = Pakyow::Console::DataTypeRegistry.type(@current_type)
         data = type.model_object.all
 
+        view.title = "console/#{type.name}"
+
         # setup the page header
         view.container(:default).scope(:'console-data-type').bind(type)
 
@@ -63,6 +65,8 @@ Pakyow::App.routes :'console-data' do
           setup_datum_actions
 
           Pakyow::Console::ServiceHookRegistry.call(:after, :new, @type.name, nil, self)
+          
+          view.title = "console/#{@type.name}/new"
         end
 
         create do
@@ -106,6 +110,8 @@ Pakyow::App.routes :'console-data' do
           setup_datum_actions
 
           Pakyow::Console::ServiceHookRegistry.call(:after, :edit, @type.name, nil, self)
+          
+          view.title = "console/#{@type.name}/edit"
         end
 
         update do
