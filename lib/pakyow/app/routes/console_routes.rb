@@ -29,10 +29,17 @@ Pakyow::App.routes :console do
         view.container(:default).scope(:"pw-post").apply(
           Pakyow::Console::Models::Post.where(published: true).all
         )
-
-        view.partial(:sidebar).scope(:"pw-post").apply(
-          Pakyow::Console::Models::Post.where(published: false).all
-        )
+        
+        drafts = Pakyow::Console::Models::Post.where(published: false).all
+        
+        view.partial(:sidebar).with do |sidebar_view|        
+          if drafts.empty?
+            sidebar_view.scope(:"pw-post").remove
+            sidebar_view.remove
+          else
+            sidebar_view.scope(:"pw-post").apply(drafts)
+          end
+        end
       end
     end
   end
