@@ -45,6 +45,8 @@ Pakyow::App.routes :'console-collection' do
         # that could have aspects of them replaced; this is pretty low priority
         #
         # one way to do it would be to define special rendering logic for a particular version
+        
+        view.scope(:head).append(Pakyow::Presenter::View.new('<link rel="alternate" type="application/rss+xml" title="RSS Feed for ' + config.app.uri + '" href="/feed">'))
       end
       
       member do
