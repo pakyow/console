@@ -198,7 +198,7 @@ unless Pakyow::Console::DataTypeRegistry.names.include?(:page)
 
     action :delete, label: 'Delete' do |page|
       page.destroy
-      notify("#{page.name} page deleted", :success)
+      notify("page deleted", :success)
 
       Pakyow::Console.sitemap.delete_location(
         File.join(Pakyow::Config.app.uri, page.slug)
