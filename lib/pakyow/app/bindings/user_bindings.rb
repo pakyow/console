@@ -18,5 +18,22 @@ Pakyow::App.bindings :'pw-user' do
         src: gravatar_url(Digest::MD5.hexdigest(bindable[:email]))
       }
     end
+    
+    binding :'description' do
+      if bindable.is_a?(Pakyow::Console::Models::PlatformUser)
+        # TODO: don't build html here :/
+        if bindable.type == :user
+          desc = "<span class=\"user-name\">#{bindable.name}</span>"
+          if bindable.username
+            desc << "<span class=\"user-aka\">aka</span><span class=\"user-username\">#{bindable.username}</span>"
+          end
+          desc
+        elsif bindable.type == :invite
+          "Invited"
+        end
+      else
+        # TODO: implement this
+      end
+    end
   end
 end

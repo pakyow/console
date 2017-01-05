@@ -89,11 +89,36 @@ class PlatformClient
         password: @token,
       })
 
-      JSON.parse(response.body).map { |app|
-        Hash.strhash(app)
-      }
+      body = Hash.strhash(JSON.parse(response.body))
+      body[:users].map { |u| Hash.strhash(u) }
+      body[:invites].map { |i| Hash.strhash(i) }
+      body
     else
       []
+    end
+  end
+  
+  def create_collaborator(email)
+    if app = @info[:project]
+      response = HTTParty.post(File.join(Pakyow::Config.console.platform_url, "api/projects/#{app[:id]}", 'collaborators'), basic_auth: {
+        username: @email,
+        password: @token,
+      }, body: { collaborator: { email: email } })
+      
+      Hash.strhash(JSON.parse(response.body))
+    else
+      {}
+    end
+  end
+  
+  def remove_collaborator(id)
+    if app = @info[:project]
+      response = HTTParty.delete(File.join(Pakyow::Config.console.platform_url, "api/projects/#{app[:id]}", 'collaborators', id), basic_auth: {
+        username: @email,
+        password: @token,
+      })
+    else
+      {}
     end
   end
 

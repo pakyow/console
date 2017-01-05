@@ -108,6 +108,14 @@ class Pakyow::Console::DataType
   def settings?
     @settings == true
   end
+  
+  def context(&block)
+    if block
+      @context = block
+    else
+      @context
+    end
+  end
 
   private
 

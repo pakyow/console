@@ -1,6 +1,6 @@
 Pakyow::App.mutable :collaborator do
   query :all do
-    platform_client.collaborators
+    Pakyow::Console::Models::PlatformUser.all(platform_client)
   end
 
   action :mutated do |params|

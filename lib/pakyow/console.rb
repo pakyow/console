@@ -108,34 +108,53 @@ Pakyow::Console.add_load_path(File.join(Pakyow::Console::ROOT, 'app'))
 
 unless Pakyow::Console::DataTypeRegistry.names.include?(:user)
   Pakyow::Console::DataTypeRegistry.register :user, icon_class: 'users' do
-    model Pakyow::Config.console.models[:user]
     pluralize
     settings
 
-    attribute :name, :string, nice: 'Full Name'
-    attribute :username, :string
-    attribute :email, :string
-    attribute :password, :sensitive
-    attribute :password_confirmation, :sensitive
+    if Pakyow::Config.console.use_pakyow_platform == true
+      context do
+        platform_client
+      end
 
-    action :remove, label: 'Delete', notification: 'user deleted' do
-      reroute router.group(:datum).path(:remove, data_id: params[:data_id], datum_id: params[:datum_id])
-    end
+      model "Pakyow::Console::Models::PlatformUser"
+      
+      attribute :email, :string
+      
+      action :disconnect,
+             label: 'Remove',
+             notification: 'user removed',
+             display: ->(user) { user.id } do |user|
+        user.remove
+        redirect "/console/data/user"
+      end
+    else
+      model Pakyow::Config.console.models[:user]
 
-    action :activate,
-           label: 'Activate',
-           notification: 'user activated',
-           display: ->(user) { !user.active } do |user|
-      user.active = true
-      user.save
-    end
+      attribute :name, :string, nice: 'Full Name'
+      attribute :username, :string
+      attribute :email, :string
+      attribute :password, :sensitive
+      attribute :password_confirmation, :sensitive
 
-    action :deactivate,
-           label: 'Deactivate',
-           notification: 'user deactivated',
-           display: ->(user) { user.active } do |user|
-      user.active = false
-      user.save
+      action :remove, label: 'Delete', notification: 'user deleted' do
+        reroute router.group(:datum).path(:remove, data_id: params[:data_id], datum_id: params[:datum_id])
+      end
+
+      action :activate,
+             label: 'Activate',
+             notification: 'user activated',
+             display: ->(user) { !user.active } do |user|
+        user.active = true
+        user.save
+      end
+
+      action :deactivate,
+             label: 'Deactivate',
+             notification: 'user deactivated',
+             display: ->(user) { user.active } do |user|
+        user.active = false
+        user.save
+      end
     end
   end
 end

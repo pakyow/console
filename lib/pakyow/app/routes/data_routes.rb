@@ -12,8 +12,13 @@ Pakyow::App.routes :'console-data' do
 
         @current_type = params[:data_id]
         type = Pakyow::Console::DataTypeRegistry.type(@current_type)
-        data = type.model_object.all
-
+        
+        if type.context
+          data = type.model_object.all(instance_exec(&type.context))
+        else
+          data = type.model_object.all
+        end
+        
         view.title = "console/#{type.name}"
 
         # setup the page header
@@ -81,7 +86,11 @@ Pakyow::App.routes :'console-data' do
             #TODO this is where we'll want to let registered processors process
             # the incoming data (especially important for media + file types)
 
-            @datum.save
+            if @type.context
+              @datum.save(instance_exec(&@type.context))
+            else
+              @datum.save
+            end
             ui.mutated(:datum)
             Pakyow::Console::ServiceHookRegistry.call(:after, :create, @type.name, @datum, self)
             notify("#{@type.nice_name.downcase} created", :success, redirect: true)
@@ -104,7 +113,11 @@ Pakyow::App.routes :'console-data' do
 
           Pakyow::Console::ServiceHookRegistry.call(:before, :edit, @type.name, nil, self)
 
-          @datum ||= @type.model_object[params[:datum_id]]
+          if @type.context
+            @datum ||= @type.model_object.find(params[:datum_id], instance_exec(&@type.context))
+          else
+            @datum ||= @type.model_object[params[:datum_id]]
+          end
           console_handle 404 if @datum.nil?
           setup_datum_form
           setup_datum_actions
@@ -117,13 +130,22 @@ Pakyow::App.routes :'console-data' do
         update do
           @type = Pakyow::Console::DataTypeRegistry.type(params[:data_id])
 
-          current = @type.model_object[params[:datum_id]]
+          if @type.context
+            current = @type.model_object.find(params[:datum_id], instance_exec(&@type.context))
+          else
+            current = @type.model_object[params[:datum_id]]
+          end
+
           @datum = current.set_all(Pakyow::Console::DatumProcessorRegistry.process(params[:'console-datum'], current, as: @type))
           console_handle 404 if @datum.nil?
           Pakyow::Console::ServiceHookRegistry.call(:before, :update, @type.name, @datum, self)
 
           if @datum.valid?
-            @datum.save
+            if @type.context
+              @datum.save(instance_exec(&type.context))
+            else
+              @datum.save
+            end
             ui.mutated(:datum)
             Pakyow::Console::ServiceHookRegistry.call(:after, :update, @type.name, @datum, self)
             notify("#{@type.nice_name.downcase} updated", :success)
@@ -139,7 +161,11 @@ Pakyow::App.routes :'console-data' do
 
         remove do
           type = Pakyow::Console::DataTypeRegistry.type(params[:data_id])
-          datum = type.model_object[params[:datum_id]]
+          if type.context
+            datum = type.model_object.find(params[:datum_id], instance_exec(&type.context))
+          else
+            datum = type.model_object[params[:datum_id]]
+          end
           console_handle 404 if datum.nil?
 
           Pakyow::Console::ServiceHookRegistry.call(:before, :delete, type.name, datum, self)
@@ -159,7 +185,11 @@ Pakyow::App.routes :'console-data' do
 
         send(method, url) do
           type = Pakyow::Console::DataTypeRegistry.type(type.name)
-          datum = type.model_object[params[:datum_id]]
+          if type.context
+            datum = type.model_object.find(params[:datum_id], instance_exec(&type.context))
+          else
+            datum = type.model_object[params[:datum_id]]
+          end
           instance_exec(datum, &action[:logic])
           notify(action[:notification], :success)
           redirect router.group(:datum).path(:edit, data_id: type.name, datum_id: params[:datum_id])
