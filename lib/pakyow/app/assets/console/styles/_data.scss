@@ -1,9 +1,9 @@
 .data-type-header {
-  font-weight: normal;
+  font-weight: 300;
   color: $color-dgray;
 
   > span {
-    font-weight: 600;
+    font-weight: 500;
     text-transform: lowercase;
     color: $color-black;
   }
@@ -112,12 +112,13 @@
     background: $color-blue;
     position: absolute;
     color: $color-white;
-    margin-top: -40px;
+    margin-top: -37px;
     margin-left: 100px;
     border-top-right-radius: $radius;
     border-bottom-right-radius: $radius;
     @include rem(font-size, 14);
-    padding: 12px;
+    padding: 10px;
+    padding-top: 11px;
     border-left: 1px solid darken($color-blue, 10%);
     cursor: pointer;
 

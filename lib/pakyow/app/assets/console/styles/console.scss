@@ -13,6 +13,11 @@ body {
   background: $color-background;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  font-family: "Gotham SSm A", "Gotham SSm B", Helvetica, serif;
+}
+
 nav {
   li {
     margin-bottom: $container-margin / 3;
@@ -173,6 +178,7 @@ main {
 h1 .button {
   float: right;
   @include rem(line-height, 13);
+  font-weight: 500;
 }
 
 .function-detail {
