@@ -117,9 +117,9 @@ unless Pakyow::Console::DataTypeRegistry.names.include?(:user)
       end
 
       model "Pakyow::Console::Models::PlatformUser"
-      
+
       attribute :email, :string
-      
+
       action :disconnect,
              label: 'Remove',
              notification: 'user removed',
@@ -373,6 +373,15 @@ unless Pakyow::Console::DataTypeRegistry.names.include?(:post)
         modified: post.updated_at.httpdate
       )
     end
+  end
+end
+
+unless Pakyow::Console::DataTypeRegistry.names.include?(:export)
+  Pakyow::Console::DataTypeRegistry.register :export, icon_class: 'cloud-download' do
+    settings
+
+    # TODO: make it so that we don't have to set a model
+    model 'Pakyow::Console::Models::Post'
   end
 end
 

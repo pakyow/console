@@ -1,0 +1,15 @@
+.export {
+  .col {
+    text-align: center;
+    border: 1px solid $color-border;
+    border-radius: $radius;
+    padding: 30px 15px;
+    color: $color-dgray;
+    background: $color-white;
+    box-sizing: border-box;
+  }
+
+  i {
+    font-size: 60px;
+  }
+}

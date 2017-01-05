@@ -373,6 +373,7 @@ aside {
   padding: 30px 0;
   color: $color-dgray;
   background: $color-white;
+  box-sizing: border-box;
   
   &:hover {
     opacity: 0.8;
@@ -412,5 +413,6 @@ aside {
 @import "forms";
 @import "media";
 @import "content";
+@import "export";
 
 @import "editors/content"
