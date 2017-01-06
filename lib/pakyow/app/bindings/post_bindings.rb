@@ -64,9 +64,9 @@ Pakyow::App.bindings :'pw-post' do
     
     binding :avatar do
       if bindable.user
-        { { src: gravatar_url(Digest::MD5.hexdigest(bindable.user[:email])) } }
+        { src: gravatar_url(Digest::MD5.hexdigest(bindable.user[:email])) }
       else
-        { { src: gravatar_url(Digest::MD5.hexdigest("support@pakyow.com")) } }
+        { src: gravatar_url(Digest::MD5.hexdigest("support@pakyow.com")) }
       end
     end
   end
