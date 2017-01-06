@@ -8,6 +8,7 @@ module Pakyow
           collabs = platform_client.collaborators
 
           data = []
+          return data if collabs.empty?
 
           data.concat(collabs[:users].map { |user|
             datum = PlatformUser.new(user)
