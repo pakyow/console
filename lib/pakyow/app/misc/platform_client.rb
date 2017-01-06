@@ -89,10 +89,13 @@ class PlatformClient
         password: @token,
       })
 
-      body = Hash.strhash(JSON.parse(response.body))
-      body[:users].map { |u| Hash.strhash(u) }
-      body[:invites].map { |i| Hash.strhash(i) }
-      body
+      if body = Hash.strhash(JSON.parse(response.body))
+        body[:users].map { |u| Hash.strhash(u) }
+        body[:invites].map { |i| Hash.strhash(i) }
+        body
+      else
+        []
+      end
     else
       []
     end
