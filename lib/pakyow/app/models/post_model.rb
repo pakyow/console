@@ -25,17 +25,20 @@ module Pakyow
           image: {
             default: {
               width: 688,
-              height: 344
+              height: 344,
+              mode: :limit
             },
 
             right: {
               width: 334,
-              height: 167
+              height: 167,
+              mode: :limit
             },
 
             left: {
               width: 334,
-              height: 167
+              height: 167,
+              mode: :limit
             }
           }
         }
@@ -67,20 +70,20 @@ module Pakyow
           published == true
         end
 
-        def html
+        def html(console: true)
           renderer_view = Pakyow.app.presenter.store(:console).view('/console/pages/template')
           rendered = renderer_view.scope(:content)[0]
-          Pakyow::Console::ContentRenderer.render(body.content, view: rendered, constraints: CONSTRAINTS).to_html
+          Pakyow::Console::ContentRenderer.render(body.content, view: rendered, constraints: console ? CONSTRAINTS :  Pakyow::Config.console.constraints).to_html
         end
 
         def summary
           [body.content.first]
         end
 
-        def summary_html
+        def summary_html(console: true)
           renderer_view = Pakyow.app.presenter.store(:console).view('/console/pages/template')
           rendered = renderer_view.scope(:content)[0]
-          Pakyow::Console::ContentRenderer.render(summary, view: rendered, constraints: CONSTRAINTS).to_html
+          Pakyow::Console::ContentRenderer.render(summary, view: rendered, constraints: console ? CONSTRAINTS :  Pakyow::Config.console.constraints).to_html
         end
       end
     end

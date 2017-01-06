@@ -3,13 +3,13 @@ Pakyow::App.mutators :'pw-post' do
     renderer = Pakyow.app.presenter.store(:console).view('/console/pages/template')
 
     view.apply(posts) do |view, post|
-      view.prop(:body)[0].replace(post.html)
+      view.prop(:body)[0].replace(post.html(console: false))
     end
   end
 
   mutator :show do |view, post|
     view.bind(post)
-    view.prop(:body)[0].replace(post.html)
+    view.prop(:body)[0].replace(post.html(console: false))
   end
 end
 
