@@ -91,8 +91,8 @@ class PlatformClient
 
       body = Hash.strhash(JSON.parse(response.body))
       if body && !body.key?("error")
-        body[:users].map { |u| Hash.strhash(u) }
-        body[:invites].map { |i| Hash.strhash(i) }
+        body[:users].map! { |u| Hash.strhash(u) }
+        body[:invites].map! { |i| Hash.strhash(i) }
         body
       else
         {}

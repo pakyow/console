@@ -2,8 +2,6 @@ module Pakyow
   module Console
     module Models
       class PlatformUser
-        EMAIL_REGEX = /\A[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\z/i
-
         def self.all(platform_client)
           collabs = platform_client.collaborators
 
@@ -40,11 +38,14 @@ module Pakyow
         end
         
         def set_all(values)
-          @id, @email, @name, @username = values.values_at("id", "email", "name", "username")
+          @id = values[:id]
+          @email = values[:email]
+          @name = values[:name]
+          @username = values[:username]
         end
         
         def valid?
-          EMAIL_REGEX =~ @email
+          User::EMAIL_REGEX =~ @email
         end
         
         def errors

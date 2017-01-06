@@ -94,7 +94,11 @@ Pakyow::App.routes :'console-data' do
             ui.mutated(:datum)
             Pakyow::Console::ServiceHookRegistry.call(:after, :create, @type.name, @datum, self)
             notify("#{@type.nice_name.downcase} created", :success, redirect: true)
-            redirect router.group(:datum).path(:edit, data_id: params[:data_id], datum_id: @datum.id)
+            if @datum.id
+              redirect router.group(:datum).path(:edit, data_id: params[:data_id], datum_id: @datum.id)
+            else
+              redirect router.group(:data).path(:show, data_id: params[:data_id])
+            end
           else
             notify("failed to create a #{@type.nice_name.downcase}", :fail)
             res.status = 400
