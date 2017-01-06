@@ -95,10 +95,10 @@ class PlatformClient
         body[:invites].map { |i| Hash.strhash(i) }
         body
       else
-        []
+        {}
       end
     else
-      []
+      {}
     end
   end
   
