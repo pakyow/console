@@ -35,6 +35,8 @@ Pakyow::App.routes :'console-session' do
 
             session[:token] = request_token.token
             session[:token_secret] = request_token.secret
+            session[:platform_email] = request_token.token
+            session[:platform_token] = request_token.secret
             redirect request_token.authorize_url(oauth_callback: callback_url)
           else
             redirect router.group(:console).path(:setup) if using_platform?
