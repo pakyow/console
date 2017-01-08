@@ -60,7 +60,7 @@ module Pakyow::Console
   class ContentRenderer
     TYPES = [:default, :image, :embed, :break]
 
-    def self.render(content, view: nil, constraints: Pakyow::Config.console.constraints)
+    def self.render(content, view: nil, constraints: Pakyow::Config.console.constraints, base_uri: Pakyow::Config.app.uri)
       templates = find_templates(view)
 
       view.apply(content) do |view, piece|
@@ -74,7 +74,7 @@ module Pakyow::Console
         else
           type_constraints = constraints.nil? ? nil : constraints[type]
 
-          rendered = renderer.render(piece, template, type_constraints)
+          rendered = renderer.render(piece, template, type_constraints, base_uri)
           if rendered.is_a?(Pakyow::Presenter::ViewCollection)
             rendered.each do |rendered_view|
               view.append(rendered_view)
@@ -109,14 +109,14 @@ end
 
 module Pakyow::Console::Content
   class Default
-    def self.render(data, view, constraints)
+    def self.render(data, view, constraints, base_uri)
       view.html = data['content']
       view
     end
   end
 
   class Image
-    def self.render(data, view, constraints)
+    def self.render(data, view, constraints, base_uri)
       alignment = data['align']
       alignment = 'default' if alignment.nil? || alignment.empty?
 
@@ -154,12 +154,12 @@ module Pakyow::Console::Content
           end
         end
 
+        src = File.join(base_uri, src)
+
         if width && height
           retina_src = "#{src}?w=#{width*2}&h=#{height*2}&m=#{constraint_mode}"
           src << "?w=#{width}&h=#{height}&m=#{constraint_mode}"
         end
-
-        src = File.join(Pakyow::Config.app.uri, src)
 
         if working.doc.tagname == 'img'
           working.attrs.src = src
@@ -194,13 +194,13 @@ module Pakyow::Console::Content
   end
 
   class Break
-    def self.render(data, view, constraints)
+    def self.render(data, view, constraints, base_uri)
       view
     end
   end
 
   class Embed
-    def self.render(data, view, constraints)
+    def self.render(data, view, constraints, base_uri)
       embed_code = data['code']
       alignment = data['align']
       alignment = 'default' if alignment.nil? || alignment.empty?

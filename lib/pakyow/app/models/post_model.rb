@@ -85,6 +85,10 @@ module Pakyow
           rendered = renderer_view.scope(:content)[0]
           Pakyow::Console::ContentRenderer.render(summary, view: rendered, constraints: console ? CONSTRAINTS :  Pakyow::Config.console.constraints).to_html
         end
+
+        def permalink
+          File.join(Pakyow::App.config.app.uri, slug)
+        end
       end
     end
   end

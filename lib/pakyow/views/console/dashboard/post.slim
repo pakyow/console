@@ -1,0 +1,16 @@
+article.dashboard-post data-scope="pw-post"
+  h1.dashboard-post-title data-prop="title"
+    | Blog Title
+
+  div.dashboard-post-body data-prop="body"
+    | body
+
+  ul.plain.horizontal.dashboard-post-metadata
+    li 
+      a@permalink_href target="_blank"
+        time data-prop="published_at"
+          | August 29, 2011
+        i.fa.fa-external-link
+    li.subscribe.float-r
+      a@subscribe data-ui="subscribe-toggle"
+        | Subscribe

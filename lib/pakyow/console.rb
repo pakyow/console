@@ -323,6 +323,8 @@ unless Pakyow::Console::DataTypeRegistry.names.include?(:post)
         location: File.join(Pakyow::Config.app.uri, post.slug),
         modified: post.updated_at.httpdate
       )
+
+      platform_client.create_syndicated_post(post)
     end
 
     action :unpublish,
@@ -335,6 +337,8 @@ unless Pakyow::Console::DataTypeRegistry.names.include?(:post)
       Pakyow::Console.sitemap.delete_location(
         File.join(Pakyow::Config.app.uri, post.slug)
       )
+
+      platform_client.delete_syndicated_post(post)
     end
 
     action :delete, label: 'Delete' do |post|
@@ -345,6 +349,7 @@ unless Pakyow::Console::DataTypeRegistry.names.include?(:post)
         File.join(Pakyow::Config.app.uri, post.slug)
       )
 
+      platform_client.delete_syndicated_post(post)
       redirect router.group(:data).path(:show, data_id: 'post')
     end
   end
@@ -372,6 +377,8 @@ unless Pakyow::Console::DataTypeRegistry.names.include?(:post)
         location: File.join(Pakyow::Config.app.uri, post.slug),
         modified: post.updated_at.httpdate
       )
+
+      platform_client.create_syndicated_post(post)
     end
   end
 end

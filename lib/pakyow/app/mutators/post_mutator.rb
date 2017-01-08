@@ -11,6 +11,10 @@ Pakyow::App.mutators :'pw-post' do
     view.bind(post)
     view.prop(:body)[0].replace(post.html(console: false))
   end
+
+  mutator :feed do |view, posts|
+    view.apply(posts)
+  end
 end
 
 Pakyow::App.mutators :'pw-post-group' do

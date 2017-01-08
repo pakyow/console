@@ -1,11 +1,11 @@
 Pakyow::App.routes :console do
   include Pakyow::Console::SharedRoutes
-  
+
   get 'robots' do
     handle 404 unless req.format == :txt
     send Pakyow::Console.robots.to_s
   end
-  
+
   get 'sitemap' do
     handle 404 unless req.format == :xml
     send Pakyow::Console.sitemap.to_s
@@ -13,26 +13,23 @@ Pakyow::App.routes :console do
 
   namespace :console, '/console' do
     get :default, '/' do
-      reroute router.group(:console).path(:dashboard)
-    end
-    
-    get "/discover" do
-      reroute router.group(:console).path(:dashboard)
+      reroute router.group(:console).path(:discover)
     end
 
-    get :dashboard, '/dashboard', before: [:auth], after: [:setup] do
+    get :discover, '/discover', before: [:auth], after: [:setup] do
       if using_platform?
         presenter.path = 'console/dashboard/platform'
-        # view.scope(:app_event).mutate(:list, with: data(:app_event).all).subscribe
-        view.scope(:app_event).mutate(:list, with: []).subscribe
-        
-        view.container(:default).scope(:"pw-post").apply(
-          Pakyow::Console::Models::Post.where(published: true).all
-        )
-        
+
+        view.scope(:"discover-tabs").with do |tabs_ctx|
+          tabs_ctx.prop(:"tab-discover").attrs.class.ensure(:active)
+          tabs_ctx.prop(:"tab-explore").attrs.class.deny(:active)
+        end
+
+        view.container(:default).scope(:"pw-post").mutate(:feed, with: data(:"pw-post").feed).subscribe
+
         drafts = Pakyow::Console::Models::Post.where(published: false).all
-        
-        view.partial(:sidebar).with do |sidebar_view|        
+
+        view.partial(:sidebar).with do |sidebar_view|
           if drafts.empty?
             sidebar_view.scope(:"pw-post").remove
             sidebar_view.remove
@@ -40,6 +37,58 @@ Pakyow::App.routes :console do
             sidebar_view.scope(:"pw-post").apply(drafts)
           end
         end
+      end
+    end
+
+    get :explore, '/discover/explore', before: [:auth], after: [:setup] do
+      if using_platform?
+        presenter.path = 'console/dashboard/platform'
+
+        view.scope(:"discover-tabs").with do |tabs_ctx|
+          tabs_ctx.prop(:"tab-discover").attrs.class.deny(:active)
+          tabs_ctx.prop(:"tab-explore").attrs.class.ensure(:active)
+        end
+
+        posts = platform_client.list_syndicated_posts
+        view.container(:default).scope(:"pw-post").apply(posts)
+
+        drafts = Pakyow::Console::Models::Post.where(published: false).all
+
+        view.partial(:sidebar).with do |sidebar_view|
+          if drafts.empty?
+            sidebar_view.scope(:"pw-post").remove
+            sidebar_view.remove
+          else
+            sidebar_view.scope(:"pw-post").apply(drafts)
+          end
+        end
+      end
+    end
+
+    get :post, '/dashboard/post/:id', before: [:auth] do
+      post = Pakyow::Console::Models::Post[params[:id]]
+
+      unless post
+        post = Pakyow::Console::Models::SyndicatedPost.first(post_id: params[:id])
+      end
+
+      unless post
+        post = platform_client.fetch_syndicated_post(params[:id])
+      end
+
+      handle 404 unless post
+
+      presenter.path = "console/dashboard/post"
+      view.scope(:'pw-post').mutate(:show, with: post)
+    end
+
+    post "/subscribe-toggle/:project_id" do
+      if subscription = Pakyow::Console::Models::Subscription.first(project_id: params[:project_id])
+        platform_client.delete_subscription(params[:project_id])
+        subscription.delete
+      else
+        platform_client.create_subscription(params[:project_id])
+        Pakyow::Console::Models::Subscription.create(project_id: params[:project_id])
       end
     end
   end
