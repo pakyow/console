@@ -129,7 +129,7 @@ Pakyow::App.routes :'console-setup' do
         @user.save
         console_auth(@user)
 
-        redirect router.group(:console).path(:dashboard)
+        redirect router.group(:console).path(:discover)
       else
         @errors = @user.errors.full_messages
         reroute router.group(:console).path(:setup), :get

@@ -16,6 +16,10 @@ Pakyow::App.routes :console do
       reroute router.group(:console).path(:discover)
     end
 
+    get :dashboard, '/dashboard' do
+      redirect router.group(:console).path(:discover)
+    end
+
     get :discover, '/discover', before: [:auth], after: [:setup] do
       if using_platform?
         presenter.path = 'console/dashboard/platform'
