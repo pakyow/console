@@ -1,5 +1,14 @@
+require "uuid"
+
 Pakyow::Console.slug_handler do
-  @post = Pakyow::Console::Models::Post.first(slug: String.normalize_path(req.path))
+  path = String.normalize_path(req.path)
+
+  if UUID.validate(path)
+    @post = Pakyow::Console::Models::Post.first(id: path)
+  else
+    @post = Pakyow::Console::Models::Post.first(slug: path)
+  end
+
   next if @post.nil? || !@post.published
 
   reroute router.group(:post).path(:show, post_id: @post.id)

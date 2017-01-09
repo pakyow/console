@@ -89,6 +89,16 @@ module Pakyow
         def permalink
           File.join(Pakyow::App.config.app.uri, slug)
         end
+
+        def slug
+          slug = @values[:slug]
+
+          if slug.nil? || slug.empty?
+            id
+          else
+            slug
+          end
+        end
       end
     end
   end

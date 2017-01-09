@@ -31,4 +31,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency('oauth', '~> 0.5')
   spec.add_dependency('reverse_markdown', '~> 1.0')
   spec.add_dependency('concurrent-ruby', '~> 1.0')
+  spec.add_dependency('uuid', '~> 2.3')
 end
