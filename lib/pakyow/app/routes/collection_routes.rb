@@ -6,11 +6,11 @@ Pakyow::Console.slug_handler do
   if req.path.include?("archive")
     reroute router.group(:collection).path(:archive, collection_id: endpoint.id)
   end
-  
+
   if req.path.include?("feed")
     reroute router.group(:collection).path(:feed, collection_id: endpoint.id)
   end
-  
+
   reroute router.group(:collection).path(:show, collection_id: endpoint.id)
 end
 
@@ -23,12 +23,12 @@ Pakyow::App.routes :'console-collection' do
         collection = Pakyow::Console::Models::Collection[params[:collection_id]]
         handle 404 if collection.nil? || !collection.published?
         @current_collection = collection
-        
+
         presenter.path = "pw-collection"
         template = presenter.store(:default).template(:default)
         partials = presenter.store(:console).partials('/pw-collection').merge(presenter.store(:default).partials('/'))
         presenter.view = template.build(presenter.composer.page).includes(partials)
-        
+
         # TODO: query based on collection settings once multiple collections are supported
         view.title = "#{config.app.name}"
 
@@ -45,25 +45,25 @@ Pakyow::App.routes :'console-collection' do
         # that could have aspects of them replaced; this is pretty low priority
         #
         # one way to do it would be to define special rendering logic for a particular version
-        
+
         view.scope(:head).append(Pakyow::Presenter::View.new('<link rel="alternate" type="application/rss+xml" title="RSS Feed for ' + config.app.uri + '" href="/feed">'))
       end
-      
+
       member do
         get :archive, "archive", after: [:prepare_project] do
           collection = Pakyow::Console::Models::Collection[params[:collection_id]]
           handle 404 if collection.nil? || !collection.published?
           @current_collection = collection
-        
+
           presenter.path = "pw-collection/archive"
           template = presenter.store(:default).template(:default)
           partials = presenter.store(:console).partials('/pw-collection/archive').merge(presenter.store(:default).partials('/'))
           presenter.view = template.build(presenter.composer.page).includes(partials)
-          
+
           view.title = "#{config.app.name} - Archive"
           view.scope(:'pw-post-group').mutate(:archive, with: data(:'pw-post').grouped)
         end
-        
+
         get :feed, "feed" do
           collection = Pakyow::Console::Models::Collection[params[:collection_id]]
           handle 404 if collection.nil? || !collection.published?
@@ -120,7 +120,7 @@ Pakyow::App.routes :'console-collection' do
             post_element.children << title
 
             link = Oga::XML::Element.new(name: 'link')
-            link.inner_text = File.join(blog_url, post.slug)
+            link.inner_text = File.join(config.app.uri, post.slug)
             post_element.children << link
 
             pub_date = Oga::XML::Element.new(name: 'pubDate')
@@ -128,7 +128,7 @@ Pakyow::App.routes :'console-collection' do
             post_element.children << pub_date
 
             guid = Oga::XML::Element.new(name: 'guid')
-            guid.inner_text = File.join(blog_url, post.slug)
+            guid.inner_text = File.join(config.app.uri, post.slug)
             guid.set('isPermaLink', 'true')
             post_element.children << guid
 

@@ -101,20 +101,20 @@ class PlatformClient
       {}
     end
   end
-  
+
   def create_collaborator(email)
     if app = @info[:project]
       response = HTTParty.post(File.join(Pakyow::Config.console.platform_url, "api/projects/#{app[:id]}", 'collaborators'), basic_auth: {
         username: @email,
         password: @token,
       }, body: { collaborator: { email: email } })
-      
+
       Hash.strhash(JSON.parse(response.body))
     else
       {}
     end
   end
-  
+
   def remove_collaborator(id)
     if app = @info[:project]
       response = HTTParty.delete(File.join(Pakyow::Config.console.platform_url, "api/projects/#{app[:id]}", 'collaborators', id), basic_auth: {
@@ -202,5 +202,71 @@ class PlatformClient
       username: @email,
       password: @token,
     })
+  end
+
+  def list_syndicated_posts
+    response = HTTParty.get(File.join(Pakyow::Config.console.platform_url, 'api/projects', @info[:project][:id].to_s, 'syndicated_posts'), basic_auth: {
+      username: @email,
+      password: @token,
+    })
+
+    JSON.parse(response.body).map! { |post|
+      Pakyow::Console::Models::SyndicatedPost.new(post)
+    }
+  end
+
+  def fetch_syndicated_post(post_id)
+    response = HTTParty.get(File.join(Pakyow::Config.console.platform_url, 'api/projects', @info[:project][:id].to_s, 'syndicated_posts', post_id), basic_auth: {
+      username: @email,
+      password: @token,
+    })
+
+    Pakyow::Console::Models::SyndicatedPost.new(JSON.parse(response.body))
+  end
+
+  def create_syndicated_post(post)
+    if app = @info[:project]
+      response = HTTParty.post(File.join(Pakyow::Config.console.platform_url, "api/projects/#{app[:id]}", 'syndicated_posts'), basic_auth: {
+        username: @email,
+        password: @token,
+      }, body: {
+        post: {
+          id: post.id,
+          title: post.title,
+          content: post.body.content,
+          published_at: post.published_at,
+          slug: post.slug
+        }
+      })
+    end
+  end
+
+  def delete_syndicated_post(post)
+    if app = @info[:project]
+      response = HTTParty.delete(File.join(Pakyow::Config.console.platform_url, "api/projects/#{app[:id]}", 'syndicated_posts', post.id), basic_auth: {
+        username: @email,
+        password: @token,
+      })
+    end
+  end
+
+  def create_subscription(project_id)
+    if app = @info[:project]
+      response = HTTParty.post(File.join(Pakyow::Config.console.platform_url, "api/projects/#{app[:id]}", 'subscriptions'), basic_auth: {
+        username: @email,
+        password: @token,
+      }, body: {
+        subscribe_to: project_id
+      })
+    end
+  end
+
+  def delete_subscription(project_id)
+    if app = @info[:project]
+      response = HTTParty.delete(File.join(Pakyow::Config.console.platform_url, "api/projects/#{app[:id]}", 'subscriptions', project_id), basic_auth: {
+        username: @email,
+        password: @token,
+      })
+    end
   end
 end

@@ -2,12 +2,23 @@
 title: console/discover
 ---
 
-.content-creation-start
+.content-creation-start.margin-b
   a href="/console/data/post/datum/new" data-ui="fastlink"
   span Write something&hellip;
 
+ul.plain.horizontal.discover-tabs@@discover-tabs
+  li.active data-prop="tab-discover"
+    a href="/console/discover" data-ui="fastlink"
+      i.fa.fa-rss
+      | Your Feed
+
+  li data-prop="tab-explore"
+    a href="/console/discover/explore" data-ui="fastlink"
+      i.fa.fa-compass
+      | Explore
+
 .discover-item.margin-t@@pw-post
-  a href="#" target="_blank" data-prop="permalink_href"
+  a href="#" target="_blank" data-prop="feed_href" data-ui="modal" data-config="container: default"
   img@avatar src="/images/avatar.png"
   h2@title This is a title
   
@@ -22,7 +33,39 @@ title: console/discover
 .container.margin-t@@pw-post data-version="empty"
   p
     strong
-      | Welcome! This is your personal discover feed. All the content you publish will appear here.
+      | Welcome! All the content you publish will appear here, as well as content from sites you subscribe to.
     br
-    |  Later on, content from sites you follow will appear here as well.
-  
+    |  How about we explore some awesome content from others?
+  p
+    a href="/console/discover/explore" data-ui="fastlink"
+      | Go Exploring &rarr;
+
+.ui-modal-blinder data-template="ui-modal-blinder"
+  .ui-modal-content.post-modal-content data-template="ui-modal-content"
+
+javascript:
+  pw.component.register("subscribe-toggle", function(view, config) {
+    view.node.addEventListener("click", function (evt) {
+      evt.preventDefault();
+
+      var opts = {
+        uri: this.href,
+        action: "call-route",
+        method: "post"
+      };
+
+      window.socket.send(opts, function (payload) {
+        var state = window.context._state;
+        var fetchOpts = {
+          uri: state.uri,
+          action: "call-route",
+          method: "get",
+          container: "default"
+        };
+
+        window.socket.send(fetchOpts, function (payload) {
+          pw.component.broadcast(state.context + ':navigator:enter', payload);
+        });
+      });
+    });
+  });
