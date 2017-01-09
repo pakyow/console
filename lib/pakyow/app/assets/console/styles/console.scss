@@ -305,26 +305,9 @@ h1 .button {
   > h2 {
     margin-top: 0;
   }
-  
+
   .console-content {
     margin: 0;
-    
-    &.content-embed {
-      .align-default {
-      	position: relative;
-      	padding-bottom: 56.25%;
-      	padding-top: 25px;
-      	height: 0;
-        
-        iframe {
-        	position: absolute;
-        	top: 0;
-        	left: 0;
-        	width: 100%;
-        	height: 100%;
-        }
-      }
-    }
   }
 }
 
@@ -358,7 +341,7 @@ aside {
     @include rem(line-height, 18);
     color: $color-mgray;
     font-weight: 500;
-    
+
     &:hover {
       color: $color-black;
     }
@@ -399,6 +382,36 @@ aside {
     @include rem(font-size, 13);
     font-weight: 500;
     margin: 0;
+  }
+}
+
+.console-content {
+  &.content-embed {
+    .align-default {
+      position: relative;
+      padding-bottom: 56.25%;
+      padding-top: 25px;
+      height: 0;
+
+      iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  blockquote {
+    color: $color-dgray;
+    border-left: 3px solid $color-border;
+    padding-left: 15px;
+    margin: 15px inherit;
+
+    p {
+      @include rem(font-size, 12);
+    }
   }
 }
 
