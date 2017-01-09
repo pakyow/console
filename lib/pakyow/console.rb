@@ -392,5 +392,5 @@ unless Pakyow::Console::DataTypeRegistry.names.include?(:export)
   end
 end
 
-Pakyow::Console::PanelRegistry.register :discover, nice_name: "Discover", icon_class: "compass"
+Pakyow::Console::PanelRegistry.register :feed, nice_name: "Feed", icon_class: "rss"
 Pakyow::Console::PanelRegistry.register :settings, nice_name: "Settings", icon_class: "cog"

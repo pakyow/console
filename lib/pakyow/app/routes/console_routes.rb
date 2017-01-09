@@ -13,14 +13,14 @@ Pakyow::App.routes :console do
 
   namespace :console, '/console' do
     get :default, '/' do
-      reroute router.group(:console).path(:discover)
+      redirect router.group(:console).path(:feed)
     end
 
     get :dashboard, '/dashboard' do
-      redirect router.group(:console).path(:discover)
+      redirect router.group(:console).path(:feed)
     end
 
-    get :discover, '/discover', before: [:auth], after: [:setup] do
+    get :feed, '/feed', before: [:auth], after: [:setup] do
       if using_platform?
         presenter.path = 'console/dashboard/platform'
 
@@ -44,9 +44,10 @@ Pakyow::App.routes :console do
       end
     end
 
-    get :explore, '/discover/explore', before: [:auth], after: [:setup] do
+    get :explore, '/feed/discover', before: [:auth], after: [:setup] do
       if using_platform?
         presenter.path = 'console/dashboard/platform'
+        view.title = "console/discover"
 
         view.scope(:"discover-tabs").with do |tabs_ctx|
           tabs_ctx.prop(:"tab-discover").attrs.class.deny(:active)

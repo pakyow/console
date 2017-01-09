@@ -19,9 +19,9 @@ module Pakyow::Console::SharedRoutes
     end
 
     items.sort! { |a, b| a[:nice_name] <=> b[:nice_name] }
-    discover = items.find { |item| item[:nice_name] == "Discover" }
-    items.delete(discover)
-    items.unshift(discover)
+    feed = items.find { |item| item[:nice_name] == "Feed" }
+    items.delete(feed)
+    items.unshift(feed)
 
     view.scope(:'console-panel-item').apply(items) do |view, item|
       if req.first_path.include?("/console/#{item[:namespace]}")
