@@ -337,6 +337,8 @@ aside {
 }
 
 .content-draft {
+  margin-bottom: 8px;
+
   a {
     @include rem(line-height, 18);
     color: $color-mgray;
