@@ -117,7 +117,7 @@ $actions-width: 75px;
   }
 
   i {
-    color: $color-lgray;
+    color: $color-dgray;
     cursor: pointer;
 
     &:hover {
@@ -175,6 +175,18 @@ $actions-width: 75px;
   padding: 12px 10px;
 }
 
+.console-content-embed-types {
+  float: right;
+  margin-top: -33px;
+  margin-right: 10px;
+
+  i {
+    margin-left: 15px;
+    @include rem(font-size, 24);
+    color: $color-lgray;
+  }
+}
+
 .console-content-image-wrapper {
   background: $color-xgray;
   background-repeat: no-repeat;
@@ -208,7 +220,7 @@ $actions-width: 75px;
     font-family: $font-code;
   }
 
-  .console-content-vimeo-wrapper, .console-content-youtube-wrapper {
+  .console-content-vimeo-wrapper, .console-content-youtube-wrapper, .console-content-spotify-wrapper {
     position: relative;
     padding-bottom: 56.25%; /* 16:9 */
     padding-top: 25px;

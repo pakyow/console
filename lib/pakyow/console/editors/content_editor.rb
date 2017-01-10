@@ -225,6 +225,10 @@ module Pakyow::Console::Content
         id = embed_code.split('youtube.com/embed/')[1]
         html = '<div class="console-content-youtube-wrapper"><iframe src="//www.youtube.com/embed/' + id + '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>'
         view.html = html
+      elsif embed_code.match('open.spotify.com/track/')
+        id = embed_code.split('open.spotify.com/track/')[1]
+        html = '<div class="console-content-spotify-wrapper"><iframe src="//embed.spotify.com/?uri=spotify%3Atrack%3A' + id + '" frameborder="0" allowtransparency="true"></iframe></div>'
+        view.html = html
       end
 
       view.attrs.class << "align-#{alignment}"
