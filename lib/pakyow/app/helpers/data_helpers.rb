@@ -2,7 +2,7 @@ module Pakyow::Helpers
   def current_plugin
     @mounted_plugin
   end
-  
+
   def current_collection
     @current_collection
   end
@@ -12,7 +12,7 @@ module Pakyow::Helpers
       attributes = @type.attributes(@datum).select { |attribute|
         (!attribute[:extras].key?(:display) || attribute[:extras][:display].call(@datum)) && !attribute[:extras][:setting]
       }
-      
+
       view.scope(:'console-data-field').apply(attributes) do |view, attribute|
         editor = Pakyow::Console::EditorRegistry.editor_for_attribute(attribute, @datum || {}, @type, self)
         view.prop(:editor)[0].replace(editor)
@@ -91,6 +91,7 @@ module Pakyow::Helpers
           view.prop(:label).text = action[:label]
         end
       else
+        view.scope(:'console-datum-action').remove
         view.remove
       end
     end
