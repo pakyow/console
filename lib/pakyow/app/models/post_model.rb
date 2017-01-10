@@ -25,19 +25,19 @@ module Pakyow
           image: {
             default: {
               width: 688,
-              height: 344,
+              # height: 344,
               mode: :limit
             },
 
             right: {
               width: 334,
-              height: 167,
+              # height: 167,
               mode: :limit
             },
 
             left: {
               width: 334,
-              height: 167,
+              # height: 167,
               mode: :limit
             }
           }
