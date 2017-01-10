@@ -62,7 +62,9 @@ Pakyow::App.bindings :'pw-post' do
 
     binding :author do
       part :content do
-        bindable.user.username if bindable.user
+        if bindable.is_a?(Pakyow::Console::Models::Post)
+          bindable.user.username if bindable.user
+        end
       end
     end
 
