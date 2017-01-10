@@ -137,9 +137,16 @@ module Pakyow::Console::Content
       images.each do |image|
         working = view.dup
         src = Pakyow::Router.instance.group(:file).path(:show, file_id: image['id'])
-        file = Pakyow::Console::FileStore.instance.find(image['id'])
 
-        width, height = file.values_at(:width, :height)
+        if file = Pakyow::Console::FileStore.instance.find(image['id'])
+          width, height = file.values_at(:width, :height)
+        elsif image["info"]
+          width, height = image["info"].values_at("width", "height")
+          width = width.to_i
+          height = height.to_i
+        else
+          width = height = 0
+        end
 
         if constraints
           constraints_for_alignment = constraints[alignment.to_sym]

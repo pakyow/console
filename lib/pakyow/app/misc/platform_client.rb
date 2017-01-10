@@ -226,6 +226,17 @@ class PlatformClient
 
   def create_syndicated_post(post)
     if app = @info[:project]
+      content = post.body.content.map do |piece|
+        if piece["type"] == "image"
+          piece["images"] = JSON.parse(piece["images"])
+          piece["images"].each do |image|
+            image["info"] = Pakyow::Console::FileStore.instance.find(image['id'])
+          end
+        end
+        
+        piece
+      end
+
       response = HTTParty.post(File.join(Pakyow::Config.console.platform_url, "api/projects/#{app[:id]}", 'syndicated_posts'), basic_auth: {
         username: @email,
         password: @token,
@@ -233,7 +244,7 @@ class PlatformClient
         post: {
           id: post.id,
           title: post.title,
-          content: post.body.content,
+          content: content,
           published_at: post.published_at,
           slug: post.slug
         }
