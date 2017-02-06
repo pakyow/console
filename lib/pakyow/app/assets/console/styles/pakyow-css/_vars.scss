@@ -45,3 +45,20 @@ $header-margin-top-factor: 1.5;
 
 $font-main: "Whitney SSm A", "Whitney SSm B", Helvetica, sans-serif;
 $font-code: "Source Code Pro", Menlo, monospace;
+
+@-ms-viewport{
+  width: device-width;
+}
+
+@mixin mobile {
+  @media (max-width: 500px) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: 870px)
+  and (min-width: 500px) {
+    @content;
+  }
+}
