@@ -4,6 +4,11 @@ html
     link href="/console/styles/pakyow-css/reset.css" rel="stylesheet" type="text/css"
     link href="/console/styles/pakyow-css/structure.css" rel="stylesheet" type="text/css"
     link href="/console/styles/pakyow-css/theme.css" rel="stylesheet" type="text/css"
+    
+    <!-- Meta Tags -->
+    meta id='viewport' name="viewport" content="width=1068"
+    meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+    meta name="viewport" content="width=device-width, initial-scale=1"
 
     link href="/console/styles/common.css" rel="stylesheet" type="text/css"
     link href="/console/styles/console.css" rel="stylesheet" type="text/css"
@@ -53,13 +58,13 @@ body
 
   /! @include notifier
 
-  .container-2.margin-t
+  .container-2.margin-t.editor-wrapper
     main.col.r-4-3
       /! @container
 
     aside.col.r-4-1
       nav.margin-b
-        ul.plain
+        ul.plain.right-nav
           li@@console-panel-item
             i.fa@icon
             a@link href="/console" data-ui="fastlink"

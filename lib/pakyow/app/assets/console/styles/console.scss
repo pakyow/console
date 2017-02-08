@@ -21,7 +21,7 @@ h1, h2, h3, h4, h5, h6 {
 nav {
   li {
     margin-bottom: $container-margin / 3;
-    
+
     &.active {
       a, i {
         color: $color-blue;
@@ -33,12 +33,12 @@ nav {
   a {
     @include rem(font-size, 13);
     color: $color-mgray;
-    
+
     &:hover {
       color: $color-black;
     }
   }
-  
+
   i {
     width: 20px;
   }
@@ -100,7 +100,7 @@ main {
     &:hover {
       opacity: 0.8;
     }
-    
+
     h2 {
       margin-top: 0;
     }
@@ -113,12 +113,12 @@ main {
     left: 0;
     right: 0;
   }
-  
+
   .item-metadata {
     border-top: 1px solid $color-background;
     display: block !important;
     padding-top: $container-margin / 4;
-  
+
     li {
       @include rem(font-size, 11);
       text-transform: uppercase;
@@ -258,11 +258,11 @@ h1 .button {
   padding: $container-margin / 3;
   position: relative;
   @include rem(font-size, 15);
-  
+
   &:hover {
     opacity: 0.8;
   }
-  
+
   a {
     position: absolute;
     top: 0;
@@ -279,11 +279,11 @@ h1 .button {
   border-radius: $radius;
   padding: $container-margin / 3;
   position: relative;
-  
+
   &:hover {
     opacity: 0.8;
   }
-  
+
   > a {
     position: absolute;
     top: 0;
@@ -292,7 +292,7 @@ h1 .button {
     right: 0;
     z-index: 100;
   }
-  
+
   > img {
     position: absolute;
     width: 25px;
@@ -301,7 +301,7 @@ h1 .button {
     margin-left: -50px;
     margin-top: 5px;
   }
-  
+
   > h2 {
     margin-top: 0;
   }
@@ -315,12 +315,18 @@ h1 .button {
   border-top: 1px solid $color-background;
   display: block !important;
   padding-top: $container-margin / 4;
-  
+
   li {
     @include rem(font-size, 11);
     text-transform: uppercase;
     color: $color-lgray;
     font-weight: 600;
+  }
+}
+
+.editor-wrapper {
+  @include mobile {
+    margin-top: 100px;
   }
 }
 
@@ -333,6 +339,38 @@ aside {
   h5 {
     color: darken($color-background, 25%);
     margin-top: 0;
+  }
+
+  @include mobile {
+    width: 100%;
+    padding: 5px 0;
+    height: 25px;
+    top: 0;
+    right: 0;
+    margin-left: 0 !important;
+    display: inline;
+    left: 0% !important;
+    margin-top: -5px;
+
+    nav {
+      background-color: $color-xgray;
+      padding: 10px 0;
+      margin-bottom: 10px !important;
+      border-bottom: 1px solid $color-border;
+      overflow-x: auto;
+    }
+
+    ul {
+      width: 90%;
+      margin: auto;
+      text-align: center;
+      overflow-x: auto;
+    }
+
+    li {
+      display: inline !important;
+      margin-left: 5.5%;
+    }
   }
 }
 
@@ -359,11 +397,11 @@ aside {
   color: $color-dgray;
   background: $color-white;
   box-sizing: border-box;
-  
+
   &:hover {
     opacity: 0.8;
   }
-  
+
   a {
     position: absolute;
     top: 0;
@@ -372,13 +410,13 @@ aside {
     right: 0;
     z-index: 100;
   }
-  
+
   i {
     width: 20px;
     display: inline-block;
     text-align: left;
   }
-  
+
   h2 {
     display: inline;
     @include rem(font-size, 13);

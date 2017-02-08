@@ -112,15 +112,19 @@
     background: $color-blue;
     position: absolute;
     color: $color-white;
-    margin-top: -37px;
+    margin-top: -36px;
     margin-left: 100px;
     border-top-right-radius: $radius;
     border-bottom-right-radius: $radius;
     @include rem(font-size, 14);
-    padding: 10px;
+    padding: 11px;
     padding-top: 11px;
     border-left: 1px solid darken($color-blue, 10%);
     cursor: pointer;
+
+    @include mobile {
+      @include rem(font-size, 15);
+    }
 
     &:hover {
       opacity: 0.8;
@@ -144,6 +148,13 @@
   }
 }
 
+.button-wrapper {
+  @include mobile {
+    float: right;
+    margin-right: 20px;
+  }
+}
+
 .datum-submit {
   background: $color-blue !important;
   border: none !important;
@@ -155,11 +166,18 @@
   &:hover {
     opacity: 0.8;
   }
+
+  @include mobile {
+    margin-right: 50px;
+  }
 }
 
 #datum-settings-trigger {
   &:checked ~ .datum-settings {
     display: block;
+    @include mobile {
+      float: right;
+    }
   }
 }
 
@@ -187,5 +205,9 @@
 
   &:hover {
     opacity: 0.8;
+  }
+
+  @include mobile {
+    margin-right: 40px;
   }
 }
