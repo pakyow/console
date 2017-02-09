@@ -109,7 +109,6 @@
   }
 
   label {
-    background: $color-blue;
     position: absolute;
     color: $color-white;
     margin-top: -36px;
@@ -117,14 +116,10 @@
     border-top-right-radius: $radius;
     border-bottom-right-radius: $radius;
     @include rem(font-size, 14);
-    padding: 11px;
+    padding: 10px;
     padding-top: 11px;
     border-left: 1px solid darken($color-blue, 10%);
     cursor: pointer;
-
-    @include mobile {
-      @include rem(font-size, 15);
-    }
 
     &:hover {
       opacity: 0.8;
@@ -148,7 +143,9 @@
   }
 }
 
-.button-wrapper {
+.data-button-wrapper {
+  background: $color-blue;
+  width: 135px;
   @include mobile {
     float: right;
     margin-right: 20px;
@@ -162,13 +159,10 @@
   width: 100px;
   border-top-right-radius:0 !important;
   border-bottom-right-radius:0 !important;
+  margin-right: 35px;
 
   &:hover {
     opacity: 0.8;
-  }
-
-  @include mobile {
-    margin-right: 50px;
   }
 }
 
@@ -208,6 +202,6 @@
   }
 
   @include mobile {
-    margin-right: 40px;
+    margin-right: 25px;
   }
 }

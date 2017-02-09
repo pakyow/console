@@ -324,7 +324,7 @@ h1 .button {
   }
 }
 
-.editor-wrapper {
+.wrapper {
   @include mobile {
     margin-top: 100px;
   }
@@ -358,18 +358,22 @@ aside {
       margin-bottom: 10px !important;
       border-bottom: 1px solid $color-border;
       overflow-x: auto;
+      white-space: nowrap;
     }
 
     ul {
-      width: 90%;
-      margin: auto;
+      width: 95%;
+      margin: auto !important;
       text-align: center;
-      overflow-x: auto;
     }
 
     li {
-      display: inline !important;
-      margin-left: 5.5%;
+      display: inline;
+      margin-left: 20px;
+
+      &:first-child {
+        margin-left: 0px;
+      }
     }
   }
 }
