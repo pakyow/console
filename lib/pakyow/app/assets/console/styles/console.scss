@@ -300,6 +300,11 @@ h1 .button {
     border-radius: 35px;
     margin-left: -50px;
     margin-top: 5px;
+
+    @include mobile {
+      margin-left: -25px;
+      margin-top: -25px;
+    }
   }
 
   > h2 {
@@ -339,6 +344,10 @@ aside {
   h5 {
     color: darken($color-background, 25%);
     margin-top: 0;
+
+    @include mobile {
+      margin-left: 25px;
+    }
   }
 
   @include mobile {
@@ -401,6 +410,12 @@ aside {
   color: $color-dgray;
   background: $color-white;
   box-sizing: border-box;
+
+  @include mobile {
+    &.col {
+      margin-bottom: 20px;
+    }
+  }
 
   &:hover {
     opacity: 0.8;
