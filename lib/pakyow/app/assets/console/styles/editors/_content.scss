@@ -22,6 +22,10 @@ $actions-width: 75px;
 
     .console-content-alignment {
       display: block;
+
+      @include mobile {
+        display: none;
+      }
     }
   }
 
@@ -34,11 +38,19 @@ $actions-width: 75px;
   &.console-content-align-left {
     float: left;
     width: 300px;
+    @include mobile {
+      width: 80%;
+      float: none;
+    }
   }
 
   &.console-content-align-right {
     float: right;
     width: 300px;
+    @include mobile {
+      width: 80%;
+      float: none;
+    }
   }
 }
 
@@ -93,7 +105,7 @@ $actions-width: 75px;
 
       i {
         @include rem(font-size, 20);
-        color: $color-lgray;
+        color: $color-dgray;
 
         &:hover {
           color: $color-red;
@@ -111,6 +123,15 @@ $actions-width: 75px;
   text-align: right;
   width: $actions-width;
 
+  @include mobile {
+    display: block;
+    position: relative;
+    width: auto;
+    text-align: left;
+    padding-left: 5px;
+    padding-bottom: 10px;
+  }
+
   li {
     display: inline-block;
     margin-right: 10px;
@@ -122,6 +143,25 @@ $actions-width: 75px;
 
     &:hover {
       color: $color-red;
+    }
+
+    &.fa-times {
+      color: $color-lgray;
+
+      &:hover {
+        color: $color-red;
+      }
+
+      @include mobile {
+        position: absolute;
+        top: -35px;
+        left: -5px;
+
+      }
+    }
+
+    @include mobile {
+      @include rem(font-size, 20);
     }
   }
 }
@@ -194,6 +234,10 @@ $actions-width: 75px;
   text-align: center;
   overflow: hidden;
   margin: 15px 0;
+
+  @include mobile {
+    margin-top: 0;
+  }
 
   i {
     color: $color-white;
