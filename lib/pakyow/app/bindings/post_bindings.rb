@@ -36,7 +36,11 @@ Pakyow::App.bindings :'pw-post' do
 
     binding :permalink_href do
       part :href do
-        File.join('/', bindable.slug)
+        if bindable.is_a?(Pakyow::Console::Models::SyndicatedPost)
+          File.join(bindable.site_url, bindable.slug)
+        else
+          File.join('/', bindable.slug)
+        end
       end
     end
 
