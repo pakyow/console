@@ -87,7 +87,7 @@ Pakyow::App.before :load do
   @paths_loaded = true
 end
 
-Pakyow::App.after :load do
+Pakyow::App.after :load, priority: :low do
   Pakyow::Console.load
 end
 
