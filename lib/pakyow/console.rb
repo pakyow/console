@@ -159,125 +159,125 @@ unless Pakyow::Console::DataTypeRegistry.names.include?(:user)
   end
 end
 
-unless Pakyow::Console::DataTypeRegistry.names.include?(:page)
-  Pakyow::Console::DataTypeRegistry.register :page, icon_class: 'file-text-o' do
-    model Pakyow::Config.console.models[:page]
-    pluralize
-
-    attribute :name, :string, label: false, class: "content-title-field", autofocus: true, nice: "Page Name"
-
-    attribute :slug, :string, display: -> (datum) {
-      !datum.nil? && !datum.id.nil?
-    }, nice: 'URL Slug', setting: true
-
-    # TODO: (later) add more user-friendly template descriptions (embedded in the top-matter?)
-    attribute :page, :relation, class: Pakyow::Config.console.models[:page], nice: 'Parent Page', relationship: :parent, setting: true
-
-    # TODO: (later) add configuration to containers so that content can be an image or whatever (look at GIRT)
-    # TODO: (later) we definitely need the concept of content templates (perhaps in _content) or something
-    attribute :template, :enum, values: -> { Pakyow.app.presenter.store.templates.keys.map { |k| [k,k] }.unshift(['', '']) }, display: -> (datum) {
-      datum.nil? || datum.fully_editable?
-    }, nice: 'Layout', setting: true
-
-    dynamic do |page|
-      next unless page.is_a?(Pakyow::Console::Models::Page) && page.id
-
-      if page.fully_editable?
-        Pakyow.app.presenter.store(:default).template(page.template.to_sym).doc.containers.each do |container|
-          attribute :"content-#{container[0]}", :content, nice: container[0].capitalize, label: false, value: -> (page) {
-            content = page.content_for(container[0])
-            content.content unless content.nil?
-          }, setter: -> (page, params, processor) {
-            Pakyow.app.presenter.store(:default).template(page.template.to_sym).doc.containers.each do |container|
-              container_name = container[0]
-              content = page.content_for(container_name)
-              value = params[:"content-#{container_name}"]
-              value = processor.call(value) if processor
-              content.update(content: value)
-            end
-          }
-        end
-      end
-
-      page.editables.each do |editable|
-        attribute :"content-#{editable[:id]}", :content, nice: editable[:id].to_s.capitalize, value: -> (page) {
-          page.content_for(editable[:id]).content
-        }, setter: -> (page, params, processor) {
-          page.editables.each do |editable|
-            content = page.content_for(editable[:id])
-            value = params[:"content-#{editable[:id]}"]
-            value = processor.call(value) if processor
-            content.update(content: value)
-          end
-        }, restricted: editable[:doc].editable_parts.count > 0 && !editable[:doc].has_attribute?(:'data-editable-unrestrict'), constraints: editable[:constraints]
-      end
-    end
-
-    # TODO: (later) we need a metadata editor with the ability for the user to add k / v OR for the editor to define keys
-
-    action :delete, label: 'Delete' do |page|
-      page.destroy
-      notify("page deleted", :success)
-
-      Pakyow::Console.sitemap.delete_location(
-        File.join(Pakyow::Config.app.uri, page.slug)
-      )
-
-      redirect router.group(:data).path(:show, data_id: 'page')
-    end
-
-    action :publish,
-           label: 'Publish',
-           notification: 'page published',
-           display: ->(page) { !page.published? } do |page|
-      page.published = true
-      page.save
-
-      Pakyow::Console.sitemap.url(
-        location: File.join(Pakyow::Config.app.uri, page.slug),
-        modified: page.updated_at.httpdate
-      )
-
-      Pakyow::Console.invalidate_endpoints
-    end
-
-    action :unpublish,
-           label: 'Unpublish',
-           notification: 'page unpublished',
-           display: ->(page) { page.published? } do |page|
-      page.published = false
-      page.save
-
-      Pakyow::Console.sitemap.delete_location(
-        File.join(Pakyow::Config.app.uri, page.slug)
-      )
-
-      Pakyow::Console.invalidate_endpoints
-    end
-  end
-
-  Pakyow::Console.after :page, :create do |page|
-    if page.published?
-      Pakyow::Console.sitemap.url(
-        location: File.join(Pakyow::Config.app.uri, page.slug),
-        modified: page.updated_at.httpdate
-      )
-    end
-  end
-
-  Pakyow::Console.after :page, :update do |page|
-    if page.published?
-      Pakyow::Console.sitemap.delete_location(
-        File.join(Pakyow::Config.app.uri, page.initial_value(:slug))
-      )
-
-      Pakyow::Console.sitemap.url(
-        location: File.join(Pakyow::Config.app.uri, page.slug),
-        modified: page.updated_at.httpdate
-      )
-    end
-  end
-end
+# unless Pakyow::Console::DataTypeRegistry.names.include?(:page)
+#   Pakyow::Console::DataTypeRegistry.register :page, icon_class: 'file-text-o' do
+#     model Pakyow::Config.console.models[:page]
+#     pluralize
+#
+#     attribute :name, :string, label: false, class: "content-title-field", autofocus: true, nice: "Page Name"
+#
+#     attribute :slug, :string, display: -> (datum) {
+#       !datum.nil? && !datum.id.nil?
+#     }, nice: 'URL Slug', setting: true
+#
+#     # TODO: (later) add more user-friendly template descriptions (embedded in the top-matter?)
+#     attribute :page, :relation, class: Pakyow::Config.console.models[:page], nice: 'Parent Page', relationship: :parent, setting: true
+#
+#     # TODO: (later) add configuration to containers so that content can be an image or whatever (look at GIRT)
+#     # TODO: (later) we definitely need the concept of content templates (perhaps in _content) or something
+#     attribute :template, :enum, values: -> { Pakyow.app.presenter.store.templates.keys.map { |k| [k,k] }.unshift(['', '']) }, display: -> (datum) {
+#       datum.nil? || datum.fully_editable?
+#     }, nice: 'Layout', setting: true
+#
+#     dynamic do |page|
+#       next unless page.is_a?(Pakyow::Console::Models::Page) && page.id
+#
+#       if page.fully_editable?
+#         Pakyow.app.presenter.store(:default).template(page.template.to_sym).doc.containers.each do |container|
+#           attribute :"content-#{container[0]}", :content, nice: container[0].capitalize, label: false, value: -> (page) {
+#             content = page.content_for(container[0])
+#             content.content unless content.nil?
+#           }, setter: -> (page, params, processor) {
+#             Pakyow.app.presenter.store(:default).template(page.template.to_sym).doc.containers.each do |container|
+#               container_name = container[0]
+#               content = page.content_for(container_name)
+#               value = params[:"content-#{container_name}"]
+#               value = processor.call(value) if processor
+#               content.update(content: value)
+#             end
+#           }
+#         end
+#       end
+#
+#       page.editables.each do |editable|
+#         attribute :"content-#{editable[:id]}", :content, nice: editable[:id].to_s.capitalize, value: -> (page) {
+#           page.content_for(editable[:id]).content
+#         }, setter: -> (page, params, processor) {
+#           page.editables.each do |editable|
+#             content = page.content_for(editable[:id])
+#             value = params[:"content-#{editable[:id]}"]
+#             value = processor.call(value) if processor
+#             content.update(content: value)
+#           end
+#         }, restricted: editable[:doc].editable_parts.count > 0 && !editable[:doc].has_attribute?(:'data-editable-unrestrict'), constraints: editable[:constraints]
+#       end
+#     end
+#
+#     # TODO: (later) we need a metadata editor with the ability for the user to add k / v OR for the editor to define keys
+#
+#     action :delete, label: 'Delete' do |page|
+#       page.destroy
+#       notify("page deleted", :success)
+#
+#       Pakyow::Console.sitemap.delete_location(
+#         File.join(Pakyow::Config.app.uri, page.slug)
+#       )
+#
+#       redirect router.group(:data).path(:show, data_id: 'page')
+#     end
+#
+#     action :publish,
+#            label: 'Publish',
+#            notification: 'page published',
+#            display: ->(page) { !page.published? } do |page|
+#       page.published = true
+#       page.save
+#
+#       Pakyow::Console.sitemap.url(
+#         location: File.join(Pakyow::Config.app.uri, page.slug),
+#         modified: page.updated_at.httpdate
+#       )
+#
+#       Pakyow::Console.invalidate_endpoints
+#     end
+#
+#     action :unpublish,
+#            label: 'Unpublish',
+#            notification: 'page unpublished',
+#            display: ->(page) { page.published? } do |page|
+#       page.published = false
+#       page.save
+#
+#       Pakyow::Console.sitemap.delete_location(
+#         File.join(Pakyow::Config.app.uri, page.slug)
+#       )
+#
+#       Pakyow::Console.invalidate_endpoints
+#     end
+#   end
+#
+#   Pakyow::Console.after :page, :create do |page|
+#     if page.published?
+#       Pakyow::Console.sitemap.url(
+#         location: File.join(Pakyow::Config.app.uri, page.slug),
+#         modified: page.updated_at.httpdate
+#       )
+#     end
+#   end
+#
+#   Pakyow::Console.after :page, :update do |page|
+#     if page.published?
+#       Pakyow::Console.sitemap.delete_location(
+#         File.join(Pakyow::Config.app.uri, page.initial_value(:slug))
+#       )
+#
+#       Pakyow::Console.sitemap.url(
+#         location: File.join(Pakyow::Config.app.uri, page.slug),
+#         modified: page.updated_at.httpdate
+#       )
+#     end
+#   end
+# end
 
 # unless Pakyow::Console::DataTypeRegistry.names.include?(:mount)
 #   Pakyow::Console::DataTypeRegistry.register :mount, icon_class: 'cubes' do

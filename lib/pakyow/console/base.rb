@@ -100,7 +100,7 @@ module Pakyow
       return @endpoints if @endpoints
 
       @endpoints = []
-      @endpoints.concat Pakyow::Console::Models::Page.all
+      # @endpoints.concat Pakyow::Console::Models::Page.all
       @endpoints.concat Pakyow::Console::Models::Collection.all
       @endpoints
     end
@@ -125,7 +125,7 @@ module Pakyow
         next if editables.empty?
 
         path = String.slugify(path)
-        next if Pakyow::Console::Models::InvalidPath.invalid_for_path?(path)
+        # next if Pakyow::Console::Models::InvalidPath.invalid_for_path?(path)
         page = Pakyow::Console::Models::Page.where(slug: path).first
 
         if page.nil?
@@ -221,7 +221,7 @@ module Pakyow
     end
 
     def self.handle_slug(ctx)
-      ctx.handle 404 if Pakyow::Console::Models::InvalidPath.invalid_for_path?(ctx.req.path)
+      # ctx.handle 404 if Pakyow::Console::Models::InvalidPath.invalid_for_path?(ctx.req.path)
 
       slug_handlers.each do |handler|
         ctx.instance_exec(&handler)
@@ -241,32 +241,32 @@ module Pakyow
         Pakyow::Router.instance.sets.delete(key)
       end
 
-      Pakyow::Console::Models::MountedPlugin.where(active: true).order(Sequel.desc(:slug)).all.each do |plugin|
-        Pakyow::Router.instance.set :"pw-blog=#{plugin.id}" do
-          include Object.const_get("Pakyow::Console::Plugins::#{Inflecto.camelize(plugin.name)}::Routes")
-          include Pakyow::Console::SharedRoutes
-
-          fn :set_plugin do
-            @mounted_plugin = plugin
-          end
-
-          fn :mixin_view do
-            begin
-              mixin_view(File.join("pw-#{current_plugin.name}", req.path), current_plugin.name.to_sym)
-            rescue Pakyow::Presenter::MissingView
-              mixin_view(File.join("pw-#{current_plugin.name}", "show"), current_plugin.name.to_sym)
-            end
-          end
-
-          send plugin.name.to_sym, :"pw-blog-#{plugin.id}", plugin.slug, before: [:set_plugin, :mixin_view, :prepare_project] do
-            plugin_obj = Pakyow::Console::PluginRegistry.find(plugin.name)
-
-            plugin_obj.routes.each do |route_name|
-              action route_name
-            end
-          end
-        end
-      end
+      # Pakyow::Console::Models::MountedPlugin.where(active: true).order(Sequel.desc(:slug)).all.each do |plugin|
+      #   Pakyow::Router.instance.set :"pw-blog=#{plugin.id}" do
+      #     include Object.const_get("Pakyow::Console::Plugins::#{Inflecto.camelize(plugin.name)}::Routes")
+      #     include Pakyow::Console::SharedRoutes
+      #
+      #     fn :set_plugin do
+      #       @mounted_plugin = plugin
+      #     end
+      #
+      #     fn :mixin_view do
+      #       begin
+      #         mixin_view(File.join("pw-#{current_plugin.name}", req.path), current_plugin.name.to_sym)
+      #       rescue Pakyow::Presenter::MissingView
+      #         mixin_view(File.join("pw-#{current_plugin.name}", "show"), current_plugin.name.to_sym)
+      #       end
+      #     end
+      #
+      #     send plugin.name.to_sym, :"pw-blog-#{plugin.id}", plugin.slug, before: [:set_plugin, :mixin_view, :prepare_project] do
+      #       plugin_obj = Pakyow::Console::PluginRegistry.find(plugin.name)
+      #
+      #       plugin_obj.routes.each do |route_name|
+      #         action route_name
+      #       end
+      #     end
+      #   end
+      # end
 
       Pakyow::Router.instance.sets[:'console-catchall'] = Pakyow::Router.instance.sets.delete(:'console-catchall')
     end

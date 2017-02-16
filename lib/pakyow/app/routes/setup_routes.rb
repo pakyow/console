@@ -50,10 +50,12 @@ Pakyow::App.routes :'console-setup' do
     end
 
     get :setup_platform, '/setup/platform' do
+
       # TODO: reject access unless in dev mode
       redirect router.group(:console).path(:login) if console_setup?
       redirect router.group(:console).path(:setup) unless platform_token?
 
+      presenter.path = 'console/setup/platform'
       view.scope(:app).apply(platform_client.apps)
     end
 
