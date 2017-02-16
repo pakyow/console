@@ -169,10 +169,10 @@ $actions-width: 75px;
 .console-content-add {
   display: block;
   padding-top: 10px;
-  color: $color-lgray;
+  color: $color-mgray;
   position: absolute;
-  bottom: 0;
-  left: 50px;
+  bottom: -15px;
+  left: 55px;
 
   &:hover {
     color: $color-red;
