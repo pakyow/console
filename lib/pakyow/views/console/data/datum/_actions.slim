@@ -1,18 +1,20 @@
+
 label.float-r.datum-settings-trigger for="datum-settings-trigger"
   i.fa.fa-tasks
 
-input.datum-submit type="submit" value="Save" form="datum-form"
+.data-button-wrapper
+  input.datum-submit type="submit" value="Save" form="datum-form"
 
-div.data-actions
-  input.hidden type="checkbox" id="actions-trigger"
-  label for="actions-trigger"
-    i.fa.fa-chevron-down
+  div.data-actions
+    input.hidden type="checkbox" id="actions-trigger"
+    label for="actions-trigger"
+      i.fa.fa-chevron-down
 
-  ul.plain.hidden
-    li@@console-datum-action
-      form@action method="post"
-        input@method type="hidden" name="_method"
-        button@label
-          | action
-    li@@console-datum-action data-version="empty"
-      | no actions found
+    ul.plain.hidden
+      li@@console-datum-action
+        form@action method="post"
+          input@method type="hidden" name="_method"
+          button@label
+            | action
+      li@@console-datum-action data-version="empty"
+        | no actions found

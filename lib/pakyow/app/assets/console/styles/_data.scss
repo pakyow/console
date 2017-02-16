@@ -109,10 +109,9 @@
   }
 
   label {
-    background: $color-blue;
     position: absolute;
     color: $color-white;
-    margin-top: -37px;
+    margin-top: -36px;
     margin-left: 100px;
     border-top-right-radius: $radius;
     border-bottom-right-radius: $radius;
@@ -144,6 +143,15 @@
   }
 }
 
+.data-button-wrapper {
+  background: $color-blue;
+  width: 135px;
+  @include mobile {
+    float: right;
+    margin-right: 20px;
+  }
+}
+
 .datum-submit {
   background: $color-blue !important;
   border: none !important;
@@ -151,6 +159,7 @@
   width: 100px;
   border-top-right-radius:0 !important;
   border-bottom-right-radius:0 !important;
+  margin-right: 35px;
 
   &:hover {
     opacity: 0.8;
@@ -160,6 +169,9 @@
 #datum-settings-trigger {
   &:checked ~ .datum-settings {
     display: block;
+    @include mobile {
+      float: right;
+    }
   }
 }
 
@@ -187,5 +199,9 @@
 
   &:hover {
     opacity: 0.8;
+  }
+
+  @include mobile {
+    margin-right: 25px;
   }
 }
