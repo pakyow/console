@@ -280,4 +280,13 @@ class PlatformClient
       })
     end
   end
+  
+  def create_site_export
+    if app = @info[:project]
+      response = HTTParty.post(File.join(Pakyow::Config.console.platform_url, "api/projects/#{app[:id]}", "site_exports"), basic_auth: {
+        username: @email,
+        password: @token,
+      })
+    end
+  end
 end
