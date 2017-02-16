@@ -15,7 +15,7 @@ Pakyow::Console.slug_handler do
 end
 
 Pakyow::App.after :load do
-  Pakyow::Console::Models::Post.where(published: true).all do |post|
+  Pakyow::Console::Models::Post.published.all do |post|
     Pakyow::Console.sitemap.url(
       location: File.join(Pakyow::Config.app.uri, post.slug),
       modified: post.updated_at.httpdate,

@@ -42,6 +42,14 @@ module Pakyow
             }
           }
         }
+        
+        def self.published
+          where("published = ? and published_at <= ?", true, Time.now)
+        end
+        
+        def self.unpublished
+          where("published = ? or published_at > ?", false, Time.now)
+        end
 
         def body
           content.first

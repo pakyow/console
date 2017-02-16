@@ -11,7 +11,7 @@ module Pakyow
         end
         
         def updated_at
-          post = Pakyow::Console::Models::Post.where(published: true).first
+          post = Pakyow::Console::Models::Post.published.first
           return @values[:updated_at] unless post
           post.updated_at
         end
