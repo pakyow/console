@@ -23,10 +23,10 @@ end
 Pakyow::CallContext.after :match do
   # this guard is needed because the route hooks are called again when calling a handler :/
   # TODO: think through a fix for the above
-  if !@console_404 #&& Pakyow::Console::Models::InvalidPath.invalid_for_path?(req.path)
-    @console_404 = true
-    handle 404, false
-  end
+  # if !@console_404 && Pakyow::Console::Models::InvalidPath.invalid_for_path?(req.path)
+  #   @console_404 = true
+  #   handle 404, false
+  # end
 
   endpoint = Pakyow::Console.endpoints.find { |e| e.matches?(req.path) }
   next if endpoint.nil?
