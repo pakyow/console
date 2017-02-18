@@ -220,7 +220,7 @@ module Pakyow::Console::Content
         id = embed_code.split('vimeo.com/')[1]
         html = '<div class="console-content-vimeo-wrapper"><iframe src="//player.vimeo.com/video/' + id + '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>'
         view.html = html
-      elsif embed_code.match('youtube.com/watch?v=')
+      elsif embed_code.match('youtube.com/watch\?v=')
         id = embed_code.split('youtube.com/watch?v=')[1]
         html = '<div class="console-content-youtube-wrapper"><iframe src="//www.youtube.com/embed/' + id + '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>'
         view.html = html
