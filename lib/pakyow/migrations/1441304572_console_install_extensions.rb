@@ -1,5 +1,9 @@
 Sequel.migration do
   up do
-    run 'CREATE EXTENSION "uuid-ossp"'
+    begin
+      run 'CREATE EXTENSION "uuid-ossp"'
+    rescue Sequel::DatabaseError
+      raise Sequel::Rollback
+    end
   end
 end
