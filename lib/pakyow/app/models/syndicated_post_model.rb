@@ -5,7 +5,7 @@ module Pakyow
         def html(console: true)
           renderer_view = Pakyow.app.presenter.store(:console).view('/console/pages/template')
           rendered = renderer_view.scope(:content)[0]
-          Pakyow::Console::ContentRenderer.render(content, view: rendered, constraints: console ? Post::CONSTRAINTS :  Pakyow::Config.console.constraints, base_uri: site_url).to_html
+          Pakyow::Console::ContentRenderer.render(content, view: rendered, constraints: console ? Post::CONSTRAINTS :  Pakyow::Config.console.constraints).to_html
         end
 
         def summary
@@ -15,7 +15,7 @@ module Pakyow
         def summary_html(console: true)
           renderer_view = Pakyow.app.presenter.store(:console).view('/console/pages/template')
           rendered = renderer_view.scope(:content)[0]
-          Pakyow::Console::ContentRenderer.render(summary, view: rendered, constraints: console ? Post::CONSTRAINTS :  Pakyow::Config.console.constraints, base_uri: site_url).to_html
+          Pakyow::Console::ContentRenderer.render(summary, view: rendered, constraints: console ? Post::CONSTRAINTS :  Pakyow::Config.console.constraints).to_html
         end
 
         def published?

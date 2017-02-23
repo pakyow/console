@@ -60,7 +60,7 @@ module Pakyow::Console
   class ContentRenderer
     TYPES = [:default, :image, :embed, :break]
 
-    def self.render(content, view: nil, constraints: Pakyow::Config.console.constraints, base_uri: Pakyow::Config.app.uri)
+    def self.render(content, view: nil, constraints: Pakyow::Config.console.constraints, base_uri: nil)
       templates = find_templates(view)
 
       view.apply(content) do |view, piece|
@@ -116,7 +116,17 @@ module Pakyow::Console::Content
   end
 
   class Image
+    extend Pakyow::Helpers
+
     def self.render(data, view, constraints, base_uri)
+      if base_uri.nil?
+        if Pakyow::Config.console.use_pakyow_platform
+          base_uri = File.join(Pakyow::Config.console.platform_cdn, "projects", platform_info[:project][:id])
+        else
+          base_uri = "/console"
+        end
+      end
+      
       alignment = data['align']
       alignment = 'default' if alignment.nil? || alignment.empty?
 
@@ -136,7 +146,7 @@ module Pakyow::Console::Content
 
       images.each do |image|
         working = view.dup
-        src = Pakyow::Router.instance.group(:file).path(:show, file_id: image['id'])
+        src = File.join("files", image['id'])
 
         if file = Pakyow::Console::FileStore.instance.find(image['id'])
           width, height = file.values_at(:width, :height)
