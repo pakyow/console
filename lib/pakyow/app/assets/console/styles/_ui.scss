@@ -36,6 +36,17 @@
   z-index: 1000;
 }
 
+.ui-modal-close {
+  float: right;
+  color: $color-dgray;
+  cursor: pointer;
+  @include rem(font-size, 18);
+  
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
 .ui-appear {
   @include animation(fade-in 0.15s);
   opacity: 1;
