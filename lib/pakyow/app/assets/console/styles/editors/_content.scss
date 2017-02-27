@@ -175,6 +175,11 @@ $actions-width: 75px;
   bottom: -15px;
   left: 55px;
 
+  @include mobile {
+    left: inherit;
+    right: 25px;
+  }
+
   &:hover {
     color: $color-red;
     text-decoration: underline;
@@ -307,7 +312,7 @@ $actions-width: 75px;
   position: relative;
   margin-bottom: 10px;
   z-index: 100;
-  
+
   &:hover {
     opacity: 0.7;
   }
