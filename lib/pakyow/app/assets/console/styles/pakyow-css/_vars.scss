@@ -51,16 +51,14 @@ $font-code: "Source Code Pro", Menlo, monospace;
 }
 
 @mixin mobile {
-//  @media (max-width: 500px) {
-  @media (max-width: 0px) {
+  @media (max-width: 500px) {
     @content;
   }
 }
 
 @mixin tablet {
-//  @media (max-width: 870px)
-//  and (min-width: 500px) {
-  @media (max-width: 0px) {
+  @media (max-width: 870px)
+  and (min-width: 500px) {
     @content;
   }
 }

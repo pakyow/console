@@ -122,10 +122,12 @@ input[type='text'], input[type='password'], textarea {
 
 input[type='submit'], input[type='button'], button, .button {
   cursor:pointer;
-
   border-radius:2px;
   border: 1px solid $color-lgray;
   padding: 5px 8px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance:none;
 
   background: #ffffff; /* Old browsers */
   background: -moz-linear-gradient(top,  #ffffff 0%, #f3f3f3 100%); /* FF3.6+ */
