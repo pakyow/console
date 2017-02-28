@@ -7,7 +7,7 @@ module Pakyow
         @store_path = Pakyow::Config.console.file_storage_path
       end
 
-      def store(tempfile, metadata)
+      def store(tempfile, metadata, **args)
         unless Dir.exists?(@store_path)
           Dir.mkdir(@store_path)
         end
@@ -22,24 +22,24 @@ module Pakyow
         reset
       end
 
-      def process(file, processed_data, w: nil, h: nil, m: nil)
+      def process(file, processed_data, w: nil, h: nil, m: nil, **args)
         path = processed_path(file[:id], w: w, h: h, m: m)
         File.open(processed_path(file[:id], w: w, h: h, m: m), 'wb+') do |f|
           f.write(processed_data)
         end
       end
 
-      def find(hash)
+      def find(hash, **args)
         files.find { |f| f[:id] == hash }
       end
 
-      def processed(hash, w: nil, h: nil, m: nil)
+      def processed(hash, w: nil, h: nil, m: nil, **args)
         path = processed_path(hash, w: w, h: h, m: m)
         return nil unless File.exists?(path)
         File.read(path)
       end
 
-      def data(hash)
+      def data(hash, **args)
         File.open(find(hash)[:path], 'rb')
       end
 
