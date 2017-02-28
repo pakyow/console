@@ -302,7 +302,9 @@ h1 .button {
     margin-top: 5px;
 
     @include mobile {
-      bottom: 10px;
+      width: 20px;
+      height: 20px;
+      bottom: 13px;
       left: 60px;
     }
   }
@@ -328,7 +330,7 @@ h1 .button {
     font-weight: 600;
 
     @include mobile {
-      margin-left: 30px;
+      margin-left: 25px;
     }
   }
 }
