@@ -226,6 +226,11 @@ $actions-width: 75px;
   margin-top: -33px;
   margin-right: 10px;
 
+  @include mobile {
+    margin-top: -73px;
+    margin-right: 0;
+  }
+
   i {
     margin-left: 15px;
     @include rem(font-size, 24);
