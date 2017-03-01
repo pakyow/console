@@ -136,6 +136,10 @@ $actions-width: 75px;
   li {
     display: inline-block;
     margin-right: 10px;
+
+    @include mobile {
+      padding: 5px;
+    }
   }
 
   i {
@@ -159,10 +163,6 @@ $actions-width: 75px;
         left: -5px;
 
       }
-    }
-
-    @include mobile {
-      @include rem(font-size, 20);
     }
   }
 }
