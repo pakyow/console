@@ -81,13 +81,12 @@
   border-radius: 2px;
 
   @include mobile {
-    width: 90%;
+    width: auto;
     margin: inherit;
     top: 20px;
     bottom: 20px;
     left: 20px;
     right: 20px;
-    box-sizing: border-box;
   }
 
   h1 {
@@ -111,12 +110,11 @@
     border-radius: 2px;
 
     @include mobile {
-      width: 90%;
+      width: auto;
       margin: inherit;
       bottom: 20px;
       left: 20px;
       right: 20px;
-      box-sizing: border-box;
     }
 
     *, a {
