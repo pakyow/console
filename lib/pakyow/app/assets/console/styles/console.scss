@@ -405,6 +405,16 @@ aside {
       color: $color-black;
     }
   }
+
+  @include non-desktop {
+    display: none;
+  }
+}
+
+.content-draft-header {
+  @include non-desktop {
+    display: none;
+  }
 }
 
 .setting-panel {
