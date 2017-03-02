@@ -57,8 +57,14 @@ $font-code: "Source Code Pro", Menlo, monospace;
 }
 
 @mixin tablet {
-  @media (max-width: 870px)
+  @media (max-width: $container-width)
   and (min-width: 500px) {
+    @content;
+  }
+}
+
+@mixin non-desktop {
+  @media (max-width: $container-width) {
     @content;
   }
 }

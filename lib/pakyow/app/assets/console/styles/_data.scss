@@ -9,7 +9,7 @@
   }
 
   .button {
-    @include mobile {
+    @include non-desktop {
       padding: 5px 7px !important;
       margin-top: 10px;
 
@@ -161,7 +161,7 @@
 .data-button-wrapper {
   background: $color-blue;
   width: 135px;
-  @include mobile {
+  @include non-desktop {
     float: right;
     margin-right: 20px;
   }
@@ -184,8 +184,10 @@
 #datum-settings-trigger {
   &:checked ~ .datum-settings {
     display: block;
-    @include mobile {
-      float: right;
+    @include non-desktop {
+      position: absolute;
+      left: auto;
+      right: 0;
     }
   }
 }
@@ -216,7 +218,7 @@
     opacity: 0.8;
   }
 
-  @include mobile {
+  @include non-desktop {
     margin-right: 25px;
   }
 }

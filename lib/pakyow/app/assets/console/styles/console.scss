@@ -301,7 +301,7 @@ h1 .button {
     margin-left: -50px;
     margin-top: 5px;
 
-    @include mobile {
+    @include non-desktop {
       width: 20px;
       height: 20px;
       bottom: 13px;
@@ -329,7 +329,7 @@ h1 .button {
     color: $color-lgray;
     font-weight: 600;
 
-    @include mobile {
+    @include non-desktop {
       margin-left: 25px;
     }
   }
@@ -356,8 +356,8 @@ aside {
     }
   }
 
-  @include mobile {
-    width: 100%;
+  @include non-desktop {
+    width: 100% !important;
     padding: 5px 0;
     height: 25px;
     top: 0;
