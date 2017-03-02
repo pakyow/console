@@ -108,6 +108,10 @@ $actions-width: 75px;
         @include rem(font-size, 20);
         color: $color-dgray;
 
+        @include mobile {
+          @include rem(font-size, 14);
+        }
+
         &:hover {
           color: $color-red;
         }
@@ -136,6 +140,10 @@ $actions-width: 75px;
   li {
     display: inline-block;
     margin-right: 10px;
+
+    @include mobile {
+      padding: 5px;
+    }
   }
 
   i {
@@ -155,14 +163,10 @@ $actions-width: 75px;
 
       @include mobile {
         position: absolute;
-        top: -35px;
+        top: -28px;
         left: -5px;
 
       }
-    }
-
-    @include mobile {
-      @include rem(font-size, 20);
     }
   }
 }
@@ -227,7 +231,7 @@ $actions-width: 75px;
   margin-right: 10px;
 
   @include mobile {
-    margin-top: -73px;
+    margin-top: -69px;
     margin-right: 0;
   }
 
@@ -235,6 +239,8 @@ $actions-width: 75px;
     margin-left: 15px;
     @include rem(font-size, 24);
     color: $color-lgray;
+
+    @include rem(font-size, 14);
   }
 }
 
