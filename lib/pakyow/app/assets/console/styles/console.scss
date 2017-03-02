@@ -316,6 +316,13 @@ h1 .button {
   .console-content {
     margin: 0;
   }
+
+  .content-image {
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
 }
 
 .discover-item-metadata {
