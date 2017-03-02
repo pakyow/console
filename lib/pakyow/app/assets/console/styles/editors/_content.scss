@@ -129,12 +129,11 @@ $actions-width: 75px;
   width: $actions-width;
 
   @include mobile {
-    display: block;
-    position: relative;
-    width: auto;
-    text-align: left;
-    padding-left: 5px;
-    padding-bottom: 10px;
+    display: none !important;
+  }
+
+  @include tablet {
+    display: none !important;
   }
 
   li {
