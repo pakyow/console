@@ -54,6 +54,10 @@
 
 .dashboard-post {
   width: 600px;
+
+  @include mobile {
+    width: auto;
+  }
 }
 
 .ui-modal-blinder {
@@ -76,6 +80,15 @@
   bottom: 100px;
   border-radius: 2px;
 
+  @include mobile {
+    width: auto;
+    margin: inherit;
+    top: 20px;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+  }
+
   h1 {
     margin-top: 0;
     border: 0;
@@ -95,6 +108,14 @@
     margin-left: -300px;
     padding: 8px 20px;
     border-radius: 2px;
+
+    @include mobile {
+      width: auto;
+      margin: inherit;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+    }
 
     *, a {
       color: $color-white;
