@@ -64,6 +64,19 @@ class PlatformClient
 
     Hash.strhash(JSON.parse(response.body))
   end
+  
+  def embed
+    if app = @info[:project]
+      response = HTTParty.get(File.join(Pakyow::Config.console.platform_url, "api/projects/#{app[:id]}", "embed"), basic_auth: {
+        username: @email,
+        password: @token,
+      })
+
+      response.body
+    else
+      ""
+    end
+  end
 
   def events
     if app = @info[:project]

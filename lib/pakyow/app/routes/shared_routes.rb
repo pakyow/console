@@ -30,6 +30,7 @@ module Pakyow::Console::SharedRoutes
     end
 
     setup_toolbar(view)
+    setup_platform_embed(view)
     mixin_scripts(view)
   end
 

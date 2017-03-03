@@ -347,9 +347,7 @@ h1 .button {
 }
 
 .wrapper {
-  @include mobile {
-    margin-top: 100px;
-  }
+  margin-top: 100px;
 }
 
 aside {

@@ -66,6 +66,15 @@ module Pakyow::Helpers
     view.scope(:'pw-user').bind(current_console_user)
     view.scope(:collaborator).mutate(:list, with: data(:collaborator).all).subscribe
   end
+  
+  def setup_platform_embed(view)
+    return unless platform?
+    
+    doc = Oga.parse_html(platform_client.embed)
+    view.scope(:head).append(Pakyow::Presenter::View.new(doc.css("link")[0].to_xml))
+    embed = Pakyow::Presenter::View.new(doc.css("header")[0].to_xml)
+    view.scope(:embed).append(embed)
+  end
 
   def mixin_scripts(view)
     Pakyow::Console::ScriptRegistry.scripts.each do |path|
