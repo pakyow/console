@@ -51,24 +51,23 @@ html
 
     title console
 body
-  .frame-wrapper
-    .loader-wrapper data-ui="loader"
-      .spinner
+  .loader-wrapper data-ui="loader"
+    .spinner
 
-    /! @include notifier
+  /! @include notifier
 
-    .container-2.margin-t.wrapper
-      main.col.r-4-3
-        /! @container
+  .container-2.margin-t.wrapper
+    main.col.r-4-3
+      /! @container
 
-      aside.col.r-4-1
-        nav.margin-b
-          ul.plain
-            li@@console-panel-item
-              i.fa@icon
-              a@link href="/console" data-ui="fastlink"
-                | Link
+    aside.col.r-4-1
+      nav.margin-b
+        ul.plain
+          li@@console-panel-item
+            i.fa@icon
+            a@link href="/console" data-ui="fastlink"
+              | Link
 
-        /! @include sidebar
+      /! @include sidebar
 
-    /! @include toolbar
+  /! @include toolbar
