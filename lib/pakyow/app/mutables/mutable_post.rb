@@ -1,5 +1,9 @@
 Pakyow::App.mutable :'pw-post' do
   query :published do
+    Pakyow::Console::Models::Post.published.limit(3).all
+  end
+
+  query :feed do
     Pakyow::Console::Models::Post.published.limit(15).all
   end
 

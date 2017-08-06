@@ -69,7 +69,7 @@ Pakyow::App.routes :'console-collection' do
           handle 404 if collection.nil? || !collection.published?
           @current_collection = collection
 
-          posts = data(:'pw-post').published.data
+          posts = data(:'pw-post').feed.data
           blog_url = File.join(config.app.uri, current_collection.slug)
 
           feed = Oga::XML::Document.new(type: :xml, xml_declaration: Oga::XML::XmlDeclaration.new(version: 1.0, encoding: 'UTF-8'))
