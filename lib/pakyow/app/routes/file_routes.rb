@@ -32,6 +32,11 @@ Pakyow::App.routes :'console-file' do
             data = Pakyow::Console::FileStore.instance.data(params[:file_id], request_context: self)
           end
 
+          if config.env == :production
+            res.headers['Cache-Control'] = 'public, max-age=31536000'
+            res.headers['Vary'] = 'Accept-Encoding'
+          end
+
           send(data, Rack::Mime.mime_type(file[:ext]))
         else
           handle 404
