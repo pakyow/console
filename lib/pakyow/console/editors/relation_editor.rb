@@ -3,13 +3,11 @@ Pakyow::Console.editor :relation do |_, related_datum, attribute, datum, datum_t
   editor = view.scope(:editor)[0]
   editor.scoped_as = :datum
 
-  view.component(:modal).with do
+  if attribute[:name] == datum_type.name
     # disallow self-referential relationships
-    if attribute[:name] == datum_type.name
-      remove
-    else
-      attrs.href = router.group(:data).path(:show, data_id: attribute[:name])
-    end
+    view.component(:modal).remove
+  else
+    view.component(:modal).attrs.href = router.group(:data).path(:show, data_id: attribute[:name])
   end
 
   related_class = attribute[:extras][:class]
