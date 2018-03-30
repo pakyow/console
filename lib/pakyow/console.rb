@@ -51,6 +51,7 @@ require 'pakyow/console/editors/datetime_editor'
 
 require 'pakyow/console/formatters/percentage_formatter'
 require 'pakyow/console/formatters/datetime_formatter'
+require 'pakyow/console/formatters/relation_formatter'
 
 require 'pakyow/console/processors/boolean_processor'
 require 'pakyow/console/processors/file_processor'

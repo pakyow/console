@@ -1,5 +1,5 @@
 module Pakyow::Console::DataTypeRegistry
-  UNLISTABLE_TYPES = [:text, :file, :media, :html, :content, :relation]
+  UNLISTABLE_TYPES = [:text, :file, :media, :html, :content]
 
   def self.names
     datatypes.keys
