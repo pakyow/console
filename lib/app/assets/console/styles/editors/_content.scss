@@ -209,3 +209,37 @@
     margin-top: 12px;
   }
 }
+
+trix-editor {
+  h1 {
+    font-size: 24px;
+    border: none;
+    margin: 0;
+  }
+
+  h2 {
+    font-size: 18px;
+    margin: 0;
+  }
+
+  ul {
+    list-style-type: disc;
+    margin-left: 2.5rem;
+  }
+
+  ol {
+  }
+
+  blockquote {
+    border-left: 3px solid $color-lgray;
+    padding-left: 10px;
+  }
+
+  pre {
+    display: block;
+    line-height: 18px;
+    font-family: $font-code;
+    background: $color-xgray;
+    padding: 3px;
+  }
+}
