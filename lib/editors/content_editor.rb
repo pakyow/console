@@ -103,7 +103,12 @@ module Pakyow::Console::Content
             scale_factor = width / constraint_width.to_f
 
             width = constraint_width
-            height = [height / scale_factor, constraint_height].min
+
+            height = if constraint_height
+              [height / scale_factor, constraint_height].min
+            else
+              height / scale_factor
+            end
           end
         end
 
