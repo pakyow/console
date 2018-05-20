@@ -61,6 +61,10 @@ module Pakyow::Console
       metadata
     end
 
+    def delete(id)
+      @adapter.delete(id)
+    end
+
     def find(hash)
       @adapter.find(hash)
     end

@@ -36,6 +36,10 @@ Pakyow::App.routes :'console-file' do
           handle 404
         end
       end
+
+      remove do
+        data(:file).delete(params[:file_id]); halt
+      end
     end
   end
 end

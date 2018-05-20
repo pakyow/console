@@ -26,5 +26,9 @@ Pakyow::App.bindings :'console-file' do
     binding :type_class do
       { class: lambda { |c| c << bindable[:type] } }
     end
+
+    binding :delete_href do
+      { href: "/console/files/#{bindable[:id]}" }
+    end
   end
 end

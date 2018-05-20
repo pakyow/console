@@ -9,4 +9,8 @@ Pakyow::App.mutable :file do
   action :create do |name, file|
     Pakyow::Console::FileStore.instance.store(name, file, context: Pakyow::Console::FileStore::CONTEXT_MEDIA)
   end
+
+  action :delete do |id|
+    Pakyow::Console::FileStore.instance.delete(id)
+  end
 end

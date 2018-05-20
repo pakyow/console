@@ -11,6 +11,10 @@ module Pakyow
         file.save
       end
 
+      def delete(id)
+        StoredFile.where("(metadata ->> 'id') = '#{id}'").delete
+      end
+
       def find(hash, w: nil, h: nil)
         file = find_object(hash, w: w, h: h)
         return if file.nil?
