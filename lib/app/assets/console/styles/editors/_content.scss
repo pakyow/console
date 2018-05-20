@@ -1,14 +1,27 @@
 .console-content {
-  margin-left: -50px;
-  margin-right: -25px;
+  &.sorting {
+    .console-content-editor-wrapper {
+    }
+
+    // .sort-shrink {
+    //   height: 33px;
+    //   overflow: hidden;
+    //   background: $color-xgray;
+    //   padding-left: 25px;
+    //   margin-left: 50px;
+
+    //   * {
+    //     visibility: hidden;
+    //   }
+    // }
+  }
 }
 
 .console-content-editor-wrapper {
   overflow: hidden;
-  padding-left: 50px;
-  padding-right: 25px;
   position: relative;
   margin-bottom: 10px;
+  background: #fff;
 
   &:hover {
     .console-content-actions {
@@ -29,11 +42,13 @@
   &.console-content-align-left {
     float: left;
     width: 300px;
+    margin-right: 15px;
   }
 
   &.console-content-align-right {
     float: right;
     width: 300px;
+    margin-left: 15px;
   }
 }
 
@@ -45,16 +60,25 @@
 }
 
 .console-content-alignment {
+  background: rgba(0, 0, 0, 0.9);
   position: absolute;
-  right: 0px;
+  right: 3px;
+  top: 3px;
+  padding: 3px;
+  border-radius: 3px;
 
   li {
     cursor: pointer;
+    margin-bottom: 3px;
 
     &.active {
       i {
         color: $color-red;
       }
+    }
+
+    &:last-child {
+      margin-bottom: 0;
     }
 
     i {
@@ -68,19 +92,23 @@
 }
 
 .console-content-settings {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.95);
   position: absolute;
-  z-index: 10;
-  padding: 3px;
-  margin-left: -50px;
-  padding-left: 50px;
-  width: 637px;
+  z-index: 2000;
+  padding: 0px;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
 
   .console-content-types {
+    vertical-align: middle;
+
     li {
-      margin-left: 20px;
-      display: inline;
+      padding: 6px 15px;
+      display: block;
       cursor: pointer;
+      float: left;
 
       &.active {
         i {
@@ -90,7 +118,7 @@
 
       i {
         @include rem(font-size, 20);
-        color: $color-lgray;
+        color: $color-mgray;
 
         &:hover {
           color: $color-red;
@@ -98,19 +126,30 @@
       }
     }
   }
+
+  .console-content-actions {
+  }
 }
 
 .console-content-actions {
   display: none;
   position: absolute;
+  z-index: 1000;
   left: 0px;
-  top: 3px;
+  top: 0px;
+  padding: 3px 8px;
+  border-radius: 3px;
   text-align: right;
-  width: 50px;
+  background: rgba(0, 0, 0, 0.9);
 
   li {
     display: inline-block;
+    margin: 0;
     margin-right: 10px;
+
+    &:last-child {
+      margin-right: 0;
+    }
   }
 
   i {
@@ -139,6 +178,10 @@
 }
 
 .console-content-plaintext {
+  .console-content-actions {
+    right: 0;
+    left: auto;
+  }
 }
 
 .console-content-plaintext, .console-content-embed {
@@ -181,6 +224,20 @@
   }
 }
 
+.console-content-image {
+  .console-content-actions {
+    left: 3px;
+    top: 3px;
+  }
+
+  .console-content-settings {
+    .console-content-actions {
+      right: 0;
+      left: auto;
+    }
+  }
+}
+
 .console-content-embed {
   textarea {
     font-family: $font-code;
@@ -200,6 +257,11 @@
       height: 100%;
     }
   }
+
+  .console-content-actions {
+    right: 0;
+    left: auto;
+  }
 }
 
 .console-content-break {
@@ -207,6 +269,11 @@
 
   hr {
     margin-top: 12px;
+  }
+
+  .console-content-actions {
+    right: 0;
+    left: auto;
   }
 }
 

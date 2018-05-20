@@ -5,10 +5,9 @@
   / default editor
   .console-content-editor-wrapper.console-content-plaintext data-scope="content" data-template="" data-version="default"
     /! @include shared
+    /! @include actions
 
     .console-content-editor data-c="editor"
-      /! @include actions
-
       / textarea rows="1" placeholder="text goes here" data-ui="content-editor-plaintext" data-prop="content"
 
       div data-ui="trix"
@@ -17,11 +16,10 @@
   / image editor
   .console-content-editor-wrapper.console-content-image data-scope="content" data-template="" data-version="image"
     /! @include shared
+    /! @include actions
     /! @include alignment
 
     .console-content-editor data-c="editor"
-      /! @include actions
-
       .console-content-image-wrapper data-ui="content-editor-media"
         input type="hidden" data-prop="images"
         i.fa.fa-image
@@ -29,11 +27,9 @@
   / embed editor
   .console-content-editor-wrapper.console-content-embed data-scope="content" data-template="" data-version="embed"
     /! @include shared
-    /! @include alignment
+    /! @include actions
 
     .console-content-editor data-c="editor"
-      /! @include actions
-
       textarea rows="5" placeholder="paste embed code here, press enter" data-ui="content-editor-embed" data-prop="code"
 
   / break editor
