@@ -10,6 +10,13 @@ module Pakyow::Helpers
       end
 
       view.bind(Pakyow::Console::DatumFormatterRegistry.format(@datum || {}, as: @type))
+
+      # preview
+      if @type.preview
+        view.prop(:preview)[0].attrs[:"data-config"] = "url: #{@type.preview}"
+      else
+        view.prop(:preview).remove
+      end
     end
 
     object_id = @datum ? @datum.id : nil

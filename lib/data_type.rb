@@ -96,6 +96,11 @@ class Pakyow::Console::DataType
     !@hidden
   end
 
+  def preview(url = nil)
+    return @preview if url.nil?
+    @preview = url
+  end
+
   private
 
   def pluralize?
