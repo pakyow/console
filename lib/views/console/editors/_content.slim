@@ -19,6 +19,9 @@
     /! @include actions
     /! @include alignment
 
+    .console-content-stepper.hidden data-c="stepper"
+      input data-prop="step" data-ui="content-stepper" type="range" min="0" max="2" value="0" step="1"
+
     .console-content-editor data-c="editor"
       .console-content-image-wrapper data-ui="content-editor-media"
         input type="hidden" data-prop="images"

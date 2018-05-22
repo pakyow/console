@@ -89,6 +89,9 @@ module Pakyow::Console::Content
       alignment = data['align']
       alignment = 'default' if alignment.empty?
 
+      step = data['step']
+      step = '1' if step.empty?
+
       JSON.parse(data['images']).each do |image|
         src = Pakyow::Router.instance.group(:file).path(:show, file_id: image['id'])
         file = Pakyow::Console::FileStore.instance.find(image['id'])
@@ -96,7 +99,7 @@ module Pakyow::Console::Content
         width, height = file.values_at(:width, :height)
 
         if constraints
-          constraints_for_alignment = constraints[alignment.to_sym]
+          constraints_for_alignment = constraints[alignment.to_sym][step.to_sym]
 
           if constraints_for_alignment
             constraint_width, constraint_height = constraints_for_alignment.values_at(:width, :height)
@@ -129,6 +132,10 @@ module Pakyow::Console::Content
         end
 
         working.attrs.class << "align-#{alignment}"
+
+        if step = data['step']
+          working.attrs.class << "step-#{step}"
+        end
 
         working = view.dup
       end
