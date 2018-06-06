@@ -87,10 +87,10 @@ module Pakyow::Console::Content
       constraints = attribute[:extras][:constraints][:image]
 
       alignment = data['align']
-      alignment = 'default' if alignment.empty?
+      alignment = 'default' if alignment.to_s.empty?
 
       step = data['step']
-      step = '1' if step.empty?
+      step = '1' if step.to_s.empty?
 
       JSON.parse(data['images']).each do |image|
         src = Pakyow::Router.instance.group(:file).path(:show, file_id: image['id'])
@@ -154,7 +154,7 @@ module Pakyow::Console::Content
     def self.render(data, view, attribute)
       embed_code = data['code']
       alignment = data['align']
-      alignment = 'default' if alignment.empty?
+      alignment = 'default' if alignment.to_s.empty?
 
       if embed_code.match('vimeo.com')
         id = embed_code.split('vimeo.com/')[1]
