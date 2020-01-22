@@ -72,7 +72,13 @@ module Pakyow
 
       Pakyow.logger.info '[console] establishing database connection'
 
-      @db = Sequel.connect(ENV.fetch('DATABASE_URL'), max_connections: 1)
+      options = if defined?($console_db_options)
+        $console_db_options
+      else
+        { max_connections: 1 }
+      end
+
+      @db = Sequel.connect(ENV.fetch('DATABASE_URL'), options)
       @db.extension :pg_json
 
       Sequel.default_timezone = :utc
